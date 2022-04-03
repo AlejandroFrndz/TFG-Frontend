@@ -1,11 +1,8 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import "antd/dist/antd.css";
-import { LandingPage } from "./screens/LandingPage";
+import { Navigation } from "./navigation";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <LandingPage />
-  </React.StrictMode>,
-  document.getElementById("root")
-);
+const container = document.getElementById("root") as HTMLElement;
+const root = createRoot(container);
+root.render(<Navigation />);

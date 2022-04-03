@@ -1,13 +1,19 @@
 import React, { CSSProperties } from "react";
 import { Form, Input, Button, Card, Divider, Row, Col, Typography } from "antd";
-import { Center } from "../../../sharedComponents/Center";
+import { Link } from "react-router-dom";
+import { Center } from "../../../shared/Center";
 
 const { Text } = Typography;
 
-export const LogInForm: React.FC = () => {
+type LogInFormProps = {
+  onFinish: (values: any) => void;
+  loading: boolean;
+};
+
+export const LogInForm: React.FC<LogInFormProps> = ({ onFinish, loading }) => {
   return (
     <Card style={styles.card} bordered={false}>
-      <Form>
+      <Form onFinish={onFinish}>
         <Form.Item
           name="email"
           rules={[{ required: true, message: "Please input your email" }]}
@@ -25,7 +31,12 @@ export const LogInForm: React.FC = () => {
 
         <Form.Item wrapperCol={{ span: 24 }}>
           <Center>
-            <Button type="primary" htmlType="submit" style={styles.loginButton}>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={styles.loginButton}
+              loading={loading}
+            >
               Log in
             </Button>
           </Center>
@@ -35,7 +46,9 @@ export const LogInForm: React.FC = () => {
       <Row>
         <Col span={24}>
           <Center>
-            <Text>Forgot password?</Text>
+            <Link to="/forgot-password" style={styles.forgotPassword}>
+              Forgot password?
+            </Link>
           </Center>
         </Col>
       </Row>
@@ -66,18 +79,22 @@ const styles = {
   } as CSSProperties,
 
   newAccountButton: {
-    borderRadius: "10px",
+    borderRadius: "5px",
     width: "80%",
   } as CSSProperties,
 
   loginButton: {
-    borderRadius: "20px",
+    borderRadius: "5px",
     width: "100%",
   } as CSSProperties,
 
   formInput: {
-    borderRadius: "20px",
+    borderRadius: "8px",
     height: "40px",
+  } as CSSProperties,
+
+  forgotPassword: {
+    fontSize: "12px",
   } as CSSProperties,
 
   card: {
