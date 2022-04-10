@@ -1,0 +1,2 @@
+/* Webpack config doesnt import the antd css file properly so we need to import it this way for it to work */
+@import "~antd/dist/antd.css";
