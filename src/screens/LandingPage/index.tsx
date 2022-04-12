@@ -4,6 +4,7 @@ import { Center } from "../../shared/Center";
 import { LogInForm } from "./components/LogInForm";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
+import { setToken } from "../../utils/api/axios";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -18,6 +19,7 @@ export const LandingPage: React.FC = () => {
 
     if (response.isSuccess()) {
       window.localStorage.setItem("token", response.value.token);
+      setToken(response.value.token);
       navigate("/home");
     } else {
       message.error({
