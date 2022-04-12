@@ -1,6 +1,6 @@
 import { ThunkDispatch } from "redux-thunk";
 import API from "../../utils/api";
-import { User } from "../../utils/api/resources/user";
+import { IUser } from "../../utils/api/resources/user";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
@@ -16,19 +16,19 @@ export type ICLEAR_AUTH_ERROR = "CLEAR_AUTH_ERROR";
 
 export type SetUser = {
   type: ISET_USER;
-  user: User;
+  user: IUser;
 };
 
-export const setUser = (user: User): SetUser => {
+export const setUser = (user: IUser): SetUser => {
   return { type: SET_USER, user };
 };
 
 export type UpdateUser = {
   type: IUPDATE_USER;
-  user: User;
+  user: IUser;
 };
 
-export const updateUser = (user: User): UpdateUser => {
+export const updateUser = (user: IUser): UpdateUser => {
   return { type: UPDATE_USER, user };
 };
 
@@ -52,7 +52,7 @@ export type ClearAuthError = {
   type: ICLEAR_AUTH_ERROR;
 };
 
-export const clearUserError = (): ClearAuthError => {
+export const clearAuthError = (): ClearAuthError => {
   return { type: CLEAR_AUTH_ERROR };
 };
 
@@ -62,3 +62,15 @@ export type AuthActions =
   | ClearAuth
   | SetAuthError
   | ClearAuthError;
+
+export const fetchMe = () => async (dispatch: ThunkDispatch<any, any, any>) => {
+  const meResponse = await API.user.me();
+
+  if (meResponse.isFailure()) {
+    dispatch(setAuthError());
+    return;
+  }
+
+  dispatch(setUser(meResponse.value.user));
+  dispatch(clearAuthError());
+};
