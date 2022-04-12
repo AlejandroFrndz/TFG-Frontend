@@ -7,6 +7,8 @@ import {
 } from "@ant-design/icons";
 import { useDispatch } from "react-redux";
 import { fetchMe } from "../../redux/actions/auth.actions";
+import { PulseLoader } from "react-spinners";
+import { Center } from "../../shared/Center";
 
 enum CategoriesEnum {
   "My Projects" = "My Projects",
@@ -39,6 +41,13 @@ export const Home: React.FC = () => {
   }, [dispatch]);
 
   const handleContent = () => {
+    if (loading) {
+      return (
+        <Center>
+          <PulseLoader />
+        </Center>
+      );
+    }
     switch (category) {
       case CategoriesEnum["My Projects"]:
         return "My Projects";
@@ -48,10 +57,6 @@ export const Home: React.FC = () => {
         return "Account";
     }
   };
-
-  if (loading) {
-    return <div>Loading</div>;
-  }
 
   return (
     <Layout style={styles.mainLayout}>
@@ -100,7 +105,9 @@ export const Home: React.FC = () => {
       <Layout style={styles.secondaryLayout}>
         <Header style={styles.whiteBackground}>{category}</Header>
         <Divider style={styles.divider} />
-        <Content style={{ ...styles.whiteBackground, ...styles.content }}>
+        <Content
+          style={{ ...styles.whiteBackground, ...styles.content(loading) }}
+        >
           {handleContent()}
         </Content>
       </Layout>
@@ -143,9 +150,13 @@ const styles = {
     backgroundColor: "#FFF",
   } as CSSProperties,
 
-  content: {
-    padding: "1vh",
-  } as CSSProperties,
+  content: (loading: boolean): CSSProperties => {
+    return {
+      padding: "1vh",
+      display: "flex",
+      justifyContent: loading ? "center" : undefined,
+    };
+  },
 
   divider: {
     marginTop: "0px",
