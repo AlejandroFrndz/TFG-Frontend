@@ -1,10 +1,12 @@
-import React, { CSSProperties, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import { Divider, Layout, Menu } from "antd";
 import {
   PartitionOutlined,
   ProjectOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { useDispatch } from "react-redux";
+import { fetchMe } from "../../redux/actions/auth.actions";
 
 enum CategoriesEnum {
   "My Projects" = "My Projects",
@@ -19,11 +21,22 @@ const COLLAPSED_WIDTH = "7vw";
 const { Header, Content, Sider } = Layout;
 
 export const Home: React.FC = () => {
+  const dispatch = useDispatch();
   const [category, setCategory] = useState(CategoriesEnum["My Projects"]);
+  const [loading, setLoading] = useState(true);
 
   const handleSelect = ({ key }: { key: string }) => {
     setCategory(CategoriesEnum[key as CategoriesType]);
   };
+
+  useEffect(() => {
+    const runFetchMe = async () => {
+      await dispatch(fetchMe());
+      setLoading(false);
+    };
+
+    runFetchMe();
+  }, [dispatch]);
 
   const handleContent = () => {
     switch (category) {
@@ -35,6 +48,10 @@ export const Home: React.FC = () => {
         return "Account";
     }
   };
+
+  if (loading) {
+    return <div>Loading</div>;
+  }
 
   return (
     <Layout style={styles.mainLayout}>
