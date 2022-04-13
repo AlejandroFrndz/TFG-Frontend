@@ -74,3 +74,9 @@ export const fetchMe = () => async (dispatch: ThunkDispatch<any, any, any>) => {
   dispatch(setUser(meResponse.value.user));
   dispatch(clearAuthError());
 };
+
+export const logOut = () => async (dispatch: ThunkDispatch<any, any, any>) => {
+  API.deleteToken();
+  localStorage.removeItem("token");
+  dispatch(clearAuth());
+};

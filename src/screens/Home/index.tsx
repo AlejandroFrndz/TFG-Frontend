@@ -6,11 +6,12 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMe } from "../../redux/auth/actions";
+import { clearAuthError, fetchMe } from "../../redux/auth/actions";
 import { PulseLoader } from "react-spinners";
 import { Center } from "../../shared/Center";
 import { selectAuthError } from "../../redux/auth/selectors";
 import { useNavigate } from "react-router-dom";
+import { AccountContent } from "./components/AccountContent";
 
 enum CategoriesEnum {
   "My Projects" = "My Projects",
@@ -46,9 +47,10 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     if (error) {
+      dispatch(clearAuthError());
       navigate("/");
     }
-  }, [error, navigate]);
+  }, [error, navigate, dispatch]);
 
   const handleContent = () => {
     if (loading) {
@@ -64,7 +66,7 @@ export const Home: React.FC = () => {
       case CategoriesEnum["Shared With Me"]:
         return "Shared With Me";
       case CategoriesEnum.Account:
-        return "Account";
+        return <AccountContent />;
     }
   };
 

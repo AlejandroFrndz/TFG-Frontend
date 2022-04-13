@@ -4,7 +4,6 @@ import { Center } from "../../shared/Center";
 import { LogInForm } from "./components/LogInForm";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
-import { setToken } from "../../utils/api/axios";
 import { useDispatch } from "react-redux";
 import { clearAuthError } from "../../redux/auth/actions";
 
@@ -22,7 +21,7 @@ export const LandingPage: React.FC = () => {
 
     if (response.isSuccess()) {
       window.localStorage.setItem("token", response.value.token);
-      setToken(response.value.token);
+      API.setToken(response.value.token);
       dispatch(clearAuthError()); // Clear auth error in case there was one so we don't push people back from home screen
       navigate("/home");
     } else {
