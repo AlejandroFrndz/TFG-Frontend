@@ -16,7 +16,7 @@ ReactDOM.render(
 );
 
 /*
-This is React 18 code. We'll upgrade once again when antd v5 with React 18 support is released
+This is React 18 code. We'll upgrade back up when antd v5 with React 18 support is released
 const root = createRoot(container);
 root.render(
   <Provider store={store}>

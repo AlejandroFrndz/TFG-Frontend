@@ -5,10 +5,12 @@ import {
   ProjectOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchMe } from "../../redux/actions/auth.actions";
 import { PulseLoader } from "react-spinners";
 import { Center } from "../../shared/Center";
+import { selectAuthError } from "../../redux/selectors/auth.selectors";
+import { useNavigate } from "react-router-dom";
 
 enum CategoriesEnum {
   "My Projects" = "My Projects",
@@ -24,8 +26,10 @@ const { Header, Content, Sider } = Layout;
 
 export const Home: React.FC = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [category, setCategory] = useState(CategoriesEnum["My Projects"]);
   const [loading, setLoading] = useState(true);
+  const error = useSelector(selectAuthError);
 
   const handleSelect = ({ key }: { key: string }) => {
     setCategory(CategoriesEnum[key as CategoriesType]);
@@ -39,6 +43,12 @@ export const Home: React.FC = () => {
 
     runFetchMe();
   }, [dispatch]);
+
+  useEffect(() => {
+    if (error) {
+      navigate("/");
+    }
+  }, [error, navigate]);
 
   const handleContent = () => {
     if (loading) {
