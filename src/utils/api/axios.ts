@@ -14,12 +14,4 @@ const instance = axios.create({
     : undefined,
 });
 
-/**
- * Updates the auth token to be used by the axios instance
- * @param token JWT provided by server
- */
-export const setToken = (token: string): void => {
-  instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-};
-
 export default instance;
