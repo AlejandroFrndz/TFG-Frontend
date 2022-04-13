@@ -12,3 +12,5 @@ const store = createStore(
 );
 
 export default store;
+
+export type State = ReturnType<typeof rootReducer>;
