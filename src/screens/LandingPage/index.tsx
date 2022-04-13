@@ -6,7 +6,7 @@ import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "../../utils/api/axios";
 import { useDispatch } from "react-redux";
-import { clearAuthError } from "../../redux/actions/auth.actions";
+import { clearAuthError } from "../../redux/auth/actions";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;

@@ -6,7 +6,7 @@ import {
   SET_AUTH_ERROR,
   UPDATE_USER,
   CLEAR_AUTH_ERROR,
-} from "../actions/auth.actions";
+} from "./actions";
 
 type AuthState = {
   user: User | {};

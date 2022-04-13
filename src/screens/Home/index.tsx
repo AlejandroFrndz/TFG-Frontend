@@ -6,10 +6,10 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchMe } from "../../redux/actions/auth.actions";
+import { fetchMe } from "../../redux/auth/actions";
 import { PulseLoader } from "react-spinners";
 import { Center } from "../../shared/Center";
-import { selectAuthError } from "../../redux/selectors/auth.selectors";
+import { selectAuthError } from "../../redux/auth/selectors";
 import { useNavigate } from "react-router-dom";
 
 enum CategoriesEnum {
