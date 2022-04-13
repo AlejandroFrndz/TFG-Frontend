@@ -1,9 +1,7 @@
 import React, { CSSProperties } from "react";
-import { Form, Input, Button, Card, Divider, Row, Col, Typography } from "antd";
+import { Form, Input, Button, Row, Col } from "antd";
 import { Link } from "react-router-dom";
-import { Center } from "../../../shared/Center";
-
-const { Text } = Typography;
+import { Center } from "../../../../shared/Center";
 
 type LogInFormProps = {
   onFinish: (values: any) => void;
@@ -12,11 +10,17 @@ type LogInFormProps = {
 
 export const LogInForm: React.FC<LogInFormProps> = ({ onFinish, loading }) => {
   return (
-    <Card style={styles.card} bordered={false}>
+    <>
       <Form onFinish={onFinish}>
         <Form.Item
           name="email"
-          rules={[{ required: true, message: "Please input your email" }]}
+          rules={[
+            {
+              required: true,
+              message: "Please input a valid email",
+              type: "email",
+            },
+          ]}
           style={styles.marginBottom20}
         >
           <Input style={styles.formInput} placeholder="Email" />
@@ -52,35 +56,13 @@ export const LogInForm: React.FC<LogInFormProps> = ({ onFinish, loading }) => {
           </Center>
         </Col>
       </Row>
-
-      <Divider />
-
-      <Row>
-        <Col span={24} style={styles.marginBottom20}>
-          <Center>
-            <Text>Don't have an account?</Text>
-          </Center>
-        </Col>
-        <Col span={24}>
-          <Center>
-            <Button type="primary" style={styles.newAccountButton}>
-              Create a new one
-            </Button>
-          </Center>
-        </Col>
-      </Row>
-    </Card>
+    </>
   );
 };
 
 const styles = {
   marginBottom20: {
     marginBottom: "20px",
-  } as CSSProperties,
-
-  newAccountButton: {
-    borderRadius: "5px",
-    width: "80%",
   } as CSSProperties,
 
   loginButton: {
@@ -95,11 +77,5 @@ const styles = {
 
   forgotPassword: {
     fontSize: "12px",
-  } as CSSProperties,
-
-  card: {
-    borderRadius: "20px",
-    width: "400px",
-    transform: "scale(1.5,1.5)",
   } as CSSProperties,
 };

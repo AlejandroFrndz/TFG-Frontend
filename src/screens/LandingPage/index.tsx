@@ -1,11 +1,12 @@
 import React, { CSSProperties, useState } from "react";
-import { Row, Col, Typography, Layout, message } from "antd";
+import { Row, Col, Typography, Layout, message, Card, Divider } from "antd";
 import { Center } from "../../shared/Center";
-import { LogInForm } from "./components/LogInForm";
+import { LogInForm } from "./components/LogIn/LogInForm";
 import API from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearAuthError } from "../../redux/auth/actions";
+import { SingUp } from "./components/SingUp/SingUp";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -60,7 +61,11 @@ export const LandingPage: React.FC = () => {
           </Col>
           <Col span={12}>
             <Center>
-              <LogInForm onFinish={onSubmit} loading={loading} />
+              <Card style={styles.card} bordered={false}>
+                <LogInForm onFinish={onSubmit} loading={loading} />
+                <Divider />
+                <SingUp />
+              </Card>
             </Center>
           </Col>
         </Row>
@@ -73,5 +78,11 @@ const styles = {
   errorMessage: {
     marginTop: "90vh",
     fontSize: "20px",
+  } as CSSProperties,
+
+  card: {
+    borderRadius: "20px",
+    width: "400px",
+    transform: "scale(1.5,1.5)",
   } as CSSProperties,
 };
