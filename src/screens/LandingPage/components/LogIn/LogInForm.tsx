@@ -1,36 +1,55 @@
-import React, { CSSProperties } from "react";
+import React, { CSSProperties, useState } from "react";
 import { Form, Input, Button, Row, Col } from "antd";
 import { Link } from "react-router-dom";
 import { Center } from "../../../../shared/Center";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
 
 type LogInFormProps = {
-  onFinish: (values: any) => void;
-  loading: boolean;
+  onFinish: (values: { email: string; password: string }) => Promise<boolean>;
 };
 
-export const LogInForm: React.FC<LogInFormProps> = ({ onFinish, loading }) => {
+export const LogInForm: React.FC<LogInFormProps> = ({ onFinish }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (values: { email: string; password: string }) => {
+    setLoading(true);
+    const error = await onFinish(values);
+    if (error) setLoading(false);
+  };
+
   return (
     <>
-      <Form onFinish={onFinish}>
+      <Form onFinish={handleSubmit}>
         <Form.Item
           name="email"
           rules={[
             {
-              required: true,
               message: "Please input a valid email",
               type: "email",
+            },
+            {
+              required: true,
+              message: "Please input your email",
             },
           ]}
           style={styles.marginBottom20}
         >
-          <Input style={styles.formInput} placeholder="Email" />
+          <Input
+            prefix={<MailOutlined style={styles.inputIcon} />}
+            style={styles.formInput}
+            placeholder="Email"
+          />
         </Form.Item>
         <Form.Item
           name="password"
           rules={[{ required: true, message: "Please input your password" }]}
           style={styles.marginBottom20}
         >
-          <Input.Password style={styles.formInput} placeholder="Password" />
+          <Input.Password
+            prefix={<LockOutlined style={styles.inputIcon} />}
+            style={styles.formInput}
+            placeholder="Password"
+          />
         </Form.Item>
 
         <Form.Item wrapperCol={{ span: 24 }}>
@@ -78,4 +97,8 @@ const styles = {
   forgotPassword: {
     fontSize: "12px",
   } as CSSProperties,
+
+  inputIcon: {
+    color: "#bebebe",
+  },
 };

@@ -9,16 +9,49 @@ type LoginRequest = {
   password: string;
 };
 
-type LoginResponse = {
+type TokenResponse = {
   token: string;
 };
 
+type SingUpRequest = {
+  username: string;
+  email: string;
+  password: string;
+};
+
 export class Auth {
+  private static prefix = "/auth";
+
   static login = async (
     data: LoginRequest
-  ): Promise<FailureOrSuccess<IError, LoginResponse>> => {
+  ): Promise<FailureOrSuccess<IError, TokenResponse>> => {
     try {
-      const response = await client.post<LoginResponse>("/auth/singin", data);
+      const response = await client.post<TokenResponse>(
+        `${this.prefix}/singin`,
+        data
+      );
+      return success(response.data);
+    } catch (error) {
+      console.log(error);
+      if (axios.isAxiosError(error)) {
+        const message = error.response
+          ? error.response.data.error
+          : error.message;
+        return failure(new ApiError(message, error));
+      }
+
+      return failure(new UnexpectedError(error));
+    }
+  };
+
+  static singup = async (
+    data: SingUpRequest
+  ): Promise<FailureOrSuccess<IError, TokenResponse>> => {
+    try {
+      const response = await client.post<TokenResponse>(
+        `${this.prefix}/singup`,
+        data
+      );
       return success(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {

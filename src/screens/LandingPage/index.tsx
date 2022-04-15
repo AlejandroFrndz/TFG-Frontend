@@ -14,10 +14,9 @@ const { Title, Text } = Typography;
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [loading, setLoading] = useState(false);
+  const [blur, setBlur] = useState(false);
 
-  const onSubmit = async (values: any) => {
-    setLoading(true);
+  const handleLogin = async (values: { email: string; password: string }) => {
     const response = await API.auth.login(values);
 
     if (response.isSuccess()) {
@@ -25,26 +24,40 @@ export const LandingPage: React.FC = () => {
       API.setToken(response.value.token);
       dispatch(clearAuthError()); // Clear auth error in case there was one so we don't push people back from home screen
       navigate("/home");
+      return false;
     } else {
       message.error({
         content: response.error.message,
         style: styles.errorMessage,
       });
       console.log(response.error);
+      return true;
     }
-    setLoading(false);
+  };
+
+  const handleSingUp = async (values: {
+    username: string;
+    email: string;
+    password: string;
+  }) => {
+    const response = await API.auth.singup(values);
+
+    if (response.isSuccess()) {
+      window.localStorage.setItem("token", response.value.token);
+      API.setToken(response.value.token);
+      dispatch(clearAuthError());
+      navigate("/home");
+      return null;
+    } else {
+      console.log(response.error);
+      return response.error.message;
+    }
   };
 
   return (
-    <Layout style={{ minHeight: "100vh" }}>
-      <Content
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Row align="middle" style={{ minWidth: "100vw" }}>
+    <Layout style={styles.layout(blur)}>
+      <Content style={styles.content}>
+        <Row align="middle" style={styles.mainRow}>
           <Col span={12}>
             <Row>
               <Col span={24}>
@@ -62,9 +75,9 @@ export const LandingPage: React.FC = () => {
           <Col span={12}>
             <Center>
               <Card style={styles.card} bordered={false}>
-                <LogInForm onFinish={onSubmit} loading={loading} />
+                <LogInForm onFinish={handleLogin} />
                 <Divider />
-                <SingUp />
+                <SingUp onFinish={handleSingUp} blurBackground={setBlur} />
               </Card>
             </Center>
           </Col>
@@ -84,5 +97,22 @@ const styles = {
     borderRadius: "20px",
     width: "400px",
     transform: "scale(1.5,1.5)",
+  } as CSSProperties,
+
+  layout: (blur: boolean) => {
+    return {
+      minHeight: "100vh",
+      filter: blur ? "blur(1px)" : undefined,
+    } as CSSProperties;
+  },
+
+  content: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  } as CSSProperties,
+
+  mainRow: {
+    minWidth: "100vw",
   } as CSSProperties,
 };
