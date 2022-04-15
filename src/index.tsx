@@ -1,17 +1,26 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+//import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import "./index.css";
+import { Navigation } from "./navigation";
+import store from "./redux";
+
+const container = document.getElementById("root") as HTMLElement;
 
 ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
+  <Provider store={store}>
+    <Navigation />
+  </Provider>,
+  container
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+/*
+This is React 18 code. We'll upgrade back up when antd v5 with React 18 support is released
+const root = createRoot(container);
+root.render(
+  <Provider store={store}>
+    <Navigation />
+  </Provider>
+);
+*/
