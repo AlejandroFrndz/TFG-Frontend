@@ -2,6 +2,8 @@
   "name": "lexicon-app",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
+  "exports": "./src/index.tsx",
   "dependencies": {
     "@ant-design/icons": "^4.7.0",
     "@testing-library/jest-dom": "^5.16.3",
@@ -14,6 +16,8 @@
     "antd": "^4.19.5",
     "axios": "^0.26.1",
     "react": "^17.0.0",
+    "react-dnd": "^15.1.2",
+    "react-dnd-html5-backend": "^15.1.2",
     "react-dom": "^17.0.0",
     "react-redux": "^7.2.8",
     "react-router-dom": "^6.3.0",
