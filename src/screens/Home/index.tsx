@@ -12,6 +12,7 @@ import { Center } from "../../shared/Center";
 import { selectAuthError } from "../../redux/auth/selectors";
 import { useNavigate } from "react-router-dom";
 import { AccountContent } from "./components/AccountContent";
+import { ProjectsContent } from "./components/ProjectsContent";
 
 enum CategoriesEnum {
   "My Projects" = "My Projects",
@@ -62,7 +63,7 @@ export const Home: React.FC = () => {
     }
     switch (category) {
       case CategoriesEnum["My Projects"]:
-        return "My Projects";
+        return <ProjectsContent />;
       case CategoriesEnum["Shared With Me"]:
         return "Shared With Me";
       case CategoriesEnum.Account:
@@ -163,11 +164,13 @@ const styles = {
   } as CSSProperties,
 
   content: (loading: boolean): CSSProperties => {
-    return {
-      padding: "1vh",
-      display: "flex",
-      justifyContent: loading ? "center" : undefined,
-    };
+    return loading
+      ? {
+          padding: "1vh",
+          display: "flex",
+          justifyContent: "center",
+        }
+      : {};
   },
 
   divider: {
