@@ -5,12 +5,16 @@ import { Provider } from "react-redux";
 import "./index.css";
 import { Navigation } from "./navigation";
 import store from "./redux";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const container = document.getElementById("root") as HTMLElement;
 
 ReactDOM.render(
   <Provider store={store}>
-    <Navigation />
+    <DndProvider backend={HTML5Backend}>
+      <Navigation />
+    </DndProvider>
   </Provider>,
   container
 );
