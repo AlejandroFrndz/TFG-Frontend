@@ -1,4 +1,4 @@
-export enum DrapTypes {
+export enum DragTypes {
   FOLDER = "folder",
   FILE = "file",
 }
