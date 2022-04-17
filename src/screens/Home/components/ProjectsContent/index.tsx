@@ -9,28 +9,28 @@ export const ProjectsContent: React.FC = () => {
       style={{ width: "100%", paddingTop: "4vh", paddingLeft: "1vw" }}
     >
       <Col span={6}>
-        <Folder name="folder" />
+        <Folder name="folder" id="a" />
       </Col>
       <Col span={6}>
-        <Folder name="folder" />
+        <Folder name="folder" id="b" />
       </Col>
       <Col span={6}>
-        <Folder name="folder" />
+        <Folder name="folder" id="c" />
       </Col>
       <Col span={6}>
-        <Folder name="folder" />
+        <Folder name="folder" id="d" />
       </Col>
       <Col span={6}>
-        <Folder name="folder" />
+        <Folder name="folder" id="e" />
       </Col>
       <Col span={6}>
-        <Folder name="folder" />
+        <Folder name="folder" id="f" />
       </Col>
       <Col span={6}>
-        <Folder name="folder" />
+        <Folder name="folder" id="g" />
       </Col>
       <Col span={6}>
-        <Folder name="folder" />
+        <Folder name="folder" id="h" />
       </Col>
     </Row>
   );
