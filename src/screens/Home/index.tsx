@@ -56,9 +56,13 @@ export const Home: React.FC = () => {
   const handleContent = () => {
     if (loading) {
       return (
-        <Center>
-          <PulseLoader />
-        </Center>
+        <Content
+          style={{ ...styles.whiteBackground, ...styles.content(loading) }}
+        >
+          <Center>
+            <PulseLoader />
+          </Center>
+        </Content>
       );
     }
     switch (category) {
@@ -115,15 +119,7 @@ export const Home: React.FC = () => {
           </Menu.Item>
         </Menu>
       </Sider>
-      <Layout style={styles.secondaryLayout}>
-        <Header style={styles.whiteBackground}>{category}</Header>
-        <Divider style={styles.divider} />
-        <Content
-          style={{ ...styles.whiteBackground, ...styles.content(loading) }}
-        >
-          {handleContent()}
-        </Content>
-      </Layout>
+      <Layout style={styles.secondaryLayout}>{handleContent()}</Layout>
     </Layout>
   );
 };

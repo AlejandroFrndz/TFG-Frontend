@@ -9,17 +9,29 @@ import { getEmptyImage } from "react-dnd-html5-backend";
 type FolderProps = {
   name: string;
   id: string;
+  selected: boolean;
+  setSelectedFolder: (folderId: string) => void;
 };
 
 const { Text } = Typography;
 
-export const Folder: React.FC<FolderProps> = ({ name, id }) => {
+export const Folder: React.FC<FolderProps> = ({
+  name,
+  id,
+  selected,
+  setSelectedFolder,
+}) => {
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     item: { name, id },
     type: DragTypes.FOLDER,
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
+    end: (item, monitor) => {
+      if (!monitor.didDrop()) {
+        setSelectedFolder(item.id);
+      }
+    },
   }));
 
   const [{ isOver }, drop] = useDrop(() => ({
@@ -40,7 +52,7 @@ export const Folder: React.FC<FolderProps> = ({ name, id }) => {
       <CustomDragLayer />
       <div ref={drop}>
         <div ref={drag}>
-          <Card style={styles.card(isDragging, isOver)}>
+          <Card style={styles.card(isDragging, isOver, selected)}>
             <FolderFilled style={styles.icon} />
             <Text style={styles.text}>{name}</Text>
           </Card>
@@ -51,7 +63,11 @@ export const Folder: React.FC<FolderProps> = ({ name, id }) => {
 };
 
 export const styles = {
-  card: (isDragging: boolean, isOver: boolean): CSSProperties => {
+  card: (
+    isDragging: boolean,
+    isOver: boolean,
+    selected: boolean
+  ): CSSProperties => {
     const overStyles: CSSProperties =
       isOver && !isDragging
         ? {
@@ -60,10 +76,14 @@ export const styles = {
           }
         : {};
 
+    const selectedStyles: CSSProperties =
+      selected && !isDragging ? { backgroundColor: "#e8f0fe" } : {};
+
     return {
       borderRadius: "8px",
       opacity: isDragging ? 0.5 : 1,
       ...overStyles,
+      ...selectedStyles,
     };
   },
 

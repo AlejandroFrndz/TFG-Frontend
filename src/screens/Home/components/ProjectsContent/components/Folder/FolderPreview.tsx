@@ -13,7 +13,7 @@ export const FolderPreview: React.FC<FolderPreviewProps> = ({ name }) => {
   return (
     <Card
       style={{
-        ...originalStyles.card(false, false),
+        ...originalStyles.card(false, false, false),
         ...previewStyle,
       }}
     >
