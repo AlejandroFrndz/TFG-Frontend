@@ -2,8 +2,8 @@ import { FolderFilled } from "@ant-design/icons";
 import { Card, Typography } from "antd";
 import React, { CSSProperties, useEffect } from "react";
 import { useDrag } from "react-dnd";
-import { DragTypes } from "../../../../../../utils/constants";
-import { CustomDragLayer } from "../CustomDragLayer";
+import { DragTypes } from "src/utils/constants";
+import { CustomDragLayer } from "src/screens/Home/components/ProjectsContent/components/CustomDragLayer";
 import { getEmptyImage } from "react-dnd-html5-backend";
 
 type FolderProps = {

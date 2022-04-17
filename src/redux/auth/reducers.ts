@@ -1,4 +1,4 @@
-import { User } from "../../utils/api/resources/user";
+import { User } from "src/utils/api/resources/user";
 import {
   AuthActions,
   CLEAR_AUTH,
@@ -6,7 +6,7 @@ import {
   SET_AUTH_ERROR,
   UPDATE_USER,
   CLEAR_AUTH_ERROR,
-} from "./actions";
+} from "src/redux/auth/actions";
 
 type AuthState = {
   user: User | {};

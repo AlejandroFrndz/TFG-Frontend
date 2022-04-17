@@ -1,6 +1,6 @@
 import { FolderFilled } from "@ant-design/icons";
 import { Card, Typography } from "antd";
-import { styles as originalStyles } from ".";
+import { styles as originalStyles } from "src/screens/Home/components/ProjectsContent/components/Folder";
 
 type FolderPreviewProps = {
   name: string;

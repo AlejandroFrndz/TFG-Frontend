@@ -1,6 +1,6 @@
 import { Col, Row } from "antd";
 import React from "react";
-import { Folder } from "./components/Folder";
+import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
 
 export const ProjectsContent: React.FC = () => {
   return (

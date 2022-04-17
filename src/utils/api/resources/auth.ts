@@ -1,8 +1,12 @@
 import axios from "axios";
-import client from "../axios";
-import { ApiError, UnexpectedError } from "../logic/errors";
-import { IError } from "../logic/errors/IError";
-import { failure, FailureOrSuccess, success } from "../logic/FailureOrSuccess";
+import client from "src/utils/api/axios";
+import { ApiError, UnexpectedError } from "src/utils/api/logic/errors";
+import { IError } from "src/utils/api/logic/errors/IError";
+import {
+  failure,
+  FailureOrSuccess,
+  success,
+} from "src/utils/api/logic/FailureOrSuccess";
 
 type LoginRequest = {
   email: string;

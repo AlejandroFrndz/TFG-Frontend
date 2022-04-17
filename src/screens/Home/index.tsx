@@ -6,13 +6,13 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { clearAuthError, fetchMe } from "../../redux/auth/actions";
+import { clearAuthError, fetchMe } from "src/redux/auth/actions";
 import { PulseLoader } from "react-spinners";
-import { Center } from "../../shared/Center";
-import { selectAuthError } from "../../redux/auth/selectors";
+import { Center } from "src/shared/Center";
+import { selectAuthError } from "src/redux/auth/selectors";
 import { useNavigate } from "react-router-dom";
-import { AccountContent } from "./components/AccountContent";
-import { ProjectsContent } from "./components/ProjectsContent";
+import { AccountContent } from "src/screens/Home/components/AccountContent";
+import { ProjectsContent } from "src/screens/Home/components/ProjectsContent";
 
 enum CategoriesEnum {
   "My Projects" = "My Projects",

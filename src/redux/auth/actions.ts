@@ -1,6 +1,6 @@
 import { ThunkDispatch } from "redux-thunk";
-import API from "../../utils/api";
-import { IUser } from "../../utils/api/resources/user";
+import API from "src/utils/api";
+import { IUser } from "src/utils/api/resources/user";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
