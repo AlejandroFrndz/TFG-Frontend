@@ -1,4 +1,4 @@
-import { Col, Divider, Layout, Row, Typography, Breadcrumb } from "antd";
+import { Col, Divider, Layout, Row, Breadcrumb } from "antd";
 import React, { useEffect, useState } from "react";
 import { CSSProperties } from "react";
 import { useSelector } from "react-redux";
@@ -11,7 +11,6 @@ type ActiveFolderStruct = {
   name: string;
 };
 
-const { Text } = Typography;
 const { Content, Header } = Layout;
 
 export const ProjectsContent: React.FC = () => {
