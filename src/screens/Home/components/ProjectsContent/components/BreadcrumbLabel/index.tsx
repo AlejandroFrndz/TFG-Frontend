@@ -1,4 +1,4 @@
-import { Breadcrumb, Typography } from "antd";
+import { Typography } from "antd";
 import { CSSProperties } from "react";
 import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
@@ -40,7 +40,9 @@ export const BreadcrumbLabel: React.FC<BreadcrumbLabelProps> = ({
       ref={drop}
       style={styles.drop(isOver)}
     >
-      <Text style={styles.text}>{name}</Text>
+      <Text ellipsis style={styles.text}>
+        {name}
+      </Text>
     </span>
   );
 };

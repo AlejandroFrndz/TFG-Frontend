@@ -1,4 +1,4 @@
-import { Col, Divider, Layout, Row, Breadcrumb, Typography } from "antd";
+import { Col, Divider, Layout, Row, Breadcrumb } from "antd";
 import React, { useEffect, useState } from "react";
 import { CSSProperties } from "react";
 import { useSelector } from "react-redux";
@@ -6,6 +6,7 @@ import { selectFolders } from "src/redux/auth/selectors";
 import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
 import { IFolder } from "src/utils/api/resources/folder";
 import { BreadcrumbLabel } from "./components/BreadcrumbLabel";
+import "./scrollbar.css";
 
 type ActiveFolderStruct = {
   id: string;
@@ -13,8 +14,6 @@ type ActiveFolderStruct = {
 };
 
 const { Content, Header } = Layout;
-
-const { Text } = Typography;
 
 export const ProjectsContent: React.FC = () => {
   const [activeFolders, setActiveFolders] = useState<ActiveFolderStruct[]>([]);
@@ -135,6 +134,8 @@ const styles = {
   header: {
     display: "flex",
     alignItems: "center",
+    overflowX: "auto",
+    overflowY: "hidden",
   } as CSSProperties,
 
   divider: {
