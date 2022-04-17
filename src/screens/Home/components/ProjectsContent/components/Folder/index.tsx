@@ -5,6 +5,8 @@ import { useDrag, useDrop } from "react-dnd";
 import { DragTypes } from "src/utils/constants";
 import { CustomDragLayer } from "src/screens/Home/components/ProjectsContent/components/CustomDragLayer";
 import { getEmptyImage } from "react-dnd-html5-backend";
+import { useDispatch } from "react-redux";
+import { updateFolderParent } from "src/redux/auth/actions";
 
 type FolderProps = {
   name: string;
@@ -21,6 +23,8 @@ export const Folder: React.FC<FolderProps> = ({
   selected,
   setSelectedFolder,
 }) => {
+  const dispatch = useDispatch();
+
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     item: { name, id },
     type: DragTypes.FOLDER,
@@ -36,7 +40,9 @@ export const Folder: React.FC<FolderProps> = ({
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: [DragTypes.FOLDER, DragTypes.FILE],
-    drop: () => console.log("drop"),
+    drop: (item: any, monitor) => {
+      dispatch(updateFolderParent(item.id, id));
+    },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),

@@ -1,4 +1,4 @@
-import { Col, Divider, Layout, Row, Breadcrumb } from "antd";
+import { Col, Divider, Layout, Row, Breadcrumb, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { CSSProperties } from "react";
 import { useSelector } from "react-redux";
@@ -13,9 +13,11 @@ type ActiveFolderStruct = {
 
 const { Content, Header } = Layout;
 
+const { Text } = Typography;
+
 export const ProjectsContent: React.FC = () => {
   const [activeFolders, setActiveFolders] = useState<ActiveFolderStruct[]>([]);
-  const [folders] = useState<IFolder[]>(useSelector(selectFolders));
+  const folders = useSelector(selectFolders);
   const [displayFolders, setDisplayFolders] = useState<IFolder[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
 
@@ -46,7 +48,7 @@ export const ProjectsContent: React.FC = () => {
   const renderHeader = () => {
     const fixedHeader = (
       <Breadcrumb.Item onClick={() => clampActiveFolders(0)} key="null">
-        My Projects
+        <Text style={styles.breadcrumbText}>My Projects</Text>
       </Breadcrumb.Item>
     );
     const dynamicHeader = activeFolders.map((folderStruct, indx) => (
@@ -54,7 +56,7 @@ export const ProjectsContent: React.FC = () => {
         onClick={() => clampActiveFolders(indx + 1)}
         key={folderStruct.id}
       >
-        {folderStruct.name}
+        <Text style={styles.breadcrumbText}>{folderStruct.name}</Text>
       </Breadcrumb.Item>
     ));
 
@@ -92,7 +94,7 @@ export const ProjectsContent: React.FC = () => {
                 }
                 onClick={(event) => {
                   setSelectedFolder(folder.id);
-                  event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content />
+                  event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
                 }}
                 key={folder.id}
               >
@@ -135,5 +137,9 @@ const styles = {
 
   breadcrumbItem: {
     cursor: "pointer",
+  } as CSSProperties,
+
+  breadcrumbText: {
+    fontSize: "20px",
   } as CSSProperties,
 };

@@ -6,6 +6,7 @@ import { IUser } from "src/utils/api/resources/user";
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
 export const SET_FOLDERS = "SET_FOLDERS";
+export const UPDATE_FOLDER = "UPDATE_FOLDER";
 export const CLEAR_AUTH = "CLEAR_AUTH";
 export const SET_AUTH_ERROR = "SET_AUTH_ERROR";
 export const CLEAR_AUTH_ERROR = "CLEAR_AUTH_ERROR";
@@ -13,6 +14,7 @@ export const CLEAR_AUTH_ERROR = "CLEAR_AUTH_ERROR";
 export type ISET_USER = "SET_USER";
 export type IUPDATE_USER = "UPDATE_USER";
 export type ISET_FOLDERS = "SET_FOLDERS";
+export type IUPDATE_FOLDER = "UPDATE_FOLDER";
 export type ICLEAR_AUTH = "CLEAR_AUTH";
 export type ISET_AUTH_ERROR = "SET_AUTH_ERROR";
 export type ICLEAR_AUTH_ERROR = "CLEAR_AUTH_ERROR";
@@ -44,6 +46,15 @@ export const setFolders = (folders: IFolder[]): SetFolders => {
   return { type: SET_FOLDERS, folders };
 };
 
+export type UpdateFolder = {
+  type: IUPDATE_FOLDER;
+  folder: IFolder;
+};
+
+export const updateFolder = (folder: IFolder): UpdateFolder => {
+  return { type: UPDATE_FOLDER, folder };
+};
+
 export type ClearAuth = {
   type: ICLEAR_AUTH;
 };
@@ -72,6 +83,7 @@ export type AuthActions =
   | SetUser
   | UpdateUser
   | SetFolders
+  | UpdateFolder
   | ClearAuth
   | SetAuthError
   | ClearAuthError;
@@ -94,3 +106,13 @@ export const logOut = () => async (dispatch: ThunkDispatch<any, any, any>) => {
   localStorage.removeItem("token");
   dispatch(clearAuth());
 };
+
+export const updateFolderParent =
+  (childId: string, parentId: string | null) =>
+  async (dispatch: ThunkDispatch<any, any, any>) => {
+    const folderResponse = await API.folder.updateParent(childId, parentId);
+
+    if (folderResponse.isSuccess()) {
+      dispatch(updateFolder(folderResponse.value.folder));
+    }
+  };

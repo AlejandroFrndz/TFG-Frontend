@@ -7,6 +7,7 @@ import {
   UPDATE_USER,
   CLEAR_AUTH_ERROR,
   SET_FOLDERS,
+  UPDATE_FOLDER,
 } from "src/redux/auth/actions";
 import { IFolder } from "src/utils/api/resources/folder";
 
@@ -38,6 +39,17 @@ const reducer = (state: AuthState = INITIAL_STATE, action: AuthActions) => {
       return {
         ...state,
         folders: action.folders,
+      };
+    case UPDATE_FOLDER:
+      return {
+        ...state,
+        folders: state.folders.map((folder) => {
+          if (folder.id === action.folder.id) {
+            return action.folder;
+          } else {
+            return folder;
+          }
+        }),
       };
     case CLEAR_AUTH:
       return INITIAL_STATE;
