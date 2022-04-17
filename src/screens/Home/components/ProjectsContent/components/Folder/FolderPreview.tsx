@@ -18,7 +18,9 @@ export const FolderPreview: React.FC<FolderPreviewProps> = ({ name }) => {
       }}
     >
       <FolderFilled style={originalStyles.icon} />
-      <Text style={originalStyles.text}>{name}</Text>
+      <Text ellipsis style={originalStyles.text}>
+        {name}
+      </Text>
     </Card>
   );
 };

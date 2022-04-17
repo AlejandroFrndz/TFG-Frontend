@@ -59,21 +59,20 @@ export const ProjectsContent: React.FC = () => {
     );
 
     const dynamicHeader = activeFolders.map((folderStruct, indx) => (
-      <BreadcrumbLabel
-        clampActiveFolders={clampActiveFolders}
-        index={indx + 1}
-        lastIndex={activeFolders.length}
-        name={folderStruct.name}
-        id={folderStruct.id}
-        key={folderStruct.id}
-      />
+      <>
+        <Breadcrumb.Separator>&gt;</Breadcrumb.Separator>
+        <BreadcrumbLabel
+          clampActiveFolders={clampActiveFolders}
+          index={indx + 1}
+          lastIndex={activeFolders.length}
+          name={folderStruct.name}
+          id={folderStruct.id}
+          key={folderStruct.id}
+        />
+      </>
     ));
 
-    return (
-      <Breadcrumb separator=">" style={styles.breadcrumb}>
-        {[fixedHeader, ...dynamicHeader]}
-      </Breadcrumb>
-    );
+    return [fixedHeader, ...dynamicHeader];
   };
 
   const handleSelectFolderAfterDrag = (folderId: string) => {
@@ -142,9 +141,5 @@ const styles = {
     marginTop: "0px",
     marginBottom: "0px",
     backgroundColor: "lightgrey",
-  } as CSSProperties,
-
-  breadcrumb: {
-    cursor: "pointer",
   } as CSSProperties,
 };

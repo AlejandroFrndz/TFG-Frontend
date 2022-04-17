@@ -60,7 +60,9 @@ export const Folder: React.FC<FolderProps> = ({
         <div ref={drag}>
           <Card style={styles.card(isDragging, isOver, selected)}>
             <FolderFilled style={styles.icon} />
-            <Text style={styles.text}>{name}</Text>
+            <Text ellipsis style={styles.text}>
+              {name}
+            </Text>
           </Card>
         </div>
       </div>
@@ -102,5 +104,6 @@ export const styles = {
 
   text: {
     verticalAlign: "middle",
+    maxWidth: "73%",
   } as CSSProperties,
 };

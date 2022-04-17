@@ -35,10 +35,12 @@ export const BreadcrumbLabel: React.FC<BreadcrumbLabelProps> = ({
   }));
 
   return (
-    <span ref={drop} style={styles.drop(isOver)}>
-      <Breadcrumb.Item onClick={() => clampActiveFolders(index)}>
-        <Text style={styles.text}>{name}</Text>
-      </Breadcrumb.Item>
+    <span
+      onClick={() => clampActiveFolders(index)}
+      ref={drop}
+      style={styles.drop(isOver)}
+    >
+      <Text style={styles.text}>{name}</Text>
     </span>
   );
 };
@@ -49,9 +51,12 @@ const styles = {
   } as CSSProperties,
 
   drop: (isOver: boolean): CSSProperties => ({
-    backgroundColor: isOver ? "gray" : undefined,
-    padding: "10px",
-    margin: "5px",
+    backgroundColor: isOver ? "#f1f3f4" : undefined,
+    padding: "5px",
     borderRadius: "10px",
+    cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
+    height: "80%",
   }),
 };
