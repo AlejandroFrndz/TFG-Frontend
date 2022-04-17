@@ -7,6 +7,7 @@ import {
 import client from "src/utils/api/axios";
 import axios from "axios";
 import { ApiError, UnexpectedError } from "src/utils/api/logic/errors";
+import { IFolder } from "./folder";
 
 export type IUser = {
   id: string;
@@ -18,6 +19,7 @@ export type IUser = {
 
 type MeResponse = {
   user: IUser;
+  folders: IFolder[];
 };
 
 export class User {

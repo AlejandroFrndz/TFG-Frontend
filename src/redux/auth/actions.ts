@@ -1,15 +1,18 @@
 import { ThunkDispatch } from "redux-thunk";
 import API from "src/utils/api";
+import { IFolder } from "src/utils/api/resources/folder";
 import { IUser } from "src/utils/api/resources/user";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
+export const SET_FOLDERS = "SET_FOLDERS";
 export const CLEAR_AUTH = "CLEAR_AUTH";
 export const SET_AUTH_ERROR = "SET_AUTH_ERROR";
 export const CLEAR_AUTH_ERROR = "CLEAR_AUTH_ERROR";
 
 export type ISET_USER = "SET_USER";
 export type IUPDATE_USER = "UPDATE_USER";
+export type ISET_FOLDERS = "SET_FOLDERS";
 export type ICLEAR_AUTH = "CLEAR_AUTH";
 export type ISET_AUTH_ERROR = "SET_AUTH_ERROR";
 export type ICLEAR_AUTH_ERROR = "CLEAR_AUTH_ERROR";
@@ -30,6 +33,15 @@ export type UpdateUser = {
 
 export const updateUser = (user: IUser): UpdateUser => {
   return { type: UPDATE_USER, user };
+};
+
+export type SetFolders = {
+  type: ISET_FOLDERS;
+  folders: IFolder[];
+};
+
+export const setFolders = (folders: IFolder[]): SetFolders => {
+  return { type: SET_FOLDERS, folders };
 };
 
 export type ClearAuth = {
@@ -59,6 +71,7 @@ export const clearAuthError = (): ClearAuthError => {
 export type AuthActions =
   | SetUser
   | UpdateUser
+  | SetFolders
   | ClearAuth
   | SetAuthError
   | ClearAuthError;
@@ -72,6 +85,7 @@ export const fetchMe = () => async (dispatch: ThunkDispatch<any, any, any>) => {
   }
 
   dispatch(setUser(meResponse.value.user));
+  dispatch(setFolders(meResponse.value.folders));
   dispatch(clearAuthError());
 };
 

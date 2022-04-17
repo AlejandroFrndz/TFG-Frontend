@@ -1,4 +1,4 @@
-import { User } from "src/utils/api/resources/user";
+import { IUser } from "src/utils/api/resources/user";
 import {
   AuthActions,
   CLEAR_AUTH,
@@ -6,15 +6,19 @@ import {
   SET_AUTH_ERROR,
   UPDATE_USER,
   CLEAR_AUTH_ERROR,
+  SET_FOLDERS,
 } from "src/redux/auth/actions";
+import { IFolder } from "src/utils/api/resources/folder";
 
 type AuthState = {
-  user: User | {};
+  user: IUser | {};
+  folders: IFolder[];
   error: boolean;
 };
 
 const INITIAL_STATE = {
   user: {},
+  folders: [],
   error: false,
 };
 
@@ -29,6 +33,11 @@ const reducer = (state: AuthState = INITIAL_STATE, action: AuthActions) => {
       return {
         ...state,
         user: action.user,
+      };
+    case SET_FOLDERS:
+      return {
+        ...state,
+        folders: action.folders,
       };
     case CLEAR_AUTH:
       return INITIAL_STATE;
