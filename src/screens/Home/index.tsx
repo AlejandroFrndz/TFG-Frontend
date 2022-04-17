@@ -1,5 +1,5 @@
 import React, { CSSProperties, useEffect, useState } from "react";
-import { Divider, Layout, Menu } from "antd";
+import { Layout, Menu } from "antd";
 import {
   PartitionOutlined,
   ProjectOutlined,
@@ -24,7 +24,7 @@ type CategoriesType = "My Projects" | "Shared With Me" | "Account";
 
 const COLLAPSED_WIDTH = "7vw";
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 export const Home: React.FC = () => {
   const dispatch = useDispatch();

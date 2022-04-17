@@ -46,7 +46,7 @@ export const Folder: React.FC<FolderProps> = ({
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
-    canDrop: (item, monitor) => (item as any).id !== id, // Avoid dropping the folder onto itself
+    canDrop: (item: any, monitor) => item.id !== id, // Avoid dropping the folder onto itself
   }));
 
   useEffect(() => {

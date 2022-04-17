@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { selectFolders } from "src/redux/auth/selectors";
 import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
 import { IFolder } from "src/utils/api/resources/folder";
+import { BreadcrumbLabel } from "./components/BreadcrumbLabel";
 
 type ActiveFolderStruct = {
   id: string;
@@ -47,21 +48,29 @@ export const ProjectsContent: React.FC = () => {
 
   const renderHeader = () => {
     const fixedHeader = (
-      <Breadcrumb.Item onClick={() => clampActiveFolders(0)} key="null">
-        <Text style={styles.breadcrumbText}>My Projects</Text>
-      </Breadcrumb.Item>
+      <BreadcrumbLabel
+        clampActiveFolders={clampActiveFolders}
+        index={0}
+        lastIndex={activeFolders.length}
+        name="My Projects"
+        id={null}
+        key="null"
+      />
     );
+
     const dynamicHeader = activeFolders.map((folderStruct, indx) => (
-      <Breadcrumb.Item
-        onClick={() => clampActiveFolders(indx + 1)}
+      <BreadcrumbLabel
+        clampActiveFolders={clampActiveFolders}
+        index={indx + 1}
+        lastIndex={activeFolders.length}
+        name={folderStruct.name}
+        id={folderStruct.id}
         key={folderStruct.id}
-      >
-        <Text style={styles.breadcrumbText}>{folderStruct.name}</Text>
-      </Breadcrumb.Item>
+      />
     ));
 
     return (
-      <Breadcrumb separator=">" style={styles.breadcrumbItem}>
+      <Breadcrumb separator=">" style={styles.breadcrumb}>
         {[fixedHeader, ...dynamicHeader]}
       </Breadcrumb>
     );
@@ -135,11 +144,7 @@ const styles = {
     backgroundColor: "lightgrey",
   } as CSSProperties,
 
-  breadcrumbItem: {
+  breadcrumb: {
     cursor: "pointer",
-  } as CSSProperties,
-
-  breadcrumbText: {
-    fontSize: "20px",
   } as CSSProperties,
 };
