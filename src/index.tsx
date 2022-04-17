@@ -2,15 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom";
 //import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import "./index.css";
-import { Navigation } from "./navigation";
-import store from "./redux";
+import "src/index.css";
+import { Navigation } from "src/navigation";
+import store from "src/redux";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
 const container = document.getElementById("root") as HTMLElement;
 
 ReactDOM.render(
   <Provider store={store}>
-    <Navigation />
+    <DndProvider backend={HTML5Backend}>
+      <Navigation />
+    </DndProvider>
   </Provider>,
   container
 );

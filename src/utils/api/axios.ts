@@ -1,5 +1,5 @@
 import axios from "axios";
-import config from "../../config";
+import config from "src/config";
 
 const PREFIX = "/api/v1";
 

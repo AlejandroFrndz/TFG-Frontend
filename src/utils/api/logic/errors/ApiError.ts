@@ -1,4 +1,4 @@
-import { IError } from "./IError";
+import { IError } from "src/utils/api/logic/errors/IError";
 
 export class ApiError implements IError {
   public readonly type = "ApiError";

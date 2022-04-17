@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Home } from "../screens/Home";
-import { LandingPage } from "../screens/LandingPage";
-import { WIP } from "../screens/WIP";
+import { Home } from "src/screens/Home";
+import { LandingPage } from "src/screens/LandingPage";
+import { WIP } from "src/screens/WIP";
 
 export const Navigation: React.FC = () => {
   return (

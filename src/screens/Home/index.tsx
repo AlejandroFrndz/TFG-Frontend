@@ -1,17 +1,18 @@
 import React, { CSSProperties, useEffect, useState } from "react";
-import { Divider, Layout, Menu } from "antd";
+import { Layout, Menu } from "antd";
 import {
   PartitionOutlined,
   ProjectOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
-import { clearAuthError, fetchMe } from "../../redux/auth/actions";
+import { clearAuthError, fetchMe } from "src/redux/auth/actions";
 import { PulseLoader } from "react-spinners";
-import { Center } from "../../shared/Center";
-import { selectAuthError } from "../../redux/auth/selectors";
+import { Center } from "src/shared/Center";
+import { selectAuthError } from "src/redux/auth/selectors";
 import { useNavigate } from "react-router-dom";
-import { AccountContent } from "./components/AccountContent";
+import { AccountContent } from "src/screens/Home/components/AccountContent";
+import { ProjectsContent } from "src/screens/Home/components/ProjectsContent";
 
 enum CategoriesEnum {
   "My Projects" = "My Projects",
@@ -23,7 +24,7 @@ type CategoriesType = "My Projects" | "Shared With Me" | "Account";
 
 const COLLAPSED_WIDTH = "7vw";
 
-const { Header, Content, Sider } = Layout;
+const { Content, Sider } = Layout;
 
 export const Home: React.FC = () => {
   const dispatch = useDispatch();
@@ -55,14 +56,18 @@ export const Home: React.FC = () => {
   const handleContent = () => {
     if (loading) {
       return (
-        <Center>
-          <PulseLoader />
-        </Center>
+        <Content
+          style={{ ...styles.whiteBackground, ...styles.content(loading) }}
+        >
+          <Center>
+            <PulseLoader />
+          </Center>
+        </Content>
       );
     }
     switch (category) {
       case CategoriesEnum["My Projects"]:
-        return "My Projects";
+        return <ProjectsContent />;
       case CategoriesEnum["Shared With Me"]:
         return "Shared With Me";
       case CategoriesEnum.Account:
@@ -114,15 +119,7 @@ export const Home: React.FC = () => {
           </Menu.Item>
         </Menu>
       </Sider>
-      <Layout style={styles.secondaryLayout}>
-        <Header style={styles.whiteBackground}>{category}</Header>
-        <Divider style={styles.divider} />
-        <Content
-          style={{ ...styles.whiteBackground, ...styles.content(loading) }}
-        >
-          {handleContent()}
-        </Content>
-      </Layout>
+      <Layout style={styles.secondaryLayout}>{handleContent()}</Layout>
     </Layout>
   );
 };
@@ -163,11 +160,13 @@ const styles = {
   } as CSSProperties,
 
   content: (loading: boolean): CSSProperties => {
-    return {
-      padding: "1vh",
-      display: "flex",
-      justifyContent: loading ? "center" : undefined,
-    };
+    return loading
+      ? {
+          padding: "1vh",
+          display: "flex",
+          justifyContent: "center",
+        }
+      : {};
   },
 
   divider: {

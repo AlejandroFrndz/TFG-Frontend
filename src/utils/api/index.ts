@@ -1,6 +1,7 @@
-import instance from "./axios";
-import { Auth } from "./resources/auth";
-import { User } from "./resources/user";
+import instance from "src/utils/api/axios";
+import { Auth } from "src/utils/api/resources/auth";
+import { User } from "src/utils/api/resources/user";
+import { Folder } from "src/utils/api/resources/folder";
 
 export default class API {
   static setToken(token: string): void {
@@ -13,4 +14,5 @@ export default class API {
 
   static auth = Auth;
   static user = User;
+  static folder = Folder;
 }

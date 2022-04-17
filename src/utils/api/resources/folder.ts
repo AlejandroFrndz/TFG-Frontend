@@ -7,25 +7,28 @@ import {
 import client from "src/utils/api/axios";
 import axios from "axios";
 import { ApiError, UnexpectedError } from "src/utils/api/logic/errors";
-import { IFolder } from "./folder";
 
-export type IUser = {
+export type IFolder = {
   id: string;
-  username: string;
-  email: string;
-  isEmailVerfied: boolean;
-  isAdmin: boolean;
+  name: string;
+  owner: string;
+  parent: string | null;
 };
 
-type MeResponse = {
-  user: IUser;
-  folders: IFolder[];
+type FolderResponse = {
+  folder: IFolder;
 };
-
-export class User {
-  static me = async (): Promise<FailureOrSuccess<IError, MeResponse>> => {
+export class Folder {
+  static updateParent = async (
+    childId: string,
+    parentId: string | null
+  ): Promise<FailureOrSuccess<IError, FolderResponse>> => {
     try {
-      const response = await client.get<MeResponse>("/user/me");
+      const response = await client.post<FolderResponse>(
+        `/folder/${childId}/updateParent`,
+        { newParentId: parentId }
+      );
+
       return success(response.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {

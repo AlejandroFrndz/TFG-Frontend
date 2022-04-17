@@ -1,12 +1,12 @@
 import React, { CSSProperties, useState } from "react";
 import { Row, Col, Typography, Layout, message, Card, Divider } from "antd";
-import { Center } from "../../shared/Center";
-import { LogInForm } from "./components/LogIn/LogInForm";
-import API from "../../utils/api";
+import { Center } from "src/shared/Center";
+import { LogInForm } from "src/screens/LandingPage/components/LogInForm";
+import API from "src/utils/api";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { clearAuthError } from "../../redux/auth/actions";
-import { SingUp } from "./components/SingUp/SingUp";
+import { clearAuthError } from "src/redux/auth/actions";
+import { SingUp } from "src/screens/LandingPage/components/SingUp";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;

@@ -1,6 +1,6 @@
 import { Col, Row } from "antd";
 import React, { CSSProperties } from "react";
-import { Center } from "../../shared/Center";
+import { Center } from "src/shared/Center";
 
 export const WIP: React.FC = () => {
   return (
