@@ -87,9 +87,12 @@ export const ProjectsContent: React.FC = () => {
     setSelectedFolder(folderId);
   };
 
-  // This would better live as a separate component but for some reason Antd doesn't like it that way and styles get messed up
-  const contextualMenu = (
-    <Menu style={styles.contextualMenu}>
+  // These would better live as a separate component but for some reason Antd doesn't like it that way and styles get messed up
+  const generalContextualMenu = (
+    <Menu
+      style={styles.contextualMenu}
+      onClick={() => console.log("Clicked general context")}
+    >
       <Menu.Item key="1">
         <FolderAddOutlined style={styles.contextualMenuIcon} />
         <Text style={styles.contextualMenuText}>New Folder</Text>
@@ -97,13 +100,27 @@ export const ProjectsContent: React.FC = () => {
     </Menu>
   );
 
+  const folderContextualMenu = (id: string) => {
+    return (
+      <Menu style={styles.contextualMenu}>
+        <Menu.Item
+          key={id}
+          onClick={() => console.log(`Clicked folder context for folder ${id}`)}
+        >
+          <FolderAddOutlined style={styles.contextualMenuIcon} />
+          <Text style={styles.contextualMenuText}>Arrrg</Text>
+        </Menu.Item>
+      </Menu>
+    );
+  };
+
   return (
     <>
       <Header style={{ ...styles.whiteBackground, ...styles.header }}>
         {renderHeader()}
       </Header>
       <Divider style={styles.divider} />
-      <Dropdown overlay={contextualMenu} trigger={["contextMenu"]}>
+      <Dropdown overlay={generalContextualMenu} trigger={["contextMenu"]}>
         <Content
           style={styles.whiteBackground}
           onClick={() => setSelectedFolder(null)}
@@ -111,27 +128,32 @@ export const ProjectsContent: React.FC = () => {
           <Row gutter={[16, 24]} style={styles.mainRow}>
             {displayFolders.map((folder) => {
               return (
-                <Col
-                  span={6}
-                  onDoubleClick={() =>
-                    setActiveFolders([
-                      ...activeFolders,
-                      { id: folder.id, name: folder.name },
-                    ])
-                  }
-                  onClick={(event) => {
-                    setSelectedFolder(folder.id);
-                    event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
-                  }}
+                <Dropdown
+                  overlay={folderContextualMenu(folder.id)}
+                  trigger={["contextMenu"]}
                   key={folder.id}
                 >
-                  <Folder
-                    name={folder.name}
-                    id={folder.id}
-                    selected={selectedFolder === folder.id}
-                    setSelectedFolder={handleSelectFolderAfterDrag}
-                  />
-                </Col>
+                  <Col
+                    span={6}
+                    onDoubleClick={() =>
+                      setActiveFolders([
+                        ...activeFolders,
+                        { id: folder.id, name: folder.name },
+                      ])
+                    }
+                    onClick={(event) => {
+                      setSelectedFolder(folder.id);
+                      event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
+                    }}
+                  >
+                    <Folder
+                      name={folder.name}
+                      id={folder.id}
+                      selected={selectedFolder === folder.id}
+                      setSelectedFolder={handleSelectFolderAfterDrag}
+                    />
+                  </Col>
+                </Dropdown>
               );
             })}
           </Row>
