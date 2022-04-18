@@ -9,7 +9,6 @@ const { Text } = Typography;
 
 type BreadcrumbLabelProps = {
   index: number;
-  lastIndex: number;
   name: string;
   id: string | null;
   clampActiveFolders: (lenght: number) => void;
@@ -17,7 +16,6 @@ type BreadcrumbLabelProps = {
 
 export const BreadcrumbLabel: React.FC<BreadcrumbLabelProps> = ({
   index,
-  lastIndex,
   name,
   id,
   clampActiveFolders,
@@ -27,7 +25,7 @@ export const BreadcrumbLabel: React.FC<BreadcrumbLabelProps> = ({
   const [{ isOver }, drop] = useDrop(() => ({
     accept: [DragTypes.FOLDER, DragTypes.FILE],
     drop: (item: any, monitor) => {
-      if (index !== lastIndex) dispatch(updateFolderParent(item.id, id));
+      dispatch(updateFolderParent(item.id, id));
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),

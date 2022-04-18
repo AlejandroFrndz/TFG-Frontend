@@ -50,7 +50,6 @@ export const ProjectsContent: React.FC = () => {
       <BreadcrumbLabel
         clampActiveFolders={clampActiveFolders}
         index={0}
-        lastIndex={activeFolders.length}
         name="My Projects"
         id={null}
         key="null"
@@ -63,7 +62,6 @@ export const ProjectsContent: React.FC = () => {
         <BreadcrumbLabel
           clampActiveFolders={clampActiveFolders}
           index={indx + 1}
-          lastIndex={activeFolders.length}
           name={folderStruct.name}
           id={folderStruct.id}
           key={folderStruct.id}
