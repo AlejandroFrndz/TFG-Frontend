@@ -44,13 +44,29 @@ const reducer = (state: AuthState = INITIAL_STATE, action: AuthActions) => {
     case UPDATE_FOLDER:
       return {
         ...state,
-        folders: state.folders.map((folder) => {
-          if (folder.id === action.folder.id) {
-            return action.folder;
-          } else {
-            return folder;
-          }
-        }),
+        folders: (() => {
+          let sortFlag = false;
+          const folders = state.folders.map((folder) => {
+            if (folder.id === action.folder.id) {
+              if (folder.name !== action.folder.name) {
+                sortFlag = true;
+              }
+              return action.folder;
+            } else {
+              return folder;
+            }
+          });
+
+          return sortFlag
+            ? folders.sort((folderA, folderB) =>
+                folderA.name.localeCompare(
+                  folderB.name,
+                  ["en", "es", "fr", "ge"],
+                  { ignorePunctuation: true }
+                )
+              )
+            : folders;
+        })(),
       };
     case ADD_FOLDER:
       return {
