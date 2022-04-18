@@ -55,7 +55,11 @@ const reducer = (state: AuthState = INITIAL_STATE, action: AuthActions) => {
     case ADD_FOLDER:
       return {
         ...state,
-        folders: [...state.folders, action.folder],
+        folders: [...state.folders, action.folder].sort((folderA, folderB) =>
+          folderA.name.localeCompare(folderB.name, ["en", "es", "fr", "ge"], {
+            ignorePunctuation: true,
+          })
+        ),
       };
     case CLEAR_AUTH:
       return INITIAL_STATE;
