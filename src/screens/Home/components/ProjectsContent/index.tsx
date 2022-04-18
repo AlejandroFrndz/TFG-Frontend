@@ -1,4 +1,14 @@
-import { Col, Divider, Layout, Row, Breadcrumb } from "antd";
+import { FolderAddOutlined } from "@ant-design/icons";
+import {
+  Col,
+  Divider,
+  Layout,
+  Row,
+  Breadcrumb,
+  Menu,
+  Dropdown,
+  Typography,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import { CSSProperties } from "react";
 import { useSelector } from "react-redux";
@@ -14,6 +24,7 @@ type ActiveFolderStruct = {
 };
 
 const { Content, Header } = Layout;
+const { Text } = Typography;
 
 export const ProjectsContent: React.FC = () => {
   const [activeFolders, setActiveFolders] = useState<ActiveFolderStruct[]>([]);
@@ -76,44 +87,56 @@ export const ProjectsContent: React.FC = () => {
     setSelectedFolder(folderId);
   };
 
+  // This would better live as a separate component but for some reason Antd doesn't like it that way and styles get messed up
+  const contextualMenu = (
+    <Menu style={styles.contextualMenu}>
+      <Menu.Item key="1">
+        <FolderAddOutlined style={styles.contextualMenuIcon} />
+        <Text style={styles.contextualMenuText}>New Folder</Text>
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <>
       <Header style={{ ...styles.whiteBackground, ...styles.header }}>
         {renderHeader()}
       </Header>
       <Divider style={styles.divider} />
-      <Content
-        style={styles.whiteBackground}
-        onClick={() => setSelectedFolder(null)}
-      >
-        <Row gutter={[16, 24]} style={styles.mainRow}>
-          {displayFolders.map((folder) => {
-            return (
-              <Col
-                span={6}
-                onDoubleClick={() =>
-                  setActiveFolders([
-                    ...activeFolders,
-                    { id: folder.id, name: folder.name },
-                  ])
-                }
-                onClick={(event) => {
-                  setSelectedFolder(folder.id);
-                  event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
-                }}
-                key={folder.id}
-              >
-                <Folder
-                  name={folder.name}
-                  id={folder.id}
-                  selected={selectedFolder === folder.id}
-                  setSelectedFolder={handleSelectFolderAfterDrag}
-                />
-              </Col>
-            );
-          })}
-        </Row>
-      </Content>
+      <Dropdown overlay={contextualMenu} trigger={["contextMenu"]}>
+        <Content
+          style={styles.whiteBackground}
+          onClick={() => setSelectedFolder(null)}
+        >
+          <Row gutter={[16, 24]} style={styles.mainRow}>
+            {displayFolders.map((folder) => {
+              return (
+                <Col
+                  span={6}
+                  onDoubleClick={() =>
+                    setActiveFolders([
+                      ...activeFolders,
+                      { id: folder.id, name: folder.name },
+                    ])
+                  }
+                  onClick={(event) => {
+                    setSelectedFolder(folder.id);
+                    event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
+                  }}
+                  key={folder.id}
+                >
+                  <Folder
+                    name={folder.name}
+                    id={folder.id}
+                    selected={selectedFolder === folder.id}
+                    setSelectedFolder={handleSelectFolderAfterDrag}
+                  />
+                </Col>
+              );
+            })}
+          </Row>
+        </Content>
+      </Dropdown>
     </>
   );
 };
@@ -140,5 +163,23 @@ const styles = {
     marginTop: "0px",
     marginBottom: "0px",
     backgroundColor: "lightgrey",
+  } as CSSProperties,
+
+  contextualMenu: {
+    paddingTop: "5px",
+    paddingBottom: "5px",
+    borderRadius: "7px",
+    minWidth: "200px",
+  } as CSSProperties,
+
+  contextualMenuIcon: {
+    fontSize: "25px",
+    verticalAlign: "middle",
+    marginRight: "10px",
+    marginLeft: "5px",
+  } as CSSProperties,
+
+  contextualMenuText: {
+    verticalAlign: "middle",
   } as CSSProperties,
 };
