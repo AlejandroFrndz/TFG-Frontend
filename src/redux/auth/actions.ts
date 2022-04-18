@@ -138,3 +138,13 @@ export const createFolder =
       dispatch(addFolder(folderResponse.value.folder));
     }
   };
+
+export const renameFolder =
+  (folderId: string, name: string) =>
+  async (dispatch: ThunkDispatch<any, any, any>) => {
+    const folderResponse = await API.folder.rename(folderId, name);
+
+    if (folderResponse.isSuccess()) {
+      dispatch(updateFolder(folderResponse.value.folder));
+    }
+  };

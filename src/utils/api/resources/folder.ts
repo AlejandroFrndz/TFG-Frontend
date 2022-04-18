@@ -24,7 +24,7 @@ export class Folder {
     parentId: string | null
   ): Promise<FailureOrSuccess<IError, FolderResponse>> => {
     try {
-      const response = await client.post<FolderResponse>(
+      const response = await client.patch<FolderResponse>(
         `/folder/${childId}/updateParent`,
         { newParentId: parentId }
       );
@@ -51,6 +51,29 @@ export class Folder {
         name,
         parent,
       });
+
+      return success(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response
+          ? error.response.data.error
+          : error.message;
+        return failure(new ApiError(message, error));
+      }
+
+      return failure(new UnexpectedError(error));
+    }
+  };
+
+  static rename = async (
+    folderId: string,
+    name: string
+  ): Promise<FailureOrSuccess<IError, FolderResponse>> => {
+    try {
+      const response = await client.patch<FolderResponse>(
+        `/folder/${folderId}/rename`,
+        { name }
+      );
 
       return success(response.data);
     } catch (error) {
