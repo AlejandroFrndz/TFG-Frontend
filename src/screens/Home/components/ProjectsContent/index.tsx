@@ -1,4 +1,4 @@
-import { FolderAddOutlined } from "@ant-design/icons";
+import { EditOutlined, FolderAddOutlined } from "@ant-design/icons";
 import {
   Col,
   Divider,
@@ -35,6 +35,10 @@ export const ProjectsContent: React.FC = () => {
   const [displayFolders, setDisplayFolders] = useState<IFolder[]>([]);
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [showCreateFolderModal, setShowCreateFolderModal] = useState(false);
+  const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
+  const [renameFolder, setRenameFolder] = useState<IFolder | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     setDisplayFolders(
@@ -73,7 +77,9 @@ export const ProjectsContent: React.FC = () => {
 
     const dynamicHeader = activeFolders.map((folderStruct, indx) => (
       <>
-        <Breadcrumb.Separator>&gt;</Breadcrumb.Separator>
+        <Breadcrumb.Separator key={`Separator ${folderStruct.id}`}>
+          &gt;
+        </Breadcrumb.Separator>
         <BreadcrumbLabel
           clampActiveFolders={clampActiveFolders}
           index={indx + 1}
@@ -119,15 +125,30 @@ export const ProjectsContent: React.FC = () => {
     </Menu>
   );
 
-  const folderContextualMenu = (id: string) => {
+  const handleRenameFolder = ({ name }: { name: string }) => {
+    console.log(`New name: ${name}`);
+    handleHideRenameFolderModal();
+  };
+
+  const handleShowRenameFolderModal = (folder: IFolder) => {
+    setShowRenameFolderModal(true);
+    setRenameFolder(folder);
+  };
+
+  const handleHideRenameFolderModal = () => {
+    setShowRenameFolderModal(false);
+    setRenameFolder(undefined);
+  };
+
+  const folderContextualMenu = (folder: IFolder) => {
     return (
       <Menu style={styles.contextualMenu}>
         <Menu.Item
-          key={id}
-          onClick={() => console.log(`Clicked folder context for folder ${id}`)}
+          key={folder.id}
+          onClick={() => handleShowRenameFolderModal(folder)}
         >
-          <FolderAddOutlined style={styles.contextualMenuIcon} />
-          <Text style={styles.contextualMenuText}>Arrrg</Text>
+          <EditOutlined style={styles.contextualMenuIcon} />
+          <Text style={styles.contextualMenuText}>Rename</Text>
         </Menu.Item>
       </Menu>
     );
@@ -148,7 +169,7 @@ export const ProjectsContent: React.FC = () => {
             {displayFolders.map((folder) => {
               return (
                 <Dropdown
-                  overlay={folderContextualMenu(folder.id)}
+                  overlay={folderContextualMenu(folder)}
                   trigger={["contextMenu"]}
                   key={folder.id}
                 >
@@ -185,6 +206,14 @@ export const ProjectsContent: React.FC = () => {
         handleHide={handleHideCreateFolderModal}
         handleSubmit={handleAddFolder}
         defaultText="New Folder"
+      />
+
+      <FolderNameModal
+        title="Rename"
+        visible={showRenameFolderModal}
+        handleHide={handleHideRenameFolderModal}
+        handleSubmit={handleRenameFolder}
+        defaultText={renameFolder ? renameFolder.name : undefined}
       />
     </>
   );
