@@ -41,4 +41,27 @@ export class Folder {
       return failure(new UnexpectedError(error));
     }
   };
+
+  static create = async (
+    name: string,
+    parent: string | null
+  ): Promise<FailureOrSuccess<IError, FolderResponse>> => {
+    try {
+      const response = await client.post<FolderResponse>(`/folder`, {
+        name,
+        parent,
+      });
+
+      return success(response.data);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response
+          ? error.response.data.error
+          : error.message;
+        return failure(new ApiError(message, error));
+      }
+
+      return failure(new UnexpectedError(error));
+    }
+  };
 }
