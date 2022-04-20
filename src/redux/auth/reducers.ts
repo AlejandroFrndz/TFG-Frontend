@@ -9,6 +9,7 @@ import {
   SET_FOLDERS,
   UPDATE_FOLDER,
   ADD_FOLDER,
+  DELETE_FOLDER,
 } from "src/redux/auth/actions";
 import { IFolder } from "src/utils/api/resources/folder";
 
@@ -23,6 +24,31 @@ const INITIAL_STATE = {
   folders: [],
   error: false,
 };
+
+/**
+ * Deletes a folder and all its children recursively
+ * @param folderArray Array with all the folders
+ * @param folderId Id of the root folder to delete
+ * @returns A new array without the root folder or any of its children
+ *
+ * I'm not sure to what extent this is worth it vs just deleting the parent thus preventing access to the children.
+ * The children will stay in the state, which will eventually be recreated and then the deleted children wont be there
+ */
+function recursivelyDeleteFolder(
+  folderArray: IFolder[],
+  folderId: string
+): IFolder[] {
+  const toDelete = folderArray.filter((folder) => folder.parent === folderId);
+
+  let deletedArray = folderArray.filter((folder) => folder.id !== folderId);
+
+  toDelete.map((folderToDelete) => {
+    deletedArray = recursivelyDeleteFolder(deletedArray, folderToDelete.id);
+    return folderToDelete;
+  });
+
+  return deletedArray;
+}
 
 const reducer = (state: AuthState = INITIAL_STATE, action: AuthActions) => {
   switch (action.type) {
@@ -75,6 +101,13 @@ const reducer = (state: AuthState = INITIAL_STATE, action: AuthActions) => {
           folderA.name.localeCompare(folderB.name, ["en", "es", "fr", "ge"], {
             ignorePunctuation: true,
           })
+        ),
+      };
+    case DELETE_FOLDER:
+      return {
+        ...state,
+        folders: state.folders.filter(
+          (folder) => folder.id !== action.folderId
         ),
       };
     case CLEAR_AUTH:

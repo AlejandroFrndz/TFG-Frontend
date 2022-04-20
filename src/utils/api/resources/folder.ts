@@ -87,4 +87,22 @@ export class Folder {
       return failure(new UnexpectedError(error));
     }
   };
+
+  static delete = async (
+    folderId: string
+  ): Promise<FailureOrSuccess<IError, null>> => {
+    try {
+      await client.delete(`/folder/${folderId}`);
+      return success(null);
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        const message = error.response
+          ? error.response.data.error
+          : error.message;
+        return failure(new ApiError(message, error));
+      }
+
+      return failure(new UnexpectedError(error));
+    }
+  };
 }

@@ -8,6 +8,7 @@ export const UPDATE_USER = "UPDATE_USER";
 export const SET_FOLDERS = "SET_FOLDERS";
 export const UPDATE_FOLDER = "UPDATE_FOLDER";
 export const ADD_FOLDER = "ADD_FOLDER";
+export const DELETE_FOLDER = "DELETE_FOLDER";
 export const CLEAR_AUTH = "CLEAR_AUTH";
 export const SET_AUTH_ERROR = "SET_AUTH_ERROR";
 export const CLEAR_AUTH_ERROR = "CLEAR_AUTH_ERROR";
@@ -17,6 +18,7 @@ export type IUPDATE_USER = "UPDATE_USER";
 export type ISET_FOLDERS = "SET_FOLDERS";
 export type IUPDATE_FOLDER = "UPDATE_FOLDER";
 export type IADD_FOLDER = "ADD_FOLDER";
+export type IDELETE_FOLDER = "DELETE_FOLDER";
 export type ICLEAR_AUTH = "CLEAR_AUTH";
 export type ISET_AUTH_ERROR = "SET_AUTH_ERROR";
 export type ICLEAR_AUTH_ERROR = "CLEAR_AUTH_ERROR";
@@ -66,6 +68,15 @@ export const addFolder = (folder: IFolder): AddFolder => {
   return { type: ADD_FOLDER, folder };
 };
 
+export type DeleteFolder = {
+  type: IDELETE_FOLDER;
+  folderId: string;
+};
+
+export const deleteFolder = (folderId: string): DeleteFolder => {
+  return { type: DELETE_FOLDER, folderId };
+};
+
 export type ClearAuth = {
   type: ICLEAR_AUTH;
 };
@@ -96,6 +107,7 @@ export type AuthActions =
   | SetFolders
   | UpdateFolder
   | AddFolder
+  | DeleteFolder
   | ClearAuth
   | SetAuthError
   | ClearAuthError;
@@ -147,4 +159,11 @@ export const renameFolder =
     if (folderResponse.isSuccess()) {
       dispatch(updateFolder(folderResponse.value.folder));
     }
+  };
+
+export const removeFolder =
+  (folderId: string) => async (dispatch: ThunkDispatch<any, any, any>) => {
+    const response = await API.folder.delete(folderId);
+
+    if (response.isSuccess()) dispatch(deleteFolder(folderId));
   };

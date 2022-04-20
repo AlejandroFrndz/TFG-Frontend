@@ -1,4 +1,8 @@
-import { EditOutlined, FolderAddOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FolderAddOutlined,
+} from "@ant-design/icons";
 import {
   Col,
   Divider,
@@ -8,11 +12,16 @@ import {
   Menu,
   Dropdown,
   Typography,
+  Modal,
 } from "antd";
 import React, { useEffect, useState } from "react";
 import { CSSProperties } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createFolder, renameFolder } from "src/redux/auth/actions";
+import {
+  createFolder,
+  removeFolder,
+  renameFolder,
+} from "src/redux/auth/actions";
 import { selectFolders } from "src/redux/auth/selectors";
 import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
 import { IFolder } from "src/utils/api/resources/folder";
@@ -27,6 +36,7 @@ type ActiveFolderStruct = {
 
 const { Content, Header } = Layout;
 const { Text } = Typography;
+const { confirm } = Modal;
 
 export const ProjectsContent: React.FC = () => {
   const dispatch = useDispatch();
@@ -118,7 +128,7 @@ export const ProjectsContent: React.FC = () => {
 
   const generalContextualMenu = (
     <Menu style={styles.contextualMenu} onClick={handleShowCreateFolderModal}>
-      <Menu.Item key="1">
+      <Menu.Item key="New Folder">
         <FolderAddOutlined style={styles.contextualMenuIcon} />
         <Text style={styles.contextualMenuText}>New Folder</Text>
       </Menu.Item>
@@ -140,15 +150,40 @@ export const ProjectsContent: React.FC = () => {
     setFolderToRename(undefined);
   };
 
+  const handleShowDeleteFolderModal = (folder: IFolder) => {
+    confirm({
+      title: "Are you sure you want to delete this folder?",
+      content: (
+        <>
+          <p>Everything contained in it will be lost</p>
+          <p>Including your projects!!</p>
+        </>
+      ),
+      okText: "Delete",
+      okType: "danger",
+      centered: true,
+      onOk: () => {
+        dispatch(removeFolder(folder.id));
+      },
+    });
+  };
+
   const folderContextualMenu = (folder: IFolder) => {
     return (
       <Menu style={styles.contextualMenu}>
         <Menu.Item
-          key={folder.id}
+          key="Rename"
           onClick={() => handleShowRenameFolderModal(folder)}
         >
           <EditOutlined style={styles.contextualMenuIcon} />
           <Text style={styles.contextualMenuText}>Rename</Text>
+        </Menu.Item>
+        <Menu.Item
+          key="Delete"
+          onClick={() => handleShowDeleteFolderModal(folder)}
+        >
+          <DeleteOutlined style={styles.contextualMenuIcon} />
+          <Text style={styles.contextualMenuText}>Delete</Text>
         </Menu.Item>
       </Menu>
     );
