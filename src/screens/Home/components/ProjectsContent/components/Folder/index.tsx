@@ -1,6 +1,4 @@
-import { FolderFilled } from "@ant-design/icons";
-import { Card, Typography } from "antd";
-import React, { CSSProperties, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { DragTypes } from "src/utils/constants";
 import { getEmptyImage } from "react-dnd-html5-backend";
@@ -15,8 +13,6 @@ type FolderProps = {
   setSelectedFolder: (folderId: string) => void;
 };
 
-const { Text } = Typography;
-
 export const Folder: React.FC<FolderProps> = ({
   name,
   id,
@@ -29,7 +25,7 @@ export const Folder: React.FC<FolderProps> = ({
     item: { name, id },
     type: DragTypes.FOLDER,
     collect: (monitor) => ({
-      isDragging: !!monitor.isDragging(),
+      isDragging: monitor.isDragging(),
     }),
     end: (item, monitor) => {
       if (!monitor.didDrop()) {
@@ -54,18 +50,16 @@ export const Folder: React.FC<FolderProps> = ({
   });
 
   return (
-    <>
-      <div ref={drop}>
-        <div ref={drag}>
-          <ProjectItem
-            type="folder"
-            isDragging={isDragging}
-            isOver={isOver}
-            isSelected={selected}
-            name={name}
-          />
-        </div>
+    <div ref={drop}>
+      <div ref={drag}>
+        <ProjectItem
+          type="folder"
+          isDragging={isDragging}
+          isOver={isOver}
+          isSelected={selected}
+          name={name}
+        />
       </div>
-    </>
+    </div>
   );
 };

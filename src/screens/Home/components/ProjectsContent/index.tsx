@@ -26,6 +26,7 @@ import { selectFolders } from "src/redux/folders/selectors";
 import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
 import { IFolder } from "src/utils/api/resources/folder";
 import { CustomDragLayer } from "./components/CustomDragLayer";
+import { File } from "./components/File";
 import { FolderNameModal } from "./components/FolderNameModal";
 import { ProjectsHeader } from "./components/ProjectsHeader";
 import "./scrollbar.css";
@@ -185,7 +186,6 @@ export const ProjectsContent: React.FC = () => {
           style={styles.whiteBackground}
           onClick={() => setSelectedFolder(null)}
         >
-          <Text>Folders</Text>
           <Row gutter={[16, 24]} style={styles.mainRow}>
             {folders.map((folder) => {
               return (
@@ -219,10 +219,14 @@ export const ProjectsContent: React.FC = () => {
               );
             })}
           </Row>
-          <Text>Files</Text>
+          <Divider />
           <Row gutter={[16, 24]} style={styles.mainRow}>
             {files.map((file) => {
-              return <div>A file</div>;
+              return (
+                <Col span={6}>
+                  <File name={file.name} id={file.id} />
+                </Col>
+              );
             })}
           </Row>
         </Content>
