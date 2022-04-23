@@ -19,13 +19,15 @@ type FolderResponse = {
   folder: IFolder;
 };
 export class Folder {
+  private static prefix = "/folder" as const;
+
   static updateParent = async (
     childId: string,
     parentId: string | null
   ): Promise<FailureOrSuccess<IError, FolderResponse>> => {
     try {
       const response = await client.patch<FolderResponse>(
-        `/folder/${childId}/updateParent`,
+        `${this.prefix}/${childId}/updateParent`,
         { newParentId: parentId }
       );
 
@@ -47,7 +49,7 @@ export class Folder {
     parent: string | null
   ): Promise<FailureOrSuccess<IError, FolderResponse>> => {
     try {
-      const response = await client.post<FolderResponse>(`/folder`, {
+      const response = await client.post<FolderResponse>(`${this.prefix}`, {
         name,
         parent,
       });
@@ -71,7 +73,7 @@ export class Folder {
   ): Promise<FailureOrSuccess<IError, FolderResponse>> => {
     try {
       const response = await client.patch<FolderResponse>(
-        `/folder/${folderId}/rename`,
+        `${this.prefix}/${folderId}/rename`,
         { name }
       );
 
@@ -92,7 +94,7 @@ export class Folder {
     folderId: string
   ): Promise<FailureOrSuccess<IError, null>> => {
     try {
-      await client.delete(`/folder/${folderId}`);
+      await client.delete(`${this.prefix}/${folderId}`);
       return success(null);
     } catch (error) {
       if (axios.isAxiosError(error)) {
