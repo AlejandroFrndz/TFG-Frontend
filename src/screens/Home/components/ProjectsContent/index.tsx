@@ -57,7 +57,7 @@ export const ProjectsContent: React.FC = () => {
         : activeFolders[activeFolders.length - 1].id
     )
   );
-  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [showCreateFolderModal, setShowCreateFolderModal] = useState(false);
   const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
   const [folderToRename, setFolderToRename] = useState<IFolder | undefined>(
@@ -78,7 +78,7 @@ export const ProjectsContent: React.FC = () => {
   };
 
   const handleSelectFolderAfterDrag = (folderId: string) => {
-    setSelectedFolder(folderId);
+    setSelectedItem(folderId);
   };
 
   // These would better live as a separate component but for some reason Antd doesn't like it that way and styles get messed up
@@ -184,7 +184,7 @@ export const ProjectsContent: React.FC = () => {
       >
         <Content
           style={styles.whiteBackground}
-          onClick={() => setSelectedFolder(null)}
+          onClick={() => setSelectedItem(null)}
         >
           <Row gutter={[16, 24]} style={styles.mainRow}>
             {folders.map((folder) => {
@@ -204,14 +204,14 @@ export const ProjectsContent: React.FC = () => {
                       ])
                     }
                     onClick={(event) => {
-                      setSelectedFolder(folder.id);
+                      setSelectedItem(folder.id);
                       event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
                     }}
                   >
                     <Folder
                       name={folder.name}
                       id={folder.id}
-                      selected={selectedFolder === folder.id}
+                      selected={selectedItem === folder.id}
                       setSelectedFolder={handleSelectFolderAfterDrag}
                     />
                   </Col>
@@ -223,8 +223,19 @@ export const ProjectsContent: React.FC = () => {
           <Row gutter={[16, 24]} style={styles.mainRow}>
             {files.map((file) => {
               return (
-                <Col span={6}>
-                  <File name={file.name} id={file.id} />
+                <Col
+                  span={6}
+                  onClick={(event) => {
+                    setSelectedItem(file.id);
+                    event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
+                  }}
+                >
+                  <File
+                    name={file.name}
+                    id={file.id}
+                    selected={selectedItem === file.id}
+                    setSelectedFile={setSelectedItem}
+                  />
                 </Col>
               );
             })}

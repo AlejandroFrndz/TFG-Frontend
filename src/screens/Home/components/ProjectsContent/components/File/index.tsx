@@ -7,15 +7,27 @@ import { DragTypes } from "src/utils/constants";
 type FileProps = {
   name: string;
   id: string;
+  selected: boolean;
+  setSelectedFile: (fileId: string) => void;
 };
 
-export const File: React.FC<FileProps> = ({ name, id }) => {
+export const File: React.FC<FileProps> = ({
+  name,
+  id,
+  selected,
+  setSelectedFile,
+}) => {
   const [{ isDragging }, drag, preview] = useDrag(() => ({
     item: { name, id },
     type: DragTypes.FILE,
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
+    end: (item, monitor) => {
+      if (!monitor.didDrop()) {
+        setSelectedFile(item.id);
+      }
+    },
   }));
 
   useEffect(() => {
@@ -24,7 +36,12 @@ export const File: React.FC<FileProps> = ({ name, id }) => {
 
   return (
     <div ref={drag}>
-      <ProjectItem type="file" name={name} isDragging={isDragging} />
+      <ProjectItem
+        type="file"
+        name={name}
+        isDragging={isDragging}
+        isSelected={selected}
+      />
     </div>
   );
 };

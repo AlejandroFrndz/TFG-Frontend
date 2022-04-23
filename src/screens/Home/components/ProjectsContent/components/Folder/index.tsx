@@ -37,12 +37,19 @@ export const Folder: React.FC<FolderProps> = ({
   const [{ isOver }, drop] = useDrop(() => ({
     accept: [DragTypes.FOLDER, DragTypes.FILE],
     drop: (item: any, monitor) => {
-      dispatch(updateFolderParent(item.id, id));
+      switch (monitor.getItemType()) {
+        case DragTypes.FOLDER:
+          dispatch(updateFolderParent(item.id, id));
+          break;
+        case DragTypes.FILE:
+          console.log("FILE");
+          break;
+      }
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
-    canDrop: (item: any, _monitor) => item.id !== id, // Avoid dropping the folder onto itself
+    canDrop: (item: any, _monitor) => item.id !== id, // Avoid dropping the folder onto itself!!
   }));
 
   useEffect(() => {

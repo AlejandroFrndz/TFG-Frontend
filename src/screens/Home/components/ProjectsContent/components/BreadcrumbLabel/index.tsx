@@ -25,7 +25,14 @@ export const BreadcrumbLabel: React.FC<BreadcrumbLabelProps> = ({
   const [{ isOver }, drop] = useDrop(() => ({
     accept: [DragTypes.FOLDER, DragTypes.FILE],
     drop: (item: any, monitor) => {
-      dispatch(updateFolderParent(item.id, id));
+      switch (monitor.getItemType()) {
+        case DragTypes.FOLDER:
+          dispatch(updateFolderParent(item.id, id));
+          break;
+        case DragTypes.FILE:
+          console.log("FILE");
+          break;
+      }
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
