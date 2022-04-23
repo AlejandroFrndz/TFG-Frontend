@@ -2,7 +2,7 @@ import { Typography } from "antd";
 import { CSSProperties } from "react";
 import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
-import { updateFolderParent } from "src/redux/auth/actions";
+import { updateFolderParent } from "src/redux/folders/actions";
 import { DragTypes } from "src/utils/constants";
 
 const { Text } = Typography;

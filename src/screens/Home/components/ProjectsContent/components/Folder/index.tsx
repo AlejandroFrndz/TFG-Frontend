@@ -6,7 +6,7 @@ import { DragTypes } from "src/utils/constants";
 import { CustomDragLayer } from "src/screens/Home/components/ProjectsContent/components/CustomDragLayer";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { useDispatch } from "react-redux";
-import { updateFolderParent } from "src/redux/auth/actions";
+import { updateFolderParent } from "src/redux/folders/actions";
 
 type FolderProps = {
   name: string;

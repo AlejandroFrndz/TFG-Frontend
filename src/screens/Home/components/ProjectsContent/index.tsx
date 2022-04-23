@@ -21,8 +21,8 @@ import {
   createFolder,
   removeFolder,
   renameFolder,
-} from "src/redux/auth/actions";
-import { selectFolders } from "src/redux/auth/selectors";
+} from "src/redux/folders/actions";
+import { selectFolders } from "src/redux/folders/selectors";
 import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
 import { IFolder } from "src/utils/api/resources/folder";
 import { BreadcrumbLabel } from "./components/BreadcrumbLabel";
