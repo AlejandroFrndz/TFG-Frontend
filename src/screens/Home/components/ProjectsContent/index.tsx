@@ -14,9 +14,10 @@ import {
   Typography,
   Modal,
 } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { CSSProperties } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { selectFiles } from "src/redux/files/selectors";
 import {
   createFolder,
   removeFolder,
@@ -26,10 +27,12 @@ import { selectFolders } from "src/redux/folders/selectors";
 import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
 import { IFolder } from "src/utils/api/resources/folder";
 import { BreadcrumbLabel } from "./components/BreadcrumbLabel";
+import { CustomDragLayer } from "./components/CustomDragLayer";
 import { FolderNameModal } from "./components/FolderNameModal";
+import { ProjectsHeader } from "./components/ProjectsHeader";
 import "./scrollbar.css";
 
-type ActiveFolderStruct = {
+export type ActiveFolderStruct = {
   id: string;
   name: string;
 };
@@ -43,6 +46,13 @@ export const ProjectsContent: React.FC = () => {
   const [activeFolders, setActiveFolders] = useState<ActiveFolderStruct[]>([]);
   const folders = useSelector(
     selectFolders(
+      activeFolders.length === 0
+        ? null
+        : activeFolders[activeFolders.length - 1].id
+    )
+  );
+  const files = useSelector(
+    selectFiles(
       activeFolders.length === 0
         ? null
         : activeFolders[activeFolders.length - 1].id
@@ -191,9 +201,11 @@ export const ProjectsContent: React.FC = () => {
 
   return (
     <>
-      <Header style={{ ...styles.whiteBackground, ...styles.header }}>
-        {renderHeader()}
-      </Header>
+      <CustomDragLayer />
+      <ProjectsHeader
+        clampActiveFolders={clampActiveFolders}
+        activeFolders={activeFolders}
+      />
       <Divider style={styles.divider} />
       <Dropdown
         overlay={generalContextualMenu}
@@ -204,6 +216,7 @@ export const ProjectsContent: React.FC = () => {
           style={styles.whiteBackground}
           onClick={() => setSelectedFolder(null)}
         >
+          <Text>Folders</Text>
           <Row gutter={[16, 24]} style={styles.mainRow}>
             {folders.map((folder) => {
               return (
@@ -237,6 +250,12 @@ export const ProjectsContent: React.FC = () => {
               );
             })}
           </Row>
+          <Text>Files</Text>
+          <Row gutter={[16, 24]} style={styles.mainRow}>
+            {files.map((file) => {
+              return <div>A file</div>;
+            })}
+          </Row>
         </Content>
       </Dropdown>
 
@@ -263,18 +282,12 @@ const styles = {
   mainRow: {
     width: "100%",
     paddingTop: "4vh",
+    paddingBottom: "4vh",
     paddingLeft: "1vw",
   } as CSSProperties,
 
   whiteBackground: {
     backgroundColor: "#FFF",
-  } as CSSProperties,
-
-  header: {
-    display: "flex",
-    alignItems: "center",
-    overflowX: "auto",
-    overflowY: "hidden",
   } as CSSProperties,
 
   divider: {

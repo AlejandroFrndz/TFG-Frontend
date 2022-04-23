@@ -3,7 +3,6 @@ import { Card, Typography } from "antd";
 import React, { CSSProperties, useEffect } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import { DragTypes } from "src/utils/constants";
-import { CustomDragLayer } from "src/screens/Home/components/ProjectsContent/components/CustomDragLayer";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { useDispatch } from "react-redux";
 import { updateFolderParent } from "src/redux/folders/actions";
@@ -46,7 +45,7 @@ export const Folder: React.FC<FolderProps> = ({
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
     }),
-    canDrop: (item: any, monitor) => item.id !== id, // Avoid dropping the folder onto itself
+    canDrop: (item: any, _monitor) => item.id !== id, // Avoid dropping the folder onto itself
   }));
 
   useEffect(() => {
@@ -55,7 +54,6 @@ export const Folder: React.FC<FolderProps> = ({
 
   return (
     <>
-      <CustomDragLayer />
       <div ref={drop}>
         <div ref={drag}>
           <Card style={styles.card(isDragging, isOver, selected)}>
