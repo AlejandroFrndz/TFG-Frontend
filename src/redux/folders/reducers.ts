@@ -1,6 +1,7 @@
 import { IFolder } from "src/utils/api/resources/folder";
 import {
   ADD_FOLDER,
+  CLEAR_FOLDERS,
   DELETE_FOLDER,
   FoldersActions,
   SET_FOLDERS,
@@ -93,6 +94,8 @@ const reducer = (
           (folder) => folder.id !== action.folderId
         ),
       };
+    case CLEAR_FOLDERS:
+      return INITIAL_STATE;
     default:
       return state;
   }

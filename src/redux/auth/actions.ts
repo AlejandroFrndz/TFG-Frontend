@@ -1,7 +1,7 @@
 import { ThunkDispatch } from "redux-thunk";
 import API from "src/utils/api";
 import { IUser } from "src/utils/api/resources/user";
-import { setFolders } from "../folders/actions";
+import { clearFolders, setFolders } from "../folders/actions";
 
 export const SET_USER = "SET_USER";
 export const UPDATE_USER = "UPDATE_USER";
@@ -81,4 +81,5 @@ export const logOut = () => async (dispatch: ThunkDispatch<any, any, any>) => {
   API.deleteToken();
   localStorage.removeItem("token");
   dispatch(clearAuth());
+  dispatch(clearFolders());
 };

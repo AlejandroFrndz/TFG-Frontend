@@ -6,11 +6,13 @@ export const SET_FOLDERS = "SET_FOLDERS";
 export const UPDATE_FOLDER = "UPDATE_FOLDER";
 export const ADD_FOLDER = "ADD_FOLDER";
 export const DELETE_FOLDER = "DELETE_FOLDER";
+export const CLEAR_FOLDERS = "CLEAR_FOLDERS";
 
 export type ISET_FOLDERS = "SET_FOLDERS";
 export type IUPDATE_FOLDER = "UPDATE_FOLDER";
 export type IADD_FOLDER = "ADD_FOLDER";
 export type IDELETE_FOLDER = "DELETE_FOLDER";
+export type ICLEAR_FOLDERS = "CLEAR_FOLDERS";
 
 export type SetFolders = {
   type: ISET_FOLDERS;
@@ -48,11 +50,20 @@ export const deleteFolder = (folderId: string): DeleteFolder => {
   return { type: DELETE_FOLDER, folderId };
 };
 
+export type ClearFolders = {
+  type: ICLEAR_FOLDERS;
+};
+
+export const clearFolders = (): ClearFolders => {
+  return { type: CLEAR_FOLDERS };
+};
+
 export type FoldersActions =
   | SetFolders
   | UpdateFolder
   | AddFolder
-  | DeleteFolder;
+  | DeleteFolder
+  | ClearFolders;
 
 export const updateFolderParent =
   (childId: string, parentId: string | null) =>
