@@ -8,7 +8,6 @@ import {
   Divider,
   Layout,
   Row,
-  Breadcrumb,
   Menu,
   Dropdown,
   Typography,
@@ -26,7 +25,6 @@ import {
 import { selectFolders } from "src/redux/folders/selectors";
 import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
 import { IFolder } from "src/utils/api/resources/folder";
-import { BreadcrumbLabel } from "./components/BreadcrumbLabel";
 import { CustomDragLayer } from "./components/CustomDragLayer";
 import { FolderNameModal } from "./components/FolderNameModal";
 import { ProjectsHeader } from "./components/ProjectsHeader";
@@ -37,7 +35,7 @@ export type ActiveFolderStruct = {
   name: string;
 };
 
-const { Content, Header } = Layout;
+const { Content } = Layout;
 const { Text } = Typography;
 const { confirm } = Modal;
 
@@ -76,35 +74,6 @@ export const ProjectsContent: React.FC = () => {
     );
 
     setActiveFolders(clampedActiveFolders);
-  };
-
-  const renderHeader = () => {
-    const fixedHeader = (
-      <BreadcrumbLabel
-        clampActiveFolders={clampActiveFolders}
-        index={0}
-        name="My Projects"
-        id={null}
-        key="null"
-      />
-    );
-
-    const dynamicHeader = activeFolders.map((folderStruct, indx) => (
-      <>
-        <Breadcrumb.Separator key={`Separator ${folderStruct.id}`}>
-          &gt;
-        </Breadcrumb.Separator>
-        <BreadcrumbLabel
-          clampActiveFolders={clampActiveFolders}
-          index={indx + 1}
-          name={folderStruct.name}
-          id={folderStruct.id}
-          key={folderStruct.id}
-        />
-      </>
-    ));
-
-    return [fixedHeader, ...dynamicHeader];
   };
 
   const handleSelectFolderAfterDrag = (folderId: string) => {
