@@ -6,6 +6,7 @@ import { DragTypes } from "src/utils/constants";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { useDispatch } from "react-redux";
 import { updateFolderParent } from "src/redux/folders/actions";
+import { ProjectItem } from "src/shared/ProjectItem";
 
 type FolderProps = {
   name: string;
@@ -56,12 +57,13 @@ export const Folder: React.FC<FolderProps> = ({
     <>
       <div ref={drop}>
         <div ref={drag}>
-          <Card style={styles.card(isDragging, isOver, selected)}>
-            <FolderFilled style={styles.icon} />
-            <Text ellipsis style={styles.text}>
-              {name}
-            </Text>
-          </Card>
+          <ProjectItem
+            type="folder"
+            isDragging={isDragging}
+            isOver={isOver}
+            isSelected={selected}
+            name={name}
+          />
         </div>
       </div>
     </>

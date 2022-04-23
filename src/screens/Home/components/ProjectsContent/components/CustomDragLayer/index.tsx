@@ -2,6 +2,7 @@ import { CSSProperties } from "react";
 import { useDragLayer, XYCoord } from "react-dnd";
 import { DragTypes } from "src/utils/constants";
 import { FolderPreview } from "src/screens/Home/components/ProjectsContent/components/Folder/FolderPreview";
+import { ProjectItem } from "src/shared/ProjectItem";
 
 export const CustomDragLayer: React.FC = () => {
   const { itemType, isDragging, currentOffset, item } = useDragLayer(
@@ -13,22 +14,19 @@ export const CustomDragLayer: React.FC = () => {
     })
   );
 
-  const renderItem = () => {
-    switch (itemType) {
-      case DragTypes.FOLDER:
-        return <FolderPreview name={item?.name} />;
-      default:
-        return null;
-    }
-  };
-
   if (!isDragging) {
     return null;
   }
 
   return (
     <div style={styles.layer}>
-      <div style={styles.item(currentOffset)}>{renderItem()}</div>
+      <div style={styles.item(currentOffset)}>
+        <ProjectItem
+          isPreview
+          name={item.name}
+          type={itemType === DragTypes.FOLDER ? "folder" : "file"}
+        />
+      </div>
     </div>
   );
 };
