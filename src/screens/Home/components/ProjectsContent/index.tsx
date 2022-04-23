@@ -41,26 +41,20 @@ const { confirm } = Modal;
 export const ProjectsContent: React.FC = () => {
   const dispatch = useDispatch();
   const [activeFolders, setActiveFolders] = useState<ActiveFolderStruct[]>([]);
-  const folders = useSelector(selectFolders);
-  const [displayFolders, setDisplayFolders] = useState<IFolder[]>([]);
+  const folders = useSelector(
+    selectFolders(
+      activeFolders.length === 0
+        ? null
+        : activeFolders[activeFolders.length - 1].id
+    )
+  );
   const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
   const [showCreateFolderModal, setShowCreateFolderModal] = useState(false);
   const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
   const [folderToRename, setFolderToRename] = useState<IFolder | undefined>(
     undefined
   );
-
-  useEffect(() => {
-    setDisplayFolders(
-      folders.filter((folder) => {
-        if (activeFolders.length === 0) {
-          return folder.parent === null;
-        } else {
-          return folder.parent === activeFolders[activeFolders.length - 1].id;
-        }
-      })
-    );
-  }, [activeFolders, folders]);
+  const [disableGeneralContext, setDisableGeneralContext] = useState(false);
 
   const clampActiveFolders = (lenght: number) => {
     if (lenght === activeFolders.length) {
@@ -189,24 +183,35 @@ export const ProjectsContent: React.FC = () => {
     );
   };
 
+  const handleDisableGeneralContext = (itemContextVisible: boolean) => {
+    itemContextVisible
+      ? setDisableGeneralContext(true)
+      : setTimeout(() => setDisableGeneralContext(false));
+  };
+
   return (
     <>
       <Header style={{ ...styles.whiteBackground, ...styles.header }}>
         {renderHeader()}
       </Header>
       <Divider style={styles.divider} />
-      <Dropdown overlay={generalContextualMenu} trigger={["contextMenu"]}>
+      <Dropdown
+        overlay={generalContextualMenu}
+        trigger={["contextMenu"]}
+        overlayClassName={disableGeneralContext ? "invisible" : ""}
+      >
         <Content
           style={styles.whiteBackground}
           onClick={() => setSelectedFolder(null)}
         >
           <Row gutter={[16, 24]} style={styles.mainRow}>
-            {displayFolders.map((folder) => {
+            {folders.map((folder) => {
               return (
                 <Dropdown
                   overlay={folderContextualMenu(folder)}
                   trigger={["contextMenu"]}
                   key={folder.id}
+                  onVisibleChange={handleDisableGeneralContext}
                 >
                   <Col
                     span={6}
