@@ -57,4 +57,13 @@ export class User {
       return handleAxiosError(error);
     }
   };
+
+  static delete = async (): Promise<FailureOrSuccess<IError, null>> => {
+    try {
+      await client.delete(`${this.prefix}/`);
+      return success(null);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
 }

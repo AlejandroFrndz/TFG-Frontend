@@ -3,6 +3,7 @@ import {
   MailOutlined,
   UnlockOutlined,
   UserOutlined,
+  WarningOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -14,6 +15,7 @@ import {
   message,
   ColProps,
   Typography,
+  Modal,
 } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { Content, Header } from "antd/lib/layout/layout";
@@ -27,6 +29,7 @@ import { IUser } from "src/utils/api/resources/user";
 import API from "src/utils/api";
 
 const { Text, Title } = Typography;
+const { confirm } = Modal;
 
 export const AccountContent: React.FC = () => {
   const dispatch = useDispatch();
@@ -92,6 +95,32 @@ export const AccountContent: React.FC = () => {
     }
   };
 
+  const handleDeleteAccount = async () => {
+    const response = await API.user.delete();
+
+    if (response.isSuccess()) {
+      handleLogOut();
+    } else {
+      message.error({
+        content: `There was an error deleting your account: ${response.error.message}. Please refresh the page and try again later`,
+        style: styles.feedbackMessage,
+      });
+    }
+  };
+
+  const handleShowDeleteAccountModal = () => {
+    confirm({
+      title: "Are you sure?",
+      content: "This action is irreversible",
+      icon: <WarningOutlined style={{ color: "red" }} />,
+      centered: true,
+      okButtonProps: { style: { backgroundColor: "red", borderColor: "red" } },
+      okText: "Delete Account",
+      cancelButtonProps: { type: "primary" },
+      onOk: handleDeleteAccount,
+    });
+  };
+
   return (
     <>
       <Header style={styles.header}>
@@ -120,7 +149,7 @@ export const AccountContent: React.FC = () => {
             rules={[{ required: true, message: "Username cannot be empty" }]}
             wrapperCol={styles.wrapperCol}
           >
-            <Input prefix={<UserOutlined />} />
+            <Input prefix={<UserOutlined />} style={styles.input} />
           </Form.Item>
           <Form.Item
             label="Email"
@@ -132,7 +161,7 @@ export const AccountContent: React.FC = () => {
             ]}
             wrapperCol={styles.wrapperCol}
           >
-            <Input prefix={<MailOutlined />} />
+            <Input prefix={<MailOutlined />} style={styles.input} />
           </Form.Item>
           <Form.Item
             label="Password"
@@ -170,7 +199,10 @@ export const AccountContent: React.FC = () => {
               }),
             ]}
           >
-            <Input.Password placeholder="Confirm new password" />
+            <Input.Password
+              placeholder="Confirm new password"
+              style={styles.input}
+            />
           </Form.Item>
           <Form.Item wrapperCol={{ span: 6, offset: 3 }}>
             <Button
@@ -193,7 +225,13 @@ export const AccountContent: React.FC = () => {
             </Text>
           </Col>
           <Col span={3} offset={2}>
-            <Button shape="round" type="primary" danger block>
+            <Button
+              shape="round"
+              type="primary"
+              danger
+              block
+              onClick={handleShowDeleteAccountModal}
+            >
               Delete Account
             </Button>
           </Col>
@@ -219,6 +257,7 @@ const styles = {
   passwordInput: {
     color: "black",
     cursor: "default",
+    borderRadius: "10px",
   } as CSSProperties,
 
   divider: {
@@ -261,5 +300,9 @@ const styles = {
 
   deleteAccountText: {
     color: "#8d8d8d",
+  } as CSSProperties,
+
+  input: {
+    borderRadius: "10px",
   } as CSSProperties,
 };
