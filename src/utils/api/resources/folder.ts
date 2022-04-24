@@ -1,12 +1,10 @@
 import { IError } from "src/utils/api/logic/errors/IError";
 import {
-  failure,
   FailureOrSuccess,
   success,
 } from "src/utils/api/logic/FailureOrSuccess";
 import client from "src/utils/api/axios";
-import axios from "axios";
-import { ApiError, UnexpectedError } from "src/utils/api/logic/errors";
+import { handleAxiosError } from "src/utils/helpers";
 
 export type IFolder = {
   id: string;
@@ -33,14 +31,7 @@ export class Folder {
 
       return success(response.data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message = error.response
-          ? error.response.data.error
-          : error.message;
-        return failure(new ApiError(message, error));
-      }
-
-      return failure(new UnexpectedError(error));
+      return handleAxiosError(error);
     }
   };
 
@@ -56,14 +47,7 @@ export class Folder {
 
       return success(response.data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message = error.response
-          ? error.response.data.error
-          : error.message;
-        return failure(new ApiError(message, error));
-      }
-
-      return failure(new UnexpectedError(error));
+      return handleAxiosError(error);
     }
   };
 
@@ -79,14 +63,7 @@ export class Folder {
 
       return success(response.data);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message = error.response
-          ? error.response.data.error
-          : error.message;
-        return failure(new ApiError(message, error));
-      }
-
-      return failure(new UnexpectedError(error));
+      return handleAxiosError(error);
     }
   };
 
@@ -97,14 +74,7 @@ export class Folder {
       await client.delete(`${this.prefix}/${folderId}`);
       return success(null);
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message = error.response
-          ? error.response.data.error
-          : error.message;
-        return failure(new ApiError(message, error));
-      }
-
-      return failure(new UnexpectedError(error));
+      return handleAxiosError(error);
     }
   };
 }
