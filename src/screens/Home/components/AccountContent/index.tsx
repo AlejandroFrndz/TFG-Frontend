@@ -13,10 +13,10 @@ import {
   Row,
   message,
   ColProps,
+  Typography,
 } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { Content, Header } from "antd/lib/layout/layout";
-import Title from "antd/lib/typography/Title";
 import React, { CSSProperties, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +25,8 @@ import { logOut, updateUser } from "src/redux/auth/actions";
 import { selectUser } from "src/redux/auth/selectors";
 import { IUser } from "src/utils/api/resources/user";
 import API from "src/utils/api";
+
+const { Text, Title } = Typography;
 
 export const AccountContent: React.FC = () => {
   const dispatch = useDispatch();
@@ -179,21 +181,38 @@ export const AccountContent: React.FC = () => {
           >
             <Input.Password placeholder="Confirm new password" />
           </Form.Item>
-          <Form.Item wrapperCol={{ span: 6, offset: 5 }}>
+          <Form.Item wrapperCol={{ span: 6, offset: 3 }}>
             <Button
               type="primary"
               htmlType="submit"
               shape="round"
               loading={loadingProfileUpdate}
+              block
             >
               Save Changes
             </Button>
           </Form.Item>
         </Form>
         <Divider />
+        <Row align="middle">
+          <Col span={6} offset={5}>
+            <Title style={{ fontSize: "20px", marginBottom: "2px" }}>
+              Delete Account
+            </Title>
+            <Text>
+              All your information, including projects, will be erased
+            </Text>
+          </Col>
+          <Col span={3} offset={2}>
+            <Button shape="round" type="primary" danger block>
+              Delete Account
+            </Button>
+          </Col>
+        </Row>
+        <Divider />
         <Row>
-          <Col span={2} offset={11} style={styles.buttonRow}>
-            <Button onClick={handleLogOut} shape={"round"}>
+          <Col span={4} offset={9} style={styles.buttonRow}>
+            <Button onClick={handleLogOut} shape={"round"} block type="dashed">
               Log Out
             </Button>
           </Col>
