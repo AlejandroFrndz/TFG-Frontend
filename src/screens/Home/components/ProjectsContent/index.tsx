@@ -17,7 +17,7 @@ import {
 import React, { useState } from "react";
 import { CSSProperties } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createFile } from "src/redux/files/actions";
+import { createFile, removeFile } from "src/redux/files/actions";
 import { selectFiles } from "src/redux/files/selectors";
 import {
   createFolder,
@@ -173,6 +173,32 @@ export const ProjectsContent: React.FC = () => {
       centered: true,
       onOk: () => {
         dispatch(removeFolder(folder.id));
+        handleDisableGeneralContext(false);
+      },
+      onCancel: () => {
+        handleDisableGeneralContext(false);
+      },
+    });
+  };
+
+  const handleShowDeleteFileModal = (file: IFile) => {
+    confirm({
+      title: "Are you sure you want to delete this project?",
+      content: (
+        <>
+          <p>All data related to the project will be lost</p>
+          <p>People you've shared the project with will also lose access</p>
+        </>
+      ),
+      okText: "Delete",
+      okType: "danger",
+      centered: true,
+      onOk: () => {
+        dispatch(removeFile(file.id));
+        handleDisableGeneralContext(false);
+      },
+      onCancel: () => {
+        handleDisableGeneralContext(false);
       },
     });
   };
@@ -197,7 +223,7 @@ export const ProjectsContent: React.FC = () => {
           onClick={() =>
             type === "folder"
               ? handleShowDeleteFolderModal(item)
-              : console.log(item)
+              : handleShowDeleteFileModal(item)
           }
         >
           <DeleteOutlined style={styles.contextualMenuIcon} />

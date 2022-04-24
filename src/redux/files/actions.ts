@@ -84,3 +84,10 @@ export const createFile =
       dispatch(addFile(fileResponse.value.file));
     }
   };
+
+export const removeFile =
+  (fileId: string) => async (dispatch: ThunkDispatch<any, any, any>) => {
+    const response = await API.file.delete(fileId);
+
+    if (response.isSuccess()) dispatch(deleteFile(fileId));
+  };
