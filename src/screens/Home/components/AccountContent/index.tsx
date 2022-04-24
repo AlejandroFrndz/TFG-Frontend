@@ -39,7 +39,7 @@ export const AccountContent: React.FC = () => {
 
   const user = useSelector(selectUser) as IUser;
 
-  const handleLogOut = (): void => {
+  const handleLogOut = () => {
     dispatch(logOut());
     navigate("/");
   };
@@ -81,16 +81,12 @@ export const AccountContent: React.FC = () => {
         dispatch(updateUser(userResponse.value.user));
         message.success({
           content: "Profile info updated!",
-          style: {
-            marginTop: "90vh",
-          },
+          style: styles.feedbackMessage,
         });
       } else {
         message.error({
           content: `Couldn't update profile info: ${userResponse.error.message}`,
-          style: {
-            marginTop: "90vh",
-          },
+          style: styles.feedbackMessage,
         });
       }
     }
@@ -98,16 +94,11 @@ export const AccountContent: React.FC = () => {
 
   return (
     <>
-      <Header
-        style={{
-          backgroundColor: "#FFF",
-          paddingTop: "1vh",
-        }}
-      >
+      <Header style={styles.header}>
         <Title>Account</Title>
       </Header>
       <Divider style={styles.divider} />
-      <Content style={{ backgroundColor: "#FFF", paddingTop: "2vh" }}>
+      <Content style={styles.content}>
         <Form
           form={form}
           size="large"
@@ -120,11 +111,11 @@ export const AccountContent: React.FC = () => {
             password: "*************",
           }}
           onFinish={handleSubmit}
-          style={{ paddingLeft: "25vw" }}
+          style={styles.form}
         >
           <Form.Item
             label="Username"
-            labelCol={{ span: 2 }}
+            labelCol={styles.labelCol}
             name="username"
             rules={[{ required: true, message: "Username cannot be empty" }]}
             wrapperCol={styles.wrapperCol}
@@ -133,7 +124,7 @@ export const AccountContent: React.FC = () => {
           </Form.Item>
           <Form.Item
             label="Email"
-            labelCol={{ span: 2 }}
+            labelCol={styles.labelCol}
             name="email"
             rules={[
               { required: true, message: "Email cannot be empty" },
@@ -145,7 +136,7 @@ export const AccountContent: React.FC = () => {
           </Form.Item>
           <Form.Item
             label="Password"
-            labelCol={{ span: 2 }}
+            labelCol={styles.labelCol}
             name="password"
             wrapperCol={styles.wrapperCol}
             rules={[{ required: true, message: "Password cannot be empty" }]}
@@ -196,10 +187,8 @@ export const AccountContent: React.FC = () => {
         <Divider />
         <Row align="middle">
           <Col span={6} offset={5}>
-            <Title style={{ fontSize: "20px", marginBottom: "2px" }}>
-              Delete Account
-            </Title>
-            <Text>
+            <Title style={styles.deleteAccountTitle}>Delete Account</Title>
+            <Text style={styles.deleteAccountText}>
               All your information, including projects, will be erased
             </Text>
           </Col>
@@ -242,4 +231,35 @@ const styles = {
     span: 6,
     offset: 1,
   } as ColProps,
+
+  labelCol: {
+    span: 2,
+  } as ColProps,
+
+  feedbackMessage: {
+    marginTop: "90vh",
+  } as CSSProperties,
+
+  header: {
+    backgroundColor: "#FFF",
+    paddingTop: "1vh",
+  } as CSSProperties,
+
+  content: {
+    backgroundColor: "#FFF",
+    paddingTop: "2vh",
+  } as CSSProperties,
+
+  form: {
+    paddingLeft: "25vw",
+  } as CSSProperties,
+
+  deleteAccountTitle: {
+    fontSize: "20px",
+    marginBottom: "2px",
+  } as CSSProperties,
+
+  deleteAccountText: {
+    color: "#8d8d8d",
+  } as CSSProperties,
 };
