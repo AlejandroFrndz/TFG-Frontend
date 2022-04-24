@@ -2,9 +2,11 @@ import { Typography } from "antd";
 import { CSSProperties } from "react";
 import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
-import { updateFileParent } from "src/redux/files/actions";
-import { updateFolderParent } from "src/redux/folders/actions";
+import { updateFile } from "src/redux/files/actions";
+import { updateFolder } from "src/redux/folders/actions";
+import API from "src/utils/api";
 import { DragTypes } from "src/utils/constants";
+import { handleActionErrorMessage } from "src/utils/helpers";
 
 const { Text } = Typography;
 
@@ -25,13 +27,25 @@ export const BreadcrumbLabel: React.FC<BreadcrumbLabelProps> = ({
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: [DragTypes.FOLDER, DragTypes.FILE],
-    drop: (item: any, monitor) => {
+    drop: async (item: any, monitor) => {
       switch (monitor.getItemType()) {
         case DragTypes.FOLDER:
-          dispatch(updateFolderParent(item.id, id));
+          const folderResponse = await API.folder.updateParent(item.id, id);
+
+          if (folderResponse.isSuccess()) {
+            dispatch(updateFolder(folderResponse.value.folder));
+          } else {
+            handleActionErrorMessage(folderResponse.error);
+          }
           break;
         case DragTypes.FILE:
-          dispatch(updateFileParent(item.id, id));
+          const fileResponse = await API.file.updateParent(item.id, id);
+
+          if (fileResponse.isSuccess()) {
+            dispatch(updateFile(fileResponse.value.file));
+          } else {
+            handleActionErrorMessage(fileResponse.error);
+          }
           break;
       }
     },
