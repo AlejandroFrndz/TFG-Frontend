@@ -13,6 +13,7 @@ import { selectAuthError } from "src/redux/auth/selectors";
 import { useNavigate } from "react-router-dom";
 import { AccountContent } from "src/screens/Home/components/AccountContent";
 import { ProjectsContent } from "src/screens/Home/components/ProjectsContent";
+import { WIP } from "../WIP";
 
 enum CategoriesEnum {
   "My Projects" = "My Projects",
@@ -69,7 +70,7 @@ export const Home: React.FC = () => {
       case CategoriesEnum["My Projects"]:
         return <ProjectsContent />;
       case CategoriesEnum["Shared With Me"]:
-        return "Shared With Me";
+        return <WIP />;
       case CategoriesEnum.Account:
         return <AccountContent />;
     }
