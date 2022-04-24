@@ -1,4 +1,4 @@
-import { FileFilled, FolderFilled } from "@ant-design/icons";
+import { AppstoreOutlined, FolderFilled } from "@ant-design/icons";
 import { Card, Typography } from "antd";
 import { CSSProperties } from "react";
 
@@ -24,7 +24,7 @@ export const ProjectItem: React.FC<ProjectItemProps> = ({
   const renderTypeIcon = () => {
     switch (type) {
       case "file":
-        return <FileFilled style={styles.icon} />;
+        return <AppstoreOutlined style={styles.icon} />;
       case "folder":
         return <FolderFilled style={styles.icon} />;
     }

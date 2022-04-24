@@ -1,4 +1,5 @@
 import {
+  AppstoreAddOutlined,
   DeleteOutlined,
   EditOutlined,
   FolderAddOutlined,
@@ -16,6 +17,7 @@ import {
 import React, { useState } from "react";
 import { CSSProperties } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { createFile } from "src/redux/files/actions";
 import { selectFiles } from "src/redux/files/selectors";
 import {
   createFolder,
@@ -24,10 +26,11 @@ import {
 } from "src/redux/folders/actions";
 import { selectFolders } from "src/redux/folders/selectors";
 import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
+import { IFile } from "src/utils/api/resources/file";
 import { IFolder } from "src/utils/api/resources/folder";
 import { CustomDragLayer } from "./components/CustomDragLayer";
 import { File } from "./components/File";
-import { FolderNameModal } from "./components/FolderNameModal";
+import { ItemNameModal } from "./components/ItemNameModal";
 import { ProjectsHeader } from "./components/ProjectsHeader";
 import "./scrollbar.css";
 
@@ -35,6 +38,16 @@ export type ActiveFolderStruct = {
   id: string;
   name: string;
 };
+
+type ItemContextualMenuParams =
+  | {
+      type: "folder";
+      item: IFolder;
+    }
+  | {
+      type: "file";
+      item: IFile;
+    };
 
 const { Content } = Layout;
 const { Text } = Typography;
@@ -64,6 +77,7 @@ export const ProjectsContent: React.FC = () => {
     undefined
   );
   const [disableGeneralContext, setDisableGeneralContext] = useState(false);
+  const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
 
   const clampActiveFolders = (lenght: number) => {
     if (lenght === activeFolders.length) {
@@ -100,11 +114,32 @@ export const ProjectsContent: React.FC = () => {
     setShowCreateFolderModal(false);
   };
 
+  const handleAddProject = ({ name }: { name: string }) => {
+    const parent =
+      activeFolders.length === 0
+        ? null
+        : activeFolders[activeFolders.length - 1].id;
+    dispatch(createFile(name, parent));
+    handleHideCreateProjectModal();
+  };
+
+  const handleShowCreateProjectModal = () => {
+    setShowCreateProjectModal(true);
+  };
+
+  const handleHideCreateProjectModal = () => {
+    setShowCreateProjectModal(false);
+  };
+
   const generalContextualMenu = (
-    <Menu style={styles.contextualMenu} onClick={handleShowCreateFolderModal}>
-      <Menu.Item key="New Folder">
+    <Menu style={styles.contextualMenu}>
+      <Menu.Item key="New Folder" onClick={handleShowCreateFolderModal}>
         <FolderAddOutlined style={styles.contextualMenuIcon} />
         <Text style={styles.contextualMenuText}>New Folder</Text>
+      </Menu.Item>
+      <Menu.Item key="New Project" onClick={handleShowCreateProjectModal}>
+        <AppstoreAddOutlined style={styles.contextualMenuIcon} />
+        <Text style={styles.contextualMenuText}>New Project</Text>
       </Menu.Item>
     </Menu>
   );
@@ -142,19 +177,28 @@ export const ProjectsContent: React.FC = () => {
     });
   };
 
-  const folderContextualMenu = (folder: IFolder) => {
+  const itemContextualMenu = (params: ItemContextualMenuParams) => {
+    const { type, item } = params;
     return (
       <Menu style={styles.contextualMenu}>
         <Menu.Item
           key="Rename"
-          onClick={() => handleShowRenameFolderModal(folder)}
+          onClick={() =>
+            type === "folder"
+              ? handleShowRenameFolderModal(item)
+              : console.log(item)
+          }
         >
           <EditOutlined style={styles.contextualMenuIcon} />
           <Text style={styles.contextualMenuText}>Rename</Text>
         </Menu.Item>
         <Menu.Item
           key="Delete"
-          onClick={() => handleShowDeleteFolderModal(folder)}
+          onClick={() =>
+            type === "folder"
+              ? handleShowDeleteFolderModal(item)
+              : console.log(item)
+          }
         >
           <DeleteOutlined style={styles.contextualMenuIcon} />
           <Text style={styles.contextualMenuText}>Delete</Text>
@@ -190,7 +234,7 @@ export const ProjectsContent: React.FC = () => {
             {folders.map((folder) => {
               return (
                 <Dropdown
-                  overlay={folderContextualMenu(folder)}
+                  overlay={itemContextualMenu({ type: "folder", item: folder })}
                   trigger={["contextMenu"]}
                   key={folder.id}
                   onVisibleChange={handleDisableGeneralContext}
@@ -223,27 +267,34 @@ export const ProjectsContent: React.FC = () => {
           <Row gutter={[16, 24]} style={styles.mainRow}>
             {files.map((file) => {
               return (
-                <Col
-                  span={6}
-                  onClick={(event) => {
-                    setSelectedItem(file.id);
-                    event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
-                  }}
+                <Dropdown
+                  overlay={itemContextualMenu({ type: "file", item: file })}
+                  trigger={["contextMenu"]}
+                  key={file.id}
+                  onVisibleChange={handleDisableGeneralContext}
                 >
-                  <File
-                    name={file.name}
-                    id={file.id}
-                    selected={selectedItem === file.id}
-                    setSelectedFile={setSelectedItem}
-                  />
-                </Col>
+                  <Col
+                    span={6}
+                    onClick={(event) => {
+                      setSelectedItem(file.id);
+                      event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
+                    }}
+                  >
+                    <File
+                      name={file.name}
+                      id={file.id}
+                      selected={selectedItem === file.id}
+                      setSelectedFile={setSelectedItem}
+                    />
+                  </Col>
+                </Dropdown>
               );
             })}
           </Row>
         </Content>
       </Dropdown>
 
-      <FolderNameModal
+      <ItemNameModal
         title="New Folder"
         visible={showCreateFolderModal}
         handleHide={handleHideCreateFolderModal}
@@ -251,7 +302,14 @@ export const ProjectsContent: React.FC = () => {
         defaultText="New Folder"
       />
 
-      <FolderNameModal
+      <ItemNameModal
+        title="New Project"
+        visible={showCreateProjectModal}
+        handleHide={handleHideCreateProjectModal}
+        handleSubmit={handleAddProject}
+      />
+
+      <ItemNameModal
         title="Rename"
         visible={showRenameFolderModal}
         handleHide={handleHideRenameFolderModal}
