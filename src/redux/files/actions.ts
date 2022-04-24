@@ -91,3 +91,13 @@ export const removeFile =
 
     if (response.isSuccess()) dispatch(deleteFile(fileId));
   };
+
+export const renameFile =
+  (fileId: string, name: string) =>
+  async (dispatch: ThunkDispatch<any, any, any>) => {
+    const fileResponse = await API.file.rename(fileId, name);
+
+    if (fileResponse.isSuccess()) {
+      dispatch(updateFile(fileResponse.value.file));
+    }
+  };

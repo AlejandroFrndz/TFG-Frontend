@@ -17,7 +17,7 @@ import {
 import React, { useState } from "react";
 import { CSSProperties } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createFile, removeFile } from "src/redux/files/actions";
+import { createFile, removeFile, renameFile } from "src/redux/files/actions";
 import { selectFiles } from "src/redux/files/selectors";
 import {
   createFolder,
@@ -40,6 +40,16 @@ export type ActiveFolderStruct = {
 };
 
 type ItemContextualMenuParams =
+  | {
+      type: "folder";
+      item: IFolder;
+    }
+  | {
+      type: "file";
+      item: IFile;
+    };
+
+type RenameItemStruct =
   | {
       type: "folder";
       item: IFolder;
@@ -73,9 +83,9 @@ export const ProjectsContent: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [showCreateFolderModal, setShowCreateFolderModal] = useState(false);
   const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
-  const [folderToRename, setFolderToRename] = useState<IFolder | undefined>(
-    undefined
-  );
+  const [itemToRename, setItemToRename] = useState<
+    RenameItemStruct | undefined
+  >(undefined);
   const [disableGeneralContext, setDisableGeneralContext] = useState(false);
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
 
@@ -144,19 +154,25 @@ export const ProjectsContent: React.FC = () => {
     </Menu>
   );
 
-  const handleRenameFolder = ({ name }: { name: string }) => {
-    if (folderToRename) dispatch(renameFolder(folderToRename.id, name));
+  const handleRenameItem = ({ name }: { name: string }) => {
+    if (itemToRename) {
+      if (itemToRename.type === "folder") {
+        dispatch(renameFolder(itemToRename.item.id, name));
+      } else {
+        dispatch(renameFile(itemToRename.item.id, name));
+      }
+    }
     handleHideRenameFolderModal();
   };
 
-  const handleShowRenameFolderModal = (folder: IFolder) => {
+  const handleShowRenameItemModal = (params: RenameItemStruct) => {
     setShowRenameFolderModal(true);
-    setFolderToRename(folder);
+    setItemToRename(params);
   };
 
   const handleHideRenameFolderModal = () => {
     setShowRenameFolderModal(false);
-    setFolderToRename(undefined);
+    setItemToRename(undefined);
   };
 
   const handleShowDeleteFolderModal = (folder: IFolder) => {
@@ -209,11 +225,7 @@ export const ProjectsContent: React.FC = () => {
       <Menu style={styles.contextualMenu}>
         <Menu.Item
           key="Rename"
-          onClick={() =>
-            type === "folder"
-              ? handleShowRenameFolderModal(item)
-              : console.log(item)
-          }
+          onClick={() => handleShowRenameItemModal(params)}
         >
           <EditOutlined style={styles.contextualMenuIcon} />
           <Text style={styles.contextualMenuText}>Rename</Text>
@@ -339,8 +351,8 @@ export const ProjectsContent: React.FC = () => {
         title="Rename"
         visible={showRenameFolderModal}
         handleHide={handleHideRenameFolderModal}
-        handleSubmit={handleRenameFolder}
-        defaultText={folderToRename ? folderToRename.name : undefined}
+        handleSubmit={handleRenameItem}
+        defaultText={itemToRename ? itemToRename.item.name : undefined}
       />
     </>
   );
