@@ -82,7 +82,7 @@ export const ProjectsContent: React.FC = () => {
   );
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const [showCreateFolderModal, setShowCreateFolderModal] = useState(false);
-  const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
+  const [showRenameItemModal, setShowRenameItemModal] = useState(false);
   const [itemToRename, setItemToRename] = useState<
     RenameItemStruct | undefined
   >(undefined);
@@ -162,17 +162,18 @@ export const ProjectsContent: React.FC = () => {
         dispatch(renameFile(itemToRename.item.id, name));
       }
     }
-    handleHideRenameFolderModal();
+    handleHideRenameItemModal();
   };
 
   const handleShowRenameItemModal = (params: RenameItemStruct) => {
-    setShowRenameFolderModal(true);
+    setShowRenameItemModal(true);
     setItemToRename(params);
   };
 
-  const handleHideRenameFolderModal = () => {
-    setShowRenameFolderModal(false);
+  const handleHideRenameItemModal = () => {
+    setShowRenameItemModal(false);
     setItemToRename(undefined);
+    setDisableGeneralContext(false);
   };
 
   const handleShowDeleteFolderModal = (folder: IFolder) => {
@@ -349,8 +350,8 @@ export const ProjectsContent: React.FC = () => {
 
       <ItemNameModal
         title="Rename"
-        visible={showRenameFolderModal}
-        handleHide={handleHideRenameFolderModal}
+        visible={showRenameItemModal}
+        handleHide={handleHideRenameItemModal}
         handleSubmit={handleRenameItem}
         defaultText={itemToRename ? itemToRename.item.name : undefined}
       />
