@@ -5,6 +5,7 @@ import { getEmptyImage } from "react-dnd-html5-backend";
 import { useDispatch } from "react-redux";
 import { updateFolderParent } from "src/redux/folders/actions";
 import { ProjectItem } from "src/shared/ProjectItem";
+import { updateFileParent } from "src/redux/files/actions";
 
 type FolderProps = {
   name: string;
@@ -42,7 +43,7 @@ export const Folder: React.FC<FolderProps> = ({
           dispatch(updateFolderParent(item.id, id));
           break;
         case DragTypes.FILE:
-          console.log("FILE");
+          dispatch(updateFileParent(item.id, id));
           break;
       }
     },
