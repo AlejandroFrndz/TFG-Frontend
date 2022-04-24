@@ -4,7 +4,16 @@ import {
   UnlockOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Button, Col, Divider, Form, Input, Row, message } from "antd";
+import {
+  Button,
+  Col,
+  Divider,
+  Form,
+  Input,
+  Row,
+  message,
+  ColProps,
+} from "antd";
 import { useForm } from "antd/lib/form/Form";
 import { Content, Header } from "antd/lib/layout/layout";
 import Title from "antd/lib/typography/Title";
@@ -95,6 +104,7 @@ export const AccountContent: React.FC = () => {
       >
         <Title>Account</Title>
       </Header>
+      <Divider style={styles.divider} />
       <Content style={{ backgroundColor: "#FFF", paddingTop: "2vh" }}>
         <Form
           form={form}
@@ -108,13 +118,14 @@ export const AccountContent: React.FC = () => {
             password: "*************",
           }}
           onFinish={handleSubmit}
+          style={{ paddingLeft: "25vw" }}
         >
           <Form.Item
             label="Username"
             labelCol={{ span: 2 }}
             name="username"
             rules={[{ required: true, message: "Username cannot be empty" }]}
-            wrapperCol={{ span: 12, offset: 1 }}
+            wrapperCol={styles.wrapperCol}
           >
             <Input prefix={<UserOutlined />} />
           </Form.Item>
@@ -126,7 +137,7 @@ export const AccountContent: React.FC = () => {
               { required: true, message: "Email cannot be empty" },
               { type: "email", message: "Invalid email" },
             ]}
-            wrapperCol={{ span: 12, offset: 1 }}
+            wrapperCol={styles.wrapperCol}
           >
             <Input prefix={<MailOutlined />} />
           </Form.Item>
@@ -134,7 +145,7 @@ export const AccountContent: React.FC = () => {
             label="Password"
             labelCol={{ span: 2 }}
             name="password"
-            wrapperCol={{ span: 12, offset: 1 }}
+            wrapperCol={styles.wrapperCol}
             rules={[{ required: true, message: "Password cannot be empty" }]}
           >
             <Input.Password
@@ -152,7 +163,7 @@ export const AccountContent: React.FC = () => {
           </Form.Item>
           <Form.Item
             name="confirmPassword"
-            wrapperCol={{ span: 12, offset: 3 }}
+            wrapperCol={{ ...styles.wrapperCol, offset: 3 }}
             hidden={passwordDisabled}
             rules={[
               ({ getFieldValue }) => ({
@@ -168,7 +179,7 @@ export const AccountContent: React.FC = () => {
           >
             <Input.Password placeholder="Confirm new password" />
           </Form.Item>
-          <Form.Item wrapperCol={{ span: 6, offset: 7 }}>
+          <Form.Item wrapperCol={{ span: 6, offset: 5 }}>
             <Button
               type="primary"
               htmlType="submit"
@@ -201,4 +212,15 @@ const styles = {
     color: "black",
     cursor: "default",
   } as CSSProperties,
+
+  divider: {
+    marginTop: "0px",
+    marginBottom: "0px",
+    backgroundColor: "#fbfbfb",
+  } as CSSProperties,
+
+  wrapperCol: {
+    span: 6,
+    offset: 1,
+  } as ColProps,
 };
