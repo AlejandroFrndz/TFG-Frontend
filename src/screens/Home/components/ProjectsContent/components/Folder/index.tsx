@@ -3,9 +3,11 @@ import { useDrag, useDrop } from "react-dnd";
 import { DragTypes } from "src/utils/constants";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { useDispatch } from "react-redux";
-import { updateFolderParent } from "src/redux/folders/actions";
+import { updateFolder } from "src/redux/folders/actions";
 import { ProjectItem } from "src/shared/ProjectItem";
-import { updateFileParent } from "src/redux/files/actions";
+import { updateFile } from "src/redux/files/actions";
+import API from "src/utils/api";
+import { handleActionErrorMessage } from "src/utils/helpers";
 
 type FolderProps = {
   name: string;
@@ -37,13 +39,25 @@ export const Folder: React.FC<FolderProps> = ({
 
   const [{ isOver }, drop] = useDrop(() => ({
     accept: [DragTypes.FOLDER, DragTypes.FILE],
-    drop: (item: any, monitor) => {
+    drop: async (item: any, monitor) => {
       switch (monitor.getItemType()) {
         case DragTypes.FOLDER:
-          dispatch(updateFolderParent(item.id, id));
+          const folderResponse = await API.folder.updateParent(item.id, id);
+
+          if (folderResponse.isSuccess()) {
+            dispatch(updateFolder(folderResponse.value.folder));
+          } else {
+            handleActionErrorMessage(folderResponse.error);
+          }
           break;
         case DragTypes.FILE:
-          dispatch(updateFileParent(item.id, id));
+          const fileResponse = await API.file.updateParent(item.id, id);
+
+          if (fileResponse.isSuccess()) {
+            dispatch(updateFile(fileResponse.value.file));
+          } else {
+            handleActionErrorMessage(fileResponse.error);
+          }
           break;
       }
     },

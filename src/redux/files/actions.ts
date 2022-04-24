@@ -1,5 +1,3 @@
-import { ThunkDispatch } from "redux-thunk";
-import API from "src/utils/api";
 import { IFile } from "src/utils/api/resources/file";
 
 export const SET_FILES = "SET_FILES";
@@ -64,13 +62,3 @@ export type FilesActions =
   | AddFile
   | DeleteFile
   | ClearFiles;
-
-export const updateFileParent =
-  (fileId: string, parentId: string | null) =>
-  async (dispatch: ThunkDispatch<any, any, any>) => {
-    const fileResponse = await API.file.updateParent(fileId, parentId);
-
-    if (fileResponse.isSuccess()) {
-      dispatch(updateFile(fileResponse.value.file));
-    }
-  };

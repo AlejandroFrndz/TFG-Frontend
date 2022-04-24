@@ -1,5 +1,3 @@
-import { ThunkDispatch } from "redux-thunk";
-import API from "src/utils/api";
 import { IFolder } from "src/utils/api/resources/folder";
 
 export const SET_FOLDERS = "SET_FOLDERS";
@@ -64,13 +62,3 @@ export type FoldersActions =
   | AddFolder
   | DeleteFolder
   | ClearFolders;
-
-export const updateFolderParent =
-  (childId: string, parentId: string | null) =>
-  async (dispatch: ThunkDispatch<any, any, any>) => {
-    const folderResponse = await API.folder.updateParent(childId, parentId);
-
-    if (folderResponse.isSuccess()) {
-      dispatch(updateFolder(folderResponse.value.folder));
-    }
-  };
