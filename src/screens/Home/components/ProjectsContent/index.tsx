@@ -13,19 +13,22 @@ import {
   Dropdown,
   Typography,
   Modal,
+  message,
 } from "antd";
 import React, { useState } from "react";
 import { CSSProperties } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { createFile, removeFile, renameFile } from "src/redux/files/actions";
+import { addFile, deleteFile, updateFile } from "src/redux/files/actions";
 import { selectFiles } from "src/redux/files/selectors";
 import {
-  createFolder,
-  removeFolder,
-  renameFolder,
+  addFolder,
+  deleteFolder,
+  updateFolder,
 } from "src/redux/folders/actions";
 import { selectFolders } from "src/redux/folders/selectors";
 import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
+import API from "src/utils/api";
+import { IError } from "src/utils/api/logic/errors/IError";
 import { IFile } from "src/utils/api/resources/file";
 import { IFolder } from "src/utils/api/resources/folder";
 import { CustomDragLayer } from "./components/CustomDragLayer";
@@ -105,15 +108,28 @@ export const ProjectsContent: React.FC = () => {
     setSelectedItem(folderId);
   };
 
+  const handleErrorMessage = (error: IError) => {
+    message.error({
+      content: `There was an error performing the action: ${error.message}. Please refresh the page and try again later`,
+    });
+  };
+
   // These would better live as a separate component but for some reason Antd doesn't like it that way and styles get messed up
-  const handleAddFolder = ({ name }: { name: string }) => {
+  const handleAddFolder = async ({ name }: { name: string }) => {
     const parent =
       activeFolders.length === 0
         ? null
         : activeFolders[activeFolders.length - 1].id;
 
-    dispatch(createFolder(name, parent));
     handleHideCreateFolderModal();
+
+    const folderResponse = await API.folder.create(name, parent);
+
+    if (folderResponse.isSuccess()) {
+      dispatch(addFolder(folderResponse.value.folder));
+    } else {
+      handleErrorMessage(folderResponse.error);
+    }
   };
 
   const handleShowCreateFolderModal = () => {
@@ -124,13 +140,21 @@ export const ProjectsContent: React.FC = () => {
     setShowCreateFolderModal(false);
   };
 
-  const handleAddProject = ({ name }: { name: string }) => {
+  const handleAddProject = async ({ name }: { name: string }) => {
     const parent =
       activeFolders.length === 0
         ? null
         : activeFolders[activeFolders.length - 1].id;
-    dispatch(createFile(name, parent));
+
     handleHideCreateProjectModal();
+
+    const fileResponse = await API.file.create(name, parent);
+
+    if (fileResponse.isSuccess()) {
+      dispatch(addFile(fileResponse.value.file));
+    } else {
+      handleErrorMessage(fileResponse.error);
+    }
   };
 
   const handleShowCreateProjectModal = () => {
@@ -154,15 +178,31 @@ export const ProjectsContent: React.FC = () => {
     </Menu>
   );
 
-  const handleRenameItem = ({ name }: { name: string }) => {
+  const handleRenameItem = async ({ name }: { name: string }) => {
+    handleHideRenameItemModal();
+
     if (itemToRename) {
       if (itemToRename.type === "folder") {
-        dispatch(renameFolder(itemToRename.item.id, name));
+        const folderResponse = await API.folder.rename(
+          itemToRename.item.id,
+          name
+        );
+
+        if (folderResponse.isSuccess()) {
+          dispatch(updateFolder(folderResponse.value.folder));
+        } else {
+          handleErrorMessage(folderResponse.error);
+        }
       } else {
-        dispatch(renameFile(itemToRename.item.id, name));
+        const fileResponse = await API.file.rename(itemToRename.item.id, name);
+
+        if (fileResponse.isSuccess()) {
+          dispatch(updateFile(fileResponse.value.file));
+        } else {
+          handleErrorMessage(fileResponse.error);
+        }
       }
     }
-    handleHideRenameItemModal();
   };
 
   const handleShowRenameItemModal = (params: RenameItemStruct) => {
@@ -188,8 +228,14 @@ export const ProjectsContent: React.FC = () => {
       okText: "Delete",
       okType: "danger",
       centered: true,
-      onOk: () => {
-        dispatch(removeFolder(folder.id));
+      onOk: async () => {
+        const response = await API.folder.delete(folder.id);
+
+        if (response.isSuccess()) {
+          dispatch(deleteFolder(folder.id));
+        } else {
+          handleErrorMessage(response.error);
+        }
         handleDisableGeneralContext(false);
       },
       onCancel: () => {
@@ -210,8 +256,14 @@ export const ProjectsContent: React.FC = () => {
       okText: "Delete",
       okType: "danger",
       centered: true,
-      onOk: () => {
-        dispatch(removeFile(file.id));
+      onOk: async () => {
+        const response = await API.file.delete(file.id);
+
+        if (response.isSuccess()) {
+          dispatch(deleteFile(file.id));
+        } else {
+          handleErrorMessage(response.error);
+        }
         handleDisableGeneralContext(false);
       },
       onCancel: () => {

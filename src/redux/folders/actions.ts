@@ -74,30 +74,3 @@ export const updateFolderParent =
       dispatch(updateFolder(folderResponse.value.folder));
     }
   };
-
-export const createFolder =
-  (name: string, parent: string | null) =>
-  async (dispatch: ThunkDispatch<any, any, any>) => {
-    const folderResponse = await API.folder.create(name, parent);
-
-    if (folderResponse.isSuccess()) {
-      dispatch(addFolder(folderResponse.value.folder));
-    }
-  };
-
-export const renameFolder =
-  (folderId: string, name: string) =>
-  async (dispatch: ThunkDispatch<any, any, any>) => {
-    const folderResponse = await API.folder.rename(folderId, name);
-
-    if (folderResponse.isSuccess()) {
-      dispatch(updateFolder(folderResponse.value.folder));
-    }
-  };
-
-export const removeFolder =
-  (folderId: string) => async (dispatch: ThunkDispatch<any, any, any>) => {
-    const response = await API.folder.delete(folderId);
-
-    if (response.isSuccess()) dispatch(deleteFolder(folderId));
-  };

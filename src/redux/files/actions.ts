@@ -74,30 +74,3 @@ export const updateFileParent =
       dispatch(updateFile(fileResponse.value.file));
     }
   };
-
-export const createFile =
-  (name: string, parent: string | null) =>
-  async (dispatch: ThunkDispatch<any, any, any>) => {
-    const fileResponse = await API.file.create(name, parent);
-
-    if (fileResponse.isSuccess()) {
-      dispatch(addFile(fileResponse.value.file));
-    }
-  };
-
-export const removeFile =
-  (fileId: string) => async (dispatch: ThunkDispatch<any, any, any>) => {
-    const response = await API.file.delete(fileId);
-
-    if (response.isSuccess()) dispatch(deleteFile(fileId));
-  };
-
-export const renameFile =
-  (fileId: string, name: string) =>
-  async (dispatch: ThunkDispatch<any, any, any>) => {
-    const fileResponse = await API.file.rename(fileId, name);
-
-    if (fileResponse.isSuccess()) {
-      dispatch(updateFile(fileResponse.value.file));
-    }
-  };
