@@ -13,7 +13,6 @@ import {
   Dropdown,
   Typography,
   Modal,
-  message,
 } from "antd";
 import React, { useState } from "react";
 import { CSSProperties } from "react";
@@ -28,9 +27,9 @@ import {
 import { selectFolders } from "src/redux/folders/selectors";
 import { Folder } from "src/screens/Home/components/ProjectsContent/components/Folder";
 import API from "src/utils/api";
-import { IError } from "src/utils/api/logic/errors/IError";
 import { IFile } from "src/utils/api/resources/file";
 import { IFolder } from "src/utils/api/resources/folder";
+import { handleActionErrorMessage } from "src/utils/helpers";
 import { CustomDragLayer } from "./components/CustomDragLayer";
 import { File } from "./components/File";
 import { ItemNameModal } from "./components/ItemNameModal";
@@ -108,12 +107,6 @@ export const ProjectsContent: React.FC = () => {
     setSelectedItem(folderId);
   };
 
-  const handleErrorMessage = (error: IError) => {
-    message.error({
-      content: `There was an error performing the action: ${error.message}. Please refresh the page and try again later`,
-    });
-  };
-
   // These would better live as a separate component but for some reason Antd doesn't like it that way and styles get messed up
   const handleAddFolder = async ({ name }: { name: string }) => {
     const parent =
@@ -128,7 +121,7 @@ export const ProjectsContent: React.FC = () => {
     if (folderResponse.isSuccess()) {
       dispatch(addFolder(folderResponse.value.folder));
     } else {
-      handleErrorMessage(folderResponse.error);
+      handleActionErrorMessage(folderResponse.error);
     }
   };
 
@@ -153,7 +146,7 @@ export const ProjectsContent: React.FC = () => {
     if (fileResponse.isSuccess()) {
       dispatch(addFile(fileResponse.value.file));
     } else {
-      handleErrorMessage(fileResponse.error);
+      handleActionErrorMessage(fileResponse.error);
     }
   };
 
@@ -191,7 +184,7 @@ export const ProjectsContent: React.FC = () => {
         if (folderResponse.isSuccess()) {
           dispatch(updateFolder(folderResponse.value.folder));
         } else {
-          handleErrorMessage(folderResponse.error);
+          handleActionErrorMessage(folderResponse.error);
         }
       } else {
         const fileResponse = await API.file.rename(itemToRename.item.id, name);
@@ -199,7 +192,7 @@ export const ProjectsContent: React.FC = () => {
         if (fileResponse.isSuccess()) {
           dispatch(updateFile(fileResponse.value.file));
         } else {
-          handleErrorMessage(fileResponse.error);
+          handleActionErrorMessage(fileResponse.error);
         }
       }
     }
@@ -234,7 +227,7 @@ export const ProjectsContent: React.FC = () => {
         if (response.isSuccess()) {
           dispatch(deleteFolder(folder.id));
         } else {
-          handleErrorMessage(response.error);
+          handleActionErrorMessage(response.error);
         }
         handleDisableGeneralContext(false);
       },
@@ -262,7 +255,7 @@ export const ProjectsContent: React.FC = () => {
         if (response.isSuccess()) {
           dispatch(deleteFile(file.id));
         } else {
-          handleErrorMessage(response.error);
+          handleActionErrorMessage(response.error);
         }
         handleDisableGeneralContext(false);
       },

@@ -8,7 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { clearAuthError, fetchMe } from "src/redux/auth/actions";
 import { PulseLoader } from "react-spinners";
-import { Center } from "src/shared/Center";
+import { Center } from "src/shared/Center/Center";
 import { selectAuthError } from "src/redux/auth/selectors";
 import { useNavigate } from "react-router-dom";
 import { AccountContent } from "src/screens/Home/components/AccountContent";

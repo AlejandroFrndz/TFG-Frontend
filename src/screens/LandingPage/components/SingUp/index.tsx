@@ -2,7 +2,7 @@ import { LockOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Col, Form, Input, Modal, Row, Typography } from "antd";
 import { useForm } from "antd/lib/form/Form";
 import React, { CSSProperties, useState } from "react";
-import { Center } from "../../../../shared/Center";
+import { Center } from "../../../../shared/Center/Center";
 
 const { Text } = Typography;
 
