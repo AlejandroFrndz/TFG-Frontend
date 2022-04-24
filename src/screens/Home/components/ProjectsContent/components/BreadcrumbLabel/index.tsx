@@ -2,6 +2,7 @@ import { Typography } from "antd";
 import { CSSProperties } from "react";
 import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
+import { updateFileParent } from "src/redux/files/actions";
 import { updateFolderParent } from "src/redux/folders/actions";
 import { DragTypes } from "src/utils/constants";
 
@@ -25,7 +26,14 @@ export const BreadcrumbLabel: React.FC<BreadcrumbLabelProps> = ({
   const [{ isOver }, drop] = useDrop(() => ({
     accept: [DragTypes.FOLDER, DragTypes.FILE],
     drop: (item: any, monitor) => {
-      dispatch(updateFolderParent(item.id, id));
+      switch (monitor.getItemType()) {
+        case DragTypes.FOLDER:
+          dispatch(updateFolderParent(item.id, id));
+          break;
+        case DragTypes.FILE:
+          dispatch(updateFileParent(item.id, id));
+          break;
+      }
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),

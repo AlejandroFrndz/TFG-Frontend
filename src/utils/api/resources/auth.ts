@@ -24,7 +24,7 @@ type SingUpRequest = {
 };
 
 export class Auth {
-  private static prefix = "/auth";
+  private static prefix = "/auth" as const;
 
   static login = async (
     data: LoginRequest

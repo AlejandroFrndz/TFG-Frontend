@@ -1,6 +1,6 @@
 import { Button, Form, Input, Modal } from "antd";
 
-type FolderNameModalProps = {
+type ItemNameModalProps = {
   visible: boolean;
   title: string;
   defaultText?: string;
@@ -8,7 +8,7 @@ type FolderNameModalProps = {
   handleSubmit: (name: { name: string }) => void;
 };
 
-export const FolderNameModal: React.FC<FolderNameModalProps> = ({
+export const ItemNameModal: React.FC<ItemNameModalProps> = ({
   visible,
   title,
   defaultText,

@@ -1,6 +1,7 @@
 import { ThunkDispatch } from "redux-thunk";
 import API from "src/utils/api";
 import { IUser } from "src/utils/api/resources/user";
+import { setFiles } from "../files/actions";
 import { clearFolders, setFolders } from "../folders/actions";
 
 export const SET_USER = "SET_USER";
@@ -74,6 +75,7 @@ export const fetchMe = () => async (dispatch: ThunkDispatch<any, any, any>) => {
 
   dispatch(setUser(meResponse.value.user));
   dispatch(setFolders(meResponse.value.folders));
+  dispatch(setFiles(meResponse.value.files));
   dispatch(clearAuthError());
 };
 

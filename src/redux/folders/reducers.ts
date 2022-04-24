@@ -44,7 +44,7 @@ function recursivelyDeleteFolder(
 const reducer = (
   state: FoldersState = INITIAL_STATE,
   action: FoldersActions
-) => {
+): FoldersState => {
   switch (action.type) {
     case SET_FOLDERS:
       return {

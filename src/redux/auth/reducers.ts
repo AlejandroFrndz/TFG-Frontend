@@ -18,7 +18,10 @@ const INITIAL_STATE: AuthState = {
   error: false,
 };
 
-const reducer = (state: AuthState = INITIAL_STATE, action: AuthActions) => {
+const reducer = (
+  state: AuthState = INITIAL_STATE,
+  action: AuthActions
+): AuthState => {
   switch (action.type) {
     case SET_USER:
       return {

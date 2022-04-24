@@ -1,32 +1,31 @@
-import { IError } from "src/utils/api/logic/errors/IError";
-import {
-  FailureOrSuccess,
-  success,
-} from "src/utils/api/logic/FailureOrSuccess";
+import { IError } from "../logic/errors/IError";
+import { FailureOrSuccess, success } from "../logic/FailureOrSuccess";
 import client from "src/utils/api/axios";
 import { handleAxiosError } from "src/utils/helpers";
 
-export type IFolder = {
+export type IFile = {
   id: string;
   name: string;
   owner: string;
   parent: string | null;
+  project: string;
 };
 
-type FolderResponse = {
-  folder: IFolder;
+type FileResponse = {
+  file: IFile;
 };
-export class Folder {
-  private static prefix = "/folder" as const;
+
+export class File {
+  private static prefix = "/file" as const;
 
   static updateParent = async (
-    childId: string,
+    fileId: string,
     parentId: string | null
-  ): Promise<FailureOrSuccess<IError, FolderResponse>> => {
+  ): Promise<FailureOrSuccess<IError, FileResponse>> => {
     try {
-      const response = await client.patch<FolderResponse>(
-        `${this.prefix}/${childId}/updateParent`,
-        { newParentId: parentId }
+      const response = await client.patch<FileResponse>(
+        `${this.prefix}/${fileId}/updateParent`,
+        { parentId }
       );
 
       return success(response.data);
@@ -38,9 +37,9 @@ export class Folder {
   static create = async (
     name: string,
     parent: string | null
-  ): Promise<FailureOrSuccess<IError, FolderResponse>> => {
+  ): Promise<FailureOrSuccess<IError, FileResponse>> => {
     try {
-      const response = await client.post<FolderResponse>(`${this.prefix}`, {
+      const response = await client.post<FileResponse>(`${this.prefix}`, {
         name,
         parent,
       });
@@ -52,12 +51,12 @@ export class Folder {
   };
 
   static rename = async (
-    folderId: string,
+    fileId: string,
     name: string
-  ): Promise<FailureOrSuccess<IError, FolderResponse>> => {
+  ): Promise<FailureOrSuccess<IError, FileResponse>> => {
     try {
-      const response = await client.patch<FolderResponse>(
-        `${this.prefix}/${folderId}/rename`,
+      const response = await client.patch<FileResponse>(
+        `${this.prefix}/${fileId}/rename`,
         { name }
       );
 
@@ -68,10 +67,10 @@ export class Folder {
   };
 
   static delete = async (
-    folderId: string
+    fileId: string
   ): Promise<FailureOrSuccess<IError, null>> => {
     try {
-      await client.delete(`${this.prefix}/${folderId}`);
+      await client.delete(`${this.prefix}/${fileId}`);
       return success(null);
     } catch (error) {
       return handleAxiosError(error);
