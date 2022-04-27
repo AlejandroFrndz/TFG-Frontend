@@ -1,6 +1,6 @@
 import axios from "axios";
 import config from "src/config";
-import * as https from "https";
+import https from "https";
 
 const PREFIX = "/api/v1";
 
