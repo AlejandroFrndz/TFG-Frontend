@@ -7,6 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { clearAuthError } from "src/redux/auth/actions";
 import { SingUp } from "src/screens/LandingPage/components/SingUp";
+import { Helmet } from "react-helmet";
+import { MarcoTAO } from "src/utils/constants";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -55,35 +57,40 @@ export const LandingPage: React.FC = () => {
   };
 
   return (
-    <Layout style={styles.layout(blur)}>
-      <Content style={styles.content}>
-        <Row align="middle" style={styles.mainRow}>
-          <Col span={12}>
-            <Row>
-              <Col span={24}>
-                <Center>
-                  <Title>Log in to your account</Title>
-                </Center>
-              </Col>
-              <Col span={24}>
-                <Center>
-                  <Text>To access all your projects and previous work</Text>
-                </Center>
-              </Col>
-            </Row>
-          </Col>
-          <Col span={12}>
-            <Center>
-              <Card style={styles.card} bordered={false}>
-                <LogInForm onFinish={handleLogin} />
-                <Divider />
-                <SingUp onFinish={handleSingUp} blurBackground={setBlur} />
-              </Card>
-            </Center>
-          </Col>
-        </Row>
-      </Content>
-    </Layout>
+    <>
+      <Helmet>
+        <title>{MarcoTAO}</title>
+      </Helmet>
+      <Layout style={styles.layout(blur)}>
+        <Content style={styles.content}>
+          <Row align="middle" style={styles.mainRow}>
+            <Col span={12}>
+              <Row>
+                <Col span={24}>
+                  <Center>
+                    <Title>Log in to your account</Title>
+                  </Center>
+                </Col>
+                <Col span={24}>
+                  <Center>
+                    <Text>To access all your projects and previous work</Text>
+                  </Center>
+                </Col>
+              </Row>
+            </Col>
+            <Col span={12}>
+              <Center>
+                <Card style={styles.card} bordered={false}>
+                  <LogInForm onFinish={handleLogin} />
+                  <Divider />
+                  <SingUp onFinish={handleSingUp} blurBackground={setBlur} />
+                </Card>
+              </Center>
+            </Col>
+          </Row>
+        </Content>
+      </Layout>
+    </>
   );
 };
 
