@@ -17,6 +17,7 @@ import {
 import React, { useState } from "react";
 import { CSSProperties } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Helmet } from "react-helmet";
 import { addFile, deleteFile, updateFile } from "src/redux/files/actions";
 import { selectFiles } from "src/redux/files/selectors";
 import {
@@ -35,6 +36,7 @@ import { File } from "./components/File";
 import { ItemNameModal } from "./components/ItemNameModal";
 import { ProjectsHeader } from "./components/ProjectsHeader";
 import "./scrollbar.css";
+import { MarcoTAO } from "src/utils/constants";
 
 export type ActiveFolderStruct = {
   id: string;
@@ -299,6 +301,9 @@ export const ProjectsContent: React.FC = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{MarcoTAO} - Projects</title>
+      </Helmet>
       <CustomDragLayer />
       <ProjectsHeader
         clampActiveFolders={clampActiveFolders}
@@ -383,7 +388,6 @@ export const ProjectsContent: React.FC = () => {
         visible={showCreateFolderModal}
         handleHide={handleHideCreateFolderModal}
         handleSubmit={handleAddFolder}
-        defaultText="New Folder"
       />
 
       <ItemNameModal

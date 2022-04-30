@@ -39,7 +39,7 @@ export const ItemNameModal: React.FC<ItemNameModalProps> = ({
           ]}
           initialValue={defaultText}
         >
-          <Input />
+          <Input autoFocus />
         </Form.Item>
 
         <Form.Item wrapperCol={{ offset: 20, span: 16 }}>
