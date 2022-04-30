@@ -169,6 +169,7 @@ export const AccountContent: React.FC = () => {
             name="password"
             wrapperCol={styles.wrapperCol}
             rules={[{ required: true, message: "Password cannot be empty" }]}
+            tooltip={{ title: "Click the lock to change your password" }}
           >
             <Input.Password
               visibilityToggle={!passwordDisabled}
@@ -181,6 +182,7 @@ export const AccountContent: React.FC = () => {
               }
               disabled={passwordDisabled}
               style={styles.passwordInput}
+              placeholder="New password"
             />
           </Form.Item>
           <Form.Item
