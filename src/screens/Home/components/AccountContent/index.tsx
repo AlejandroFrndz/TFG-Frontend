@@ -27,6 +27,8 @@ import { logOut, updateUser } from "src/redux/auth/actions";
 import { selectUser } from "src/redux/auth/selectors";
 import { IUser } from "src/utils/api/resources/user";
 import API from "src/utils/api";
+import { Helmet } from "react-helmet";
+import { MarcoTAO } from "src/utils/constants";
 
 const { Text, Title } = Typography;
 const { confirm } = Modal;
@@ -123,6 +125,9 @@ export const AccountContent: React.FC = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{MarcoTAO} - Settings</title>
+      </Helmet>
       <Header style={styles.header}>
         <Title>Account</Title>
       </Header>
@@ -169,6 +174,7 @@ export const AccountContent: React.FC = () => {
             name="password"
             wrapperCol={styles.wrapperCol}
             rules={[{ required: true, message: "Password cannot be empty" }]}
+            tooltip={{ title: "Click the lock to change your password" }}
           >
             <Input.Password
               visibilityToggle={!passwordDisabled}
@@ -181,6 +187,7 @@ export const AccountContent: React.FC = () => {
               }
               disabled={passwordDisabled}
               style={styles.passwordInput}
+              placeholder="New password"
             />
           </Form.Item>
           <Form.Item
