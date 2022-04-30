@@ -383,7 +383,6 @@ export const ProjectsContent: React.FC = () => {
         visible={showCreateFolderModal}
         handleHide={handleHideCreateFolderModal}
         handleSubmit={handleAddFolder}
-        defaultText="New Folder"
       />
 
       <ItemNameModal
