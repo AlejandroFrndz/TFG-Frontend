@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { setProject } from "src/redux/projects/actions";
 import { Center } from "src/shared/Center/Center";
 import { FullScreenLoader } from "src/shared/FullScreenLoader";
 import API from "src/utils/api";
+import { MarcoTAO } from "src/utils/constants";
 
 export const Project: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -51,7 +53,15 @@ export const Project: React.FC = () => {
     fetchProject();
   }, [dispatch, projectId, setLoading]);
 
-  if (loading) return <FullScreenLoader type="Propagate" color="red" />;
+  if (loading)
+    return (
+      <>
+        <Helmet>
+          <title>{`${MarcoTAO} - Workspace`}</title>
+        </Helmet>
+        <FullScreenLoader type="Propagate" color="red" />
+      </>
+    );
 
   if (error) return <Center style={{ height: "100vh" }}>{errorMessage}</Center>;
 
