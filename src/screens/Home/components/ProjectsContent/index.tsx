@@ -368,6 +368,13 @@ export const ProjectsContent: React.FC = () => {
                       setSelectedItem(file.id);
                       event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
                     }}
+                    onDoubleClick={() => {
+                      window.open(
+                        `/project/${file.project}`,
+                        "_blank",
+                        "noopener,noreferrer"
+                      );
+                    }}
                   >
                     <File
                       name={file.name}
