@@ -3,6 +3,7 @@ import thunk from "redux-thunk";
 import authReducer from "src/redux/auth/reducers";
 import foldersReducer from "src/redux/folders/reducers";
 import filesReducer from "src/redux/files/reducers";
+import projectReducer from "src/redux/projects/reducers";
 import config from "src/config";
 
 const composeEnhancers = config.isDevEnv
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   folders: foldersReducer,
   files: filesReducer,
+  project: projectReducer,
 });
 
 const store = createStore(
