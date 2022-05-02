@@ -9,9 +9,17 @@ export enum ProjectLanguage {
   French = "French",
 }
 
+export enum ProjectPhase {
+  Creation = "Creation",
+  Analysis = "Analysis",
+  Tagging = "Tagging",
+  Visualization = "Visualization",
+}
+
 export type IProject = {
   id: string;
   owner: string;
+  phase: ProjectPhase;
   language: ProjectLanguage | null;
   domainName: string | null;
   isUsingSubdomains: boolean;
