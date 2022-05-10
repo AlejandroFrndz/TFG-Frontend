@@ -7,6 +7,7 @@ import { Center } from "src/shared/Center/Center";
 import { FullScreenLoader } from "src/shared/FullScreenLoader";
 import API from "src/utils/api";
 import { MarcoTAO } from "src/utils/constants";
+import { ProjectStepper } from "./components/Stepper";
 
 export const Project: React.FC = () => {
   const [loading, setLoading] = useState(true);
@@ -65,5 +66,7 @@ export const Project: React.FC = () => {
 
   if (error) return <Center style={{ height: "100vh" }}>{errorMessage}</Center>;
 
-  return <Center style={{ height: "100vh" }}>Yo wasa</Center>;
+  return (
+    <ProjectStepper setError={setError} setErrorMessage={setErrorMessage} />
+  );
 };
