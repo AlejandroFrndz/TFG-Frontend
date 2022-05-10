@@ -12,8 +12,14 @@ import {
   Upload,
 } from "antd";
 import ReactCountryFlag from "react-country-flag";
-import { ProjectLanguage } from "src/utils/api/resources/project";
+import { IProject, ProjectLanguage } from "src/utils/api/resources/project";
 import { RcFile } from "antd/lib/upload";
+import API from "src/utils/api";
+import { useDispatch, useSelector } from "react-redux";
+import _ from "lodash";
+import { selectProject } from "src/redux/projects/selectors";
+import { isNotEmpty } from "src/utils/helpers";
+import { setProject } from "src/redux/projects/actions";
 
 const { Title, Text } = Typography;
 const { Dragger } = Upload;
@@ -61,14 +67,14 @@ const languageOptions = [
 ];
 
 type CreateProjectState = {
-  name: string;
+  domainName: string;
   isUsingSubdomains: boolean;
   language: ProjectLanguage;
   corpusFile: RcFile | null;
 };
 
 const INITIAL_STATE: CreateProjectState = {
-  name: "",
+  domainName: "",
   isUsingSubdomains: false,
   language: ProjectLanguage.English,
   corpusFile: null,
@@ -78,8 +84,11 @@ export const CreationStep: React.FC = () => {
   const [projectState, setProjectState] =
     useState<CreateProjectState>(INITIAL_STATE);
 
+  const project = useSelector(selectProject());
+  const dispatch = useDispatch();
+
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setProjectState({ ...projectState, name: e.target.value });
+    setProjectState({ ...projectState, domainName: e.target.value });
   };
 
   const handleSubdomainsChange = (value: boolean) => {
@@ -91,10 +100,26 @@ export const CreationStep: React.FC = () => {
   };
 
   const handleDisableSubmit = (): boolean => {
-    return projectState.name === "" || projectState.corpusFile === null;
+    return projectState.domainName === "" || projectState.corpusFile === null;
   };
 
-  console.log(projectState);
+  const beforeUpload = (file: RcFile, _fileList: RcFile[]): boolean => {
+    setProjectState({ ...projectState, corpusFile: file });
+    return false;
+  };
+
+  const handleSubmit = async () => {
+    if (isNotEmpty<IProject>(project)) {
+      const projectWithDetailsResponse = await API.project.updateDetails(
+        project.id,
+        _.omit(projectState, "corpusFile")
+      );
+
+      if (projectWithDetailsResponse.isSuccess()) {
+        dispatch(setProject(projectWithDetailsResponse.value));
+      }
+    }
+  };
 
   return (
     <>
@@ -107,7 +132,7 @@ export const CreationStep: React.FC = () => {
             placeholder="Name"
             style={styles.domainInput}
             onChange={handleNameChange}
-            value={projectState.name}
+            value={projectState.domainName}
           />
         </Col>
         <Col span={5}>
@@ -145,10 +170,7 @@ export const CreationStep: React.FC = () => {
             name="corpus"
             maxCount={1}
             accept=".txt,text/plain"
-            beforeUpload={(file) => {
-              setProjectState({ ...projectState, corpusFile: file });
-              return false;
-            }}
+            beforeUpload={beforeUpload}
           >
             <Text style={{ display: "block" }}>
               Upload the corpus file you're going to be working with
@@ -177,6 +199,7 @@ export const CreationStep: React.FC = () => {
             shape="round"
             style={{ width: "200px", height: "50px" }}
             disabled={handleDisableSubmit()}
+            onClick={handleSubmit}
           >
             Confirm
           </Button>

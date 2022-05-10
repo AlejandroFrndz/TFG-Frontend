@@ -25,6 +25,12 @@ export type IProject = {
   isUsingSubdomains: boolean;
 };
 
+export type ProjectDetails = {
+  language: ProjectLanguage;
+  domainName: string;
+  isUsingSubdomains: boolean;
+};
+
 type AxiosProjectResponse = {
   project: IProject;
 };
@@ -38,6 +44,22 @@ export class Project {
     try {
       const response = await client.get<AxiosProjectResponse>(
         `${this.prefix}/${projectId}`
+      );
+
+      return success(response.data.project);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  static updateDetails = async (
+    projectId: string,
+    projectDetails: ProjectDetails
+  ) => {
+    try {
+      const response = await client.patch<AxiosProjectResponse>(
+        `${this.prefix}/${projectId}`,
+        projectDetails
       );
 
       return success(response.data.project);
