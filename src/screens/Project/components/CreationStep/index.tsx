@@ -84,6 +84,7 @@ const INITIAL_STATE: CreateProjectState = {
 export const CreationStep: React.FC = () => {
   const [projectState, setProjectState] =
     useState<CreateProjectState>(INITIAL_STATE);
+  const [loading, setLoading] = useState(false);
 
   const project = useSelector(selectProject());
   const dispatch = useDispatch();
@@ -126,14 +127,14 @@ export const CreationStep: React.FC = () => {
 
   const handleSubmit = async () => {
     if (isNotEmpty<IProject>(project)) {
+      setLoading(true);
+
       const projectWithDetailsResponse = await API.project.updateDetails(
         project.id,
         _.omit(projectState, "corpusFile")
       );
 
       if (projectWithDetailsResponse.isSuccess()) {
-        dispatch(setProject(projectWithDetailsResponse.value));
-
         if (projectState.corpusFiles) {
           const corpusData = new FormData();
 
@@ -145,8 +146,14 @@ export const CreationStep: React.FC = () => {
             project.id,
             corpusData
           );
+
+          if (response.isSuccess()) {
+            dispatch(setProject(response.value));
+          }
         }
       }
+
+      setLoading(false);
     }
   };
 
@@ -231,6 +238,7 @@ export const CreationStep: React.FC = () => {
             style={{ width: "200px", height: "50px" }}
             disabled={handleDisableSubmit()}
             onClick={handleSubmit}
+            loading={loading}
           >
             Confirm
           </Button>

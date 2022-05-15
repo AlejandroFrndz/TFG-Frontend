@@ -70,11 +70,15 @@ export class Project {
 
   static uploadCorpus = async (projectId: string, data: FormData) => {
     try {
-      await client.post(`${this.prefix}/${projectId}/uploadCorpus`, data, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const response = await client.post<AxiosProjectResponse>(
+        `${this.prefix}/${projectId}/uploadCorpus`,
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
 
-      return success(null);
+      return success(response.data.project);
     } catch (error) {
       return handleAxiosError(error);
     }
