@@ -20,6 +20,7 @@ import _ from "lodash";
 import { selectProject } from "src/redux/projects/selectors";
 import { isNotEmpty } from "src/utils/helpers";
 import { setProject } from "src/redux/projects/actions";
+import { UploadFile } from "antd/lib/upload/interface";
 
 const { Title, Text } = Typography;
 const { Dragger } = Upload;
@@ -70,14 +71,14 @@ type CreateProjectState = {
   domainName: string;
   isUsingSubdomains: boolean;
   language: ProjectLanguage;
-  corpusFile: RcFile | null;
+  corpusFiles: RcFile[];
 };
 
 const INITIAL_STATE: CreateProjectState = {
   domainName: "",
   isUsingSubdomains: false,
   language: ProjectLanguage.English,
-  corpusFile: null,
+  corpusFiles: [],
 };
 
 export const CreationStep: React.FC = () => {
@@ -100,12 +101,27 @@ export const CreationStep: React.FC = () => {
   };
 
   const handleDisableSubmit = (): boolean => {
-    return projectState.domainName === "" || projectState.corpusFile === null;
+    return (
+      projectState.domainName === "" || projectState.corpusFiles.length === 0
+    );
   };
 
-  const beforeUpload = (file: RcFile, _fileList: RcFile[]): boolean => {
-    setProjectState({ ...projectState, corpusFile: file });
+  const beforeUpload = (_file: RcFile, fileList: RcFile[]): boolean => {
+    setProjectState({
+      ...projectState,
+      corpusFiles: fileList,
+    });
     return false;
+  };
+
+  const handleRemove = (removedFile: UploadFile<any>): boolean => {
+    setProjectState({
+      ...projectState,
+      corpusFiles: projectState.corpusFiles.filter(
+        (file) => file.uid !== removedFile.uid
+      ),
+    });
+    return true;
   };
 
   const handleSubmit = async () => {
@@ -117,6 +133,19 @@ export const CreationStep: React.FC = () => {
 
       if (projectWithDetailsResponse.isSuccess()) {
         dispatch(setProject(projectWithDetailsResponse.value));
+
+        if (projectState.corpusFiles) {
+          const corpusData = new FormData();
+
+          projectState.corpusFiles.forEach((file) => {
+            corpusData.append("corpusFile", file);
+          });
+
+          const response = await API.project.uploadCorpus(
+            project.id,
+            corpusData
+          );
+        }
       }
     }
   };
@@ -168,9 +197,11 @@ export const CreationStep: React.FC = () => {
         <Col span={6} style={{ marginBottom: "3vh" }}>
           <Dragger
             name="corpus"
-            maxCount={1}
+            multiple
+            maxCount={15}
             accept=".txt,text/plain"
             beforeUpload={beforeUpload}
+            onRemove={handleRemove}
           >
             <Text style={{ display: "block" }}>
               Upload the corpus file you're going to be working with

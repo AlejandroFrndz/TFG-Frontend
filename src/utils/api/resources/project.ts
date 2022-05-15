@@ -67,4 +67,16 @@ export class Project {
       return handleAxiosError(error);
     }
   };
+
+  static uploadCorpus = async (projectId: string, data: FormData) => {
+    try {
+      await client.post(`${this.prefix}/${projectId}/uploadCorpus`, data, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      return success(null);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
 }
