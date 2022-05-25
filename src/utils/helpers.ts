@@ -1,5 +1,6 @@
 import { message } from "antd";
 import axios from "axios";
+import _ from "lodash";
 import { ApiError, UnexpectedError } from "./api/logic/errors";
 import { IError } from "./api/logic/errors/IError";
 import { failure, FailureOrSuccess } from "./api/logic/FailureOrSuccess";
@@ -22,3 +23,7 @@ export const handleActionErrorMessage = (error: IError) => {
     duration: 5,
   });
 };
+
+export function isNotEmpty<T>(obj: Record<string, any>): obj is T {
+  return !_.isEmpty(obj);
+}
