@@ -369,6 +369,7 @@ export const ProjectsContent: React.FC = () => {
                       event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
                     }}
                     onDoubleClick={() => {
+                      console.log("Double clicked file");
                       window.open(
                         `/project/${file.project}`,
                         "_blank",
