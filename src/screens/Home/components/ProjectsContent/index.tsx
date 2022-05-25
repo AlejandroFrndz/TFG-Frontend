@@ -365,6 +365,7 @@ export const ProjectsContent: React.FC = () => {
                   <Col
                     span={6}
                     onClick={(event) => {
+                      console.log("Clicked file");
                       setSelectedItem(file.id);
                       event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
                     }}
