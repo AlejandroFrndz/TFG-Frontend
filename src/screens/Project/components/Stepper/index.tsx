@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Divider, Steps } from "antd";
 import { CSSProperties } from "react";
+import { AnalysisStep } from "../AnalysisStep";
 import { CreationStep } from "../CreationStep";
 import { useStep } from "./hooks/useStep";
 
@@ -27,7 +28,7 @@ export const ProjectStepper: React.FC<ProjectStepperProps> = ({
       case 0:
         return <CreationStep />;
       case 1:
-        return <div>Analysis</div>;
+        return <AnalysisStep />;
       case 2:
         return <div>Tagging</div>;
       case 3:
