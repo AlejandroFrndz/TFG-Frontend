@@ -40,15 +40,29 @@ export class Search {
   private static prefix = "/search" as const;
 
   static create = async (
-    params: CreateSearchRequest
+    data: FormData
   ): Promise<FailureOrSuccess<IError, ISearch>> => {
     try {
       const response = await client.post<SearchResponse>(
         `${this.prefix}`,
-        params
+        data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
       );
 
       return success(response.data.search);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  static delete = async (
+    searchId: string
+  ): Promise<FailureOrSuccess<IError, null>> => {
+    try {
+      await client.delete(`${this.prefix}/${searchId}`);
+      return success(null);
     } catch (error) {
       return handleAxiosError(error);
     }

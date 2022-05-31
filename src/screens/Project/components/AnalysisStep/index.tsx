@@ -17,9 +17,11 @@ import React, { useState } from "react";
 import { ParameterInput } from "./components/ParameterInput";
 import {
   CreateSearchRequest,
+  ISearch,
   SearchParameterType,
 } from "src/utils/api/resources/search";
 import API from "src/utils/api";
+import { SavedSearch } from "./components/SavedSearch";
 
 const { Title, Text } = Typography;
 
@@ -110,9 +112,26 @@ export const AnalysisStep: React.FC = () => {
   );
   const [isUsingSynt, setIsUsingSynt] = useState(false);
 
-  const handleSaveSearch = async () => {
-    console.log({ noun1State, verbState, noun2State, isUsingSynt });
+  const [savedSearches, setSavedSearches] = useState<ISearch[]>([]);
 
+  const resetSearchState = () => {
+    setNoun1State(initialParameterState);
+    setVerbState(initialParameterState);
+    setNoun2State(initialParameterState);
+    setIsUsingSynt(false);
+  };
+
+  const handleDeleteSearch = async (searchId: string) => {
+    const deleteResponse = await API.search.delete(searchId);
+
+    if (deleteResponse.isSuccess()) {
+      setSavedSearches(
+        savedSearches.filter((search) => search.id !== searchId)
+      );
+    }
+  };
+
+  const handleSaveSearch = async () => {
     const createSearchRequest: CreateSearchRequest = {
       noun1: {
         type: noun1State.type as SearchParameterType,
@@ -130,7 +149,29 @@ export const AnalysisStep: React.FC = () => {
       project: project.id,
     };
 
-    const searchResponse = await API.search.create(createSearchRequest);
+    const data = new FormData();
+
+    data.append("document", JSON.stringify(createSearchRequest));
+
+    if (noun1State.type === "file") {
+      data.append("noun1File", noun1State.value as RcFile);
+    }
+
+    if (verbState.type === "file") {
+      data.append("verbFile", verbState.value as RcFile);
+    }
+
+    if (noun2State.type === "file") {
+      data.append("noun2File", noun2State.value as RcFile);
+    }
+
+    const searchResponse = await API.search.create(data);
+
+    if (searchResponse.isSuccess()) {
+      setSavedSearches([...savedSearches, searchResponse.value]);
+    }
+
+    resetSearchState();
   };
 
   const canSaveSearch = () => {
@@ -260,6 +301,15 @@ export const AnalysisStep: React.FC = () => {
         <Center>
           <Title>Saved Searches</Title>
         </Center>
+        <Row>
+          {savedSearches.map((search) => (
+            <SavedSearch
+              search={search}
+              key={search.id}
+              deleteSearch={handleDeleteSearch}
+            />
+          ))}
+        </Row>
       </>
     </>
   );
