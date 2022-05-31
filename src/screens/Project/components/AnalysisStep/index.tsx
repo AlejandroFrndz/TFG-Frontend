@@ -15,6 +15,11 @@ import {
 import { RcFile } from "antd/lib/upload";
 import React, { useState } from "react";
 import { ParameterInput } from "./components/ParameterInput";
+import {
+  CreateSearchRequest,
+  SearchParameterType,
+} from "src/utils/api/resources/search";
+import API from "src/utils/api";
 
 const { Title, Text } = Typography;
 
@@ -105,8 +110,27 @@ export const AnalysisStep: React.FC = () => {
   );
   const [isUsingSynt, setIsUsingSynt] = useState(false);
 
-  const handleSaveSearch = () => {
+  const handleSaveSearch = async () => {
     console.log({ noun1State, verbState, noun2State, isUsingSynt });
+
+    const createSearchRequest: CreateSearchRequest = {
+      noun1: {
+        type: noun1State.type as SearchParameterType,
+        value: noun1State.type === "file" ? null : noun1State.value,
+      },
+      verb: {
+        type: verbState.type as SearchParameterType,
+        value: verbState.type === "file" ? null : verbState.value,
+      },
+      noun2: {
+        type: noun2State.type as SearchParameterType,
+        value: noun2State.type === "file" ? null : noun2State.value,
+      },
+      isUsingSynt,
+      project: project.id,
+    };
+
+    const searchResponse = await API.search.create(createSearchRequest);
   };
 
   const canSaveSearch = () => {
