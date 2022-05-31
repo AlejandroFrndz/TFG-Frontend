@@ -13,7 +13,7 @@ import {
   QuestionOutlined,
 } from "@ant-design/icons";
 import { RcFile } from "antd/lib/upload";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ParameterInput } from "./components/ParameterInput";
 import {
   CreateSearchRequest,
@@ -22,6 +22,7 @@ import {
 } from "src/utils/api/resources/search";
 import API from "src/utils/api";
 import { SavedSearch } from "./components/SavedSearch";
+import { FullScreenLoader } from "src/shared/FullScreenLoader";
 
 const { Title, Text } = Typography;
 
@@ -112,7 +113,26 @@ export const AnalysisStep: React.FC = () => {
   );
   const [isUsingSynt, setIsUsingSynt] = useState(false);
 
+  const [isLoadingSavedSearches, setIsLoadingSavedSearches] = useState(false);
   const [savedSearches, setSavedSearches] = useState<ISearch[]>([]);
+
+  useEffect(() => {
+    const fetchSearches = async () => {
+      setIsLoadingSavedSearches(true);
+      const response = await API.search.getAllForProject(project.id);
+
+      if (response.isSuccess()) {
+        setSavedSearches((savedSearches) => [
+          ...savedSearches,
+          ...response.value,
+        ]);
+      }
+
+      setIsLoadingSavedSearches(false);
+    };
+
+    fetchSearches();
+  }, [project]);
 
   const resetSearchState = () => {
     setNoun1State(initialParameterState);
@@ -301,15 +321,19 @@ export const AnalysisStep: React.FC = () => {
         <Center>
           <Title>Saved Searches</Title>
         </Center>
-        <Row>
-          {savedSearches.map((search) => (
-            <SavedSearch
-              search={search}
-              key={search.id}
-              deleteSearch={handleDeleteSearch}
-            />
-          ))}
-        </Row>
+        {isLoadingSavedSearches ? (
+          <FullScreenLoader type="Bar" />
+        ) : (
+          <Row>
+            {savedSearches.map((search) => (
+              <SavedSearch
+                search={search}
+                key={search.id}
+                deleteSearch={handleDeleteSearch}
+              />
+            ))}
+          </Row>
+        )}
       </>
     </>
   );

@@ -23,6 +23,10 @@ type SearchResponse = {
   search: ISearch;
 };
 
+type SearchesResponse = {
+  searches: ISearch[];
+};
+
 export type CreateSearchRequestParameter = {
   type: SearchParameterType;
   value: string | null;
@@ -63,6 +67,20 @@ export class Search {
     try {
       await client.delete(`${this.prefix}/${searchId}`);
       return success(null);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  static getAllForProject = async (
+    projectId: string
+  ): Promise<FailureOrSuccess<IError, ISearch[]>> => {
+    try {
+      const response = await client.get<SearchesResponse>(
+        `${this.prefix}/project/${projectId}`
+      );
+
+      return success(response.data.searches);
     } catch (error) {
       return handleAxiosError(error);
     }
