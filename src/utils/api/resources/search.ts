@@ -85,4 +85,16 @@ export class Search {
       return handleAxiosError(error);
     }
   };
+
+  static runSearches = async (
+    projectId: string
+  ): Promise<FailureOrSuccess<IError, null>> => {
+    try {
+      await client.get(`${this.prefix}/project/${projectId}/run`);
+
+      return success(null);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
 }
