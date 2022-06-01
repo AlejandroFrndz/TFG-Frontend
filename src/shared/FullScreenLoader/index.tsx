@@ -25,7 +25,6 @@ import {
   SquareLoader,
   SyncLoader,
 } from "react-spinners";
-import { JsxElement } from "typescript";
 import { Center } from "../Center/Center";
 
 type LoaderType =
@@ -154,13 +153,11 @@ export const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
         }
       >
         <Row justify="center" align="middle">
-          <Col span={24} style={{ marginTop: "-10vh" }}>
+          <Col span={24} style={styles.textWrapper}>
             {text}
           </Col>
           <Col span={24}>
-            <div style={{ width: "100%", paddingLeft: "25%" }}>
-              {renderLoader()}
-            </div>
+            <div style={styles.loaderWrapper}>{renderLoader()}</div>
           </Col>
         </Row>
       </Center>
@@ -172,5 +169,14 @@ const styles = {
   fullScreenSize: {
     height: "100vh",
     width: "100vw",
+  } as CSSProperties,
+
+  textWrapper: {
+    marginTop: "-10vh",
+  } as CSSProperties,
+
+  loaderWrapper: {
+    width: "100%",
+    paddingLeft: "25%",
   } as CSSProperties,
 };

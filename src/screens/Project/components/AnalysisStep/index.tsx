@@ -205,6 +205,18 @@ export const AnalysisStep: React.FC = () => {
     resetSearchState();
   };
 
+  const handleRunSearches = async () => {
+    setIsRunningSearches(true);
+
+    const response = await API.search.runSearches(project.id);
+
+    if (response.isSuccess()) {
+      // Update search with dispatch
+    }
+
+    setIsRunningSearches(false);
+  };
+
   const canSaveSearch = () => {
     if (
       noun1State.type === "unset" ||
@@ -360,10 +372,7 @@ export const AnalysisStep: React.FC = () => {
                   </Button>
                 </Tooltip>
               ) : (
-                <Button
-                  type="primary"
-                  onClick={() => setIsRunningSearches(true)}
-                >
+                <Button type="primary" onClick={handleRunSearches}>
                   Run Searches
                 </Button>
               )}

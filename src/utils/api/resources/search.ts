@@ -88,11 +88,13 @@ export class Search {
 
   static runSearches = async (
     projectId: string
-  ): Promise<FailureOrSuccess<IError, null>> => {
+  ): Promise<FailureOrSuccess<IError, ISearch>> => {
     try {
-      await client.get(`${this.prefix}/project/${projectId}/run`);
+      const response = await client.get<SearchResponse>(
+        `${this.prefix}/project/${projectId}/run`
+      );
 
-      return success(null);
+      return success(response.data.search);
     } catch (error) {
       return handleAxiosError(error);
     }
