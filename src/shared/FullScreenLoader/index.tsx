@@ -1,3 +1,4 @@
+import { Col, Row } from "antd";
 import { CSSProperties } from "react";
 import {
   BarLoader,
@@ -24,6 +25,7 @@ import {
   SquareLoader,
   SyncLoader,
 } from "react-spinners";
+import { JsxElement } from "typescript";
 import { Center } from "../Center/Center";
 
 type LoaderType =
@@ -59,6 +61,9 @@ type FullScreenLoaderProps = {
   margin?: number;
   radius?: number;
   color?: string;
+  wrapperHeight?: string;
+  wrapperWidth?: string;
+  text?: JSX.Element;
 };
 
 export const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
@@ -69,6 +74,9 @@ export const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
   margin,
   radius,
   color,
+  wrapperHeight,
+  wrapperWidth,
+  text,
 }) => {
   const renderLoader = () => {
     switch (type) {
@@ -136,7 +144,28 @@ export const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
         return <SyncLoader size={size} margin={margin} color={color} />;
     }
   };
-  return <Center style={styles.fullScreenSize}>{renderLoader()}</Center>;
+  return (
+    <>
+      <Center
+        style={
+          wrapperHeight || wrapperWidth
+            ? { height: wrapperHeight, width: wrapperWidth }
+            : styles.fullScreenSize
+        }
+      >
+        <Row justify="center" align="middle">
+          <Col span={24} style={{ marginTop: "-10vh" }}>
+            {text}
+          </Col>
+          <Col span={24}>
+            <div style={{ width: "100%", paddingLeft: "25%" }}>
+              {renderLoader()}
+            </div>
+          </Col>
+        </Row>
+      </Center>
+    </>
+  );
 };
 
 const styles = {
