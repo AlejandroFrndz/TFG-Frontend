@@ -1,6 +1,15 @@
 import { Helmet } from "react-helmet";
 import { useSelector } from "react-redux";
-import { Button, Col, Divider, Menu, Row, Switch, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Divider,
+  Menu,
+  Row,
+  Switch,
+  Tooltip,
+  Typography,
+} from "antd";
 import { selectProject } from "src/redux/projects/selectors";
 import { Center } from "src/shared/Center/Center";
 import { IProject } from "src/utils/api/resources/project";
@@ -13,7 +22,7 @@ import {
   QuestionOutlined,
 } from "@ant-design/icons";
 import { RcFile } from "antd/lib/upload";
-import React, { useEffect, useState } from "react";
+import React, { CSSProperties, useEffect, useState } from "react";
 import { ParameterInput } from "./components/ParameterInput";
 import {
   CreateSearchRequest,
@@ -232,29 +241,29 @@ export const AnalysisStep: React.FC = () => {
       </Helmet>
 
       <>
-        <Center style={{ marginBottom: "20px" }}>
+        <Center style={styles.configureSearchLabel}>
           <Title>Configure Search</Title>
         </Center>
-        <Row style={{ textAlign: "center" }} justify="center">
+        <Row style={styles.textAlignCenter} justify="center">
           <Col span={5}>
             <Text>First Noun</Text>
           </Col>
-          <Divider type="vertical" style={{ visibility: "hidden" }} />
+          <Divider type="vertical" style={styles.hidden} />
           <Col span={5}>
             <Text>Verb</Text>
           </Col>
-          <Divider type="vertical" style={{ visibility: "hidden" }} />
+          <Divider type="vertical" style={styles.hidden} />
           <Col span={5}>
             <Text>Second Noun</Text>
           </Col>
-          <Divider type="vertical" style={{ visibility: "hidden" }} />
+          <Divider type="vertical" style={styles.hidden} />
           <Col span={4}>
             <Text>Use Syntax</Text>
           </Col>
-          <Divider type="vertical" style={{ visibility: "hidden" }} />
+          <Divider type="vertical" style={styles.hidden} />
           <Col span={3} />
         </Row>
-        <Row style={{ textAlign: "center" }} justify="center" align="middle">
+        <Row style={styles.textAlignCenter} justify="center" align="middle">
           <Col span={5}>
             <ParameterInput
               dropdownMenu={parameterTypeMenu(setNoun1State)}
@@ -263,10 +272,7 @@ export const AnalysisStep: React.FC = () => {
               isUsingSynt={isUsingSynt}
             />
           </Col>
-          <Divider
-            type="vertical"
-            style={{ height: "180px", marginTop: "-45px" }}
-          />
+          <Divider type="vertical" style={styles.verticalDivider} />
           <Col span={5}>
             <ParameterInput
               dropdownMenu={parameterTypeMenu(setVerbState)}
@@ -275,10 +281,7 @@ export const AnalysisStep: React.FC = () => {
               isUsingSynt={isUsingSynt}
             />
           </Col>
-          <Divider
-            type="vertical"
-            style={{ height: "190px", marginTop: "-45px" }}
-          />
+          <Divider type="vertical" style={styles.verticalDivider} />
           <Col span={5}>
             <ParameterInput
               dropdownMenu={parameterTypeMenu(setNoun2State)}
@@ -287,10 +290,7 @@ export const AnalysisStep: React.FC = () => {
               isUsingSynt={isUsingSynt}
             />
           </Col>
-          <Divider
-            type="vertical"
-            style={{ height: "190px", marginTop: "-45px" }}
-          />
+          <Divider type="vertical" style={styles.verticalDivider} />
           <Col span={4}>
             <Switch
               checked={isUsingSynt}
@@ -299,10 +299,7 @@ export const AnalysisStep: React.FC = () => {
               onChange={(checked) => setIsUsingSynt(checked)}
             />
           </Col>
-          <Divider
-            type="vertical"
-            style={{ height: "190px", marginTop: "-45px" }}
-          />
+          <Divider type="vertical" style={styles.verticalDivider} />
           <Col span={3}>
             <Button
               type="primary"
@@ -315,7 +312,7 @@ export const AnalysisStep: React.FC = () => {
         </Row>
       </>
 
-      <Divider style={{ marginTop: "18px" }} />
+      <Divider style={styles.horizontalDivider} />
 
       <>
         <Center>
@@ -324,17 +321,68 @@ export const AnalysisStep: React.FC = () => {
         {isLoadingSavedSearches ? (
           <FullScreenLoader type="Bar" />
         ) : (
-          <Row>
-            {savedSearches.map((search) => (
-              <SavedSearch
-                search={search}
-                key={search.id}
-                deleteSearch={handleDeleteSearch}
-              />
-            ))}
-          </Row>
+          <>
+            <Row>
+              {savedSearches.map((search) => (
+                <SavedSearch
+                  search={search}
+                  key={search.id}
+                  deleteSearch={handleDeleteSearch}
+                />
+              ))}
+            </Row>
+            <Center style={styles.runSearchesButton}>
+              {savedSearches.length < 1 ? (
+                <Tooltip
+                  title="You must add at least 1 search before running them!"
+                  placement="bottom"
+                  arrowPointAtCenter
+                  color={styles.runSearchesTooltip.color}
+                  mouseEnterDelay={0.3}
+                >
+                  <Button type="primary" disabled>
+                    Run Searches
+                  </Button>
+                </Tooltip>
+              ) : (
+                <Button type="primary">Run Searches</Button>
+              )}
+            </Center>
+          </>
         )}
       </>
     </>
   );
+};
+
+const styles = {
+  runSearchesTooltip: {
+    color: "#ad0000",
+  } as CSSProperties,
+
+  runSearchesButton: {
+    marginTop: "2vh",
+    paddingBottom: "2vh",
+  } as CSSProperties,
+
+  horizontalDivider: {
+    marginTop: "18px",
+  } as CSSProperties,
+
+  verticalDivider: {
+    height: "190px",
+    marginTop: "-45px",
+  } as CSSProperties,
+
+  textAlignCenter: {
+    textAlign: "center",
+  } as CSSProperties,
+
+  configureSearchLabel: {
+    marginBottom: "20px",
+  } as CSSProperties,
+
+  hidden: {
+    visibility: "hidden",
+  } as CSSProperties,
 };
