@@ -125,6 +125,8 @@ export const AnalysisStep: React.FC = () => {
   const [isLoadingSavedSearches, setIsLoadingSavedSearches] = useState(false);
   const [savedSearches, setSavedSearches] = useState<ISearch[]>([]);
 
+  const [isRunningSearches, setIsRunningSearches] = useState(false);
+
   useEffect(() => {
     const fetchSearches = async () => {
       setIsLoadingSavedSearches(true);
@@ -231,6 +233,19 @@ export const AnalysisStep: React.FC = () => {
 
     return true;
   };
+
+  if (isRunningSearches) {
+    return (
+      <>
+        <FullScreenLoader
+          type="Ring"
+          wrapperHeight="85vh"
+          wrapperWidth="100vw"
+          text={<p>Performing Searches</p>}
+        />
+      </>
+    );
+  }
 
   return (
     <>
@@ -345,7 +360,12 @@ export const AnalysisStep: React.FC = () => {
                   </Button>
                 </Tooltip>
               ) : (
-                <Button type="primary">Run Searches</Button>
+                <Button
+                  type="primary"
+                  onClick={() => setIsRunningSearches(true)}
+                >
+                  Run Searches
+                </Button>
               )}
             </Center>
           </>
