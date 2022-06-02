@@ -212,6 +212,7 @@ export const AnalysisStep: React.FC = () => {
 
     if (response.isSuccess()) {
       // Update search with dispatch
+      window.alert((response.value as any).url);
     }
 
     setIsRunningSearches(false);

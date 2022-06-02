@@ -94,7 +94,7 @@ export class Search {
         `${this.prefix}/project/${projectId}/run`
       );
 
-      return success(response.data.search);
+      return success(response.data as any);
     } catch (error) {
       return handleAxiosError(error);
     }
