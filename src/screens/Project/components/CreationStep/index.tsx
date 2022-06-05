@@ -21,20 +21,72 @@ import { selectProject } from "src/redux/projects/selectors";
 import { isNotEmpty } from "src/utils/helpers";
 import { setProject } from "src/redux/projects/actions";
 import { UploadFile } from "antd/lib/upload/interface";
+import { FullScreenLoader } from "src/shared/FullScreenLoader";
 
 const { Title, Text } = Typography;
 const { Dragger } = Upload;
+
+const styles = {
+  sectionTitle: {
+    textAlign: "center",
+    paddingBottom: "2vh",
+  } as CSSProperties,
+
+  domainInputCol: {
+    marginRight: "20px",
+  } as CSSProperties,
+
+  domainInput: {
+    borderRadius: "10px",
+    height: "40px",
+  } as CSSProperties,
+
+  subdomainText: {
+    marginRight: "5px",
+  } as CSSProperties,
+
+  subdomainIcon: {
+    marginRight: "10px",
+    color: "#c0bdbd",
+  } as CSSProperties,
+
+  draggerIcon: {
+    fontSize: "40px",
+    color: "#2d76d6",
+    paddingTop: "3vh",
+    paddingBottom: "3vh",
+  } as CSSProperties,
+
+  displayBlock: {
+    display: "block",
+  } as CSSProperties,
+
+  confirmButton: {
+    width: "200px",
+    height: "50px",
+  } as CSSProperties,
+
+  draggerWrapper: {
+    marginBottom: "3vh",
+  } as CSSProperties,
+
+  domainSettingsRow: {
+    marginBottom: "5vh",
+  } as CSSProperties,
+
+  countryFlag: {
+    width: "20vw",
+    height: "20vh",
+    paddingTop: "10px",
+  } as CSSProperties,
+};
 
 const languageOptions = [
   {
     label: (
       <div>
-        <ReactCountryFlag
-          countryCode="GB"
-          svg
-          style={{ width: "20vw", height: "20vh", paddingTop: "10px" }}
-        />
-        <Text style={{ display: "block" }}>{ProjectLanguage.English}</Text>
+        <ReactCountryFlag countryCode="GB" svg style={styles.countryFlag} />
+        <Text style={styles.displayBlock}>{ProjectLanguage.English}</Text>
       </div>
     ),
     value: ProjectLanguage.English,
@@ -42,12 +94,8 @@ const languageOptions = [
   {
     label: (
       <div>
-        <ReactCountryFlag
-          countryCode="ES"
-          svg
-          style={{ width: "20vw", height: "20vh", paddingTop: "10px" }}
-        />
-        <Text style={{ display: "block" }}>{ProjectLanguage.Spanish}</Text>
+        <ReactCountryFlag countryCode="ES" svg style={styles.countryFlag} />
+        <Text style={styles.displayBlock}>{ProjectLanguage.Spanish}</Text>
       </div>
     ),
     value: ProjectLanguage.Spanish,
@@ -55,12 +103,8 @@ const languageOptions = [
   {
     label: (
       <div>
-        <ReactCountryFlag
-          countryCode="FR"
-          svg
-          style={{ width: "20vw", height: "20vh", paddingTop: "10px" }}
-        />
-        <Text style={{ display: "block" }}>{ProjectLanguage.French}</Text>
+        <ReactCountryFlag countryCode="FR" svg style={styles.countryFlag} />
+        <Text style={styles.displayBlock}>{ProjectLanguage.French}</Text>
       </div>
     ),
     value: ProjectLanguage.French,
@@ -84,7 +128,7 @@ const INITIAL_STATE: CreateProjectState = {
 export const CreationStep: React.FC = () => {
   const [projectState, setProjectState] =
     useState<CreateProjectState>(INITIAL_STATE);
-  const [loading, setLoading] = useState(false);
+  const [isParsingCorpus, setIsParsingCorpus] = useState(false);
 
   const project = useSelector(selectProject());
   const dispatch = useDispatch();
@@ -127,7 +171,7 @@ export const CreationStep: React.FC = () => {
 
   const handleSubmit = async () => {
     if (isNotEmpty<IProject>(project)) {
-      setLoading(true);
+      setIsParsingCorpus(true);
 
       const projectWithDetailsResponse = await API.project.updateDetails(
         project.id,
@@ -153,13 +197,24 @@ export const CreationStep: React.FC = () => {
         }
       }
 
-      setLoading(false);
+      setIsParsingCorpus(false);
     }
   };
 
+  if (isParsingCorpus) {
+    return (
+      <FullScreenLoader
+        type="Ring"
+        wrapperHeight="85vh"
+        wrapperWidth="100vw"
+        text={<p>Parsing Corpus</p>}
+      />
+    );
+  }
+
   return (
     <>
-      <Row align="middle" justify="center" style={{ marginBottom: "5vh" }}>
+      <Row align="middle" justify="center" style={styles.domainSettingsRow}>
         <Col span={24} style={styles.sectionTitle}>
           <Title>Domain Settings</Title>
         </Col>
@@ -201,7 +256,7 @@ export const CreationStep: React.FC = () => {
         <Col span={24} style={styles.sectionTitle}>
           <Title>Corpus</Title>
         </Col>
-        <Col span={6} style={{ marginBottom: "3vh" }}>
+        <Col span={6} style={styles.draggerWrapper}>
           <Dragger
             name="corpus"
             multiple
@@ -210,18 +265,11 @@ export const CreationStep: React.FC = () => {
             beforeUpload={beforeUpload}
             onRemove={handleRemove}
           >
-            <Text style={{ display: "block" }}>
+            <Text style={styles.displayBlock}>
               Upload the corpus file you're going to be working with
             </Text>
-            <FileTextOutlined
-              style={{
-                fontSize: "40px",
-                color: "#2d76d6",
-                paddingTop: "3vh",
-                paddingBottom: "3vh",
-              }}
-            />
-            <Text style={{ display: "block" }}>
+            <FileTextOutlined style={styles.draggerIcon} />
+            <Text style={styles.displayBlock}>
               Drag the file here o click to open the file explorer
             </Text>
             <Text>Currenlty, only plain text files (.txt) are supported</Text>
@@ -235,10 +283,10 @@ export const CreationStep: React.FC = () => {
             type="primary"
             size="large"
             shape="round"
-            style={{ width: "200px", height: "50px" }}
+            style={styles.confirmButton}
             disabled={handleDisableSubmit()}
             onClick={handleSubmit}
-            loading={loading}
+            loading={isParsingCorpus}
           >
             Confirm
           </Button>
@@ -246,29 +294,4 @@ export const CreationStep: React.FC = () => {
       </Row>
     </>
   );
-};
-
-const styles = {
-  sectionTitle: {
-    textAlign: "center",
-    paddingBottom: "2vh",
-  } as CSSProperties,
-
-  domainInputCol: {
-    marginRight: "20px",
-  } as CSSProperties,
-
-  domainInput: {
-    borderRadius: "10px",
-    height: "40px",
-  } as CSSProperties,
-
-  subdomainText: {
-    marginRight: "5px",
-  } as CSSProperties,
-
-  subdomainIcon: {
-    marginRight: "10px",
-    color: "#c0bdbd",
-  } as CSSProperties,
 };

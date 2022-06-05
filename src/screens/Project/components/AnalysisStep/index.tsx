@@ -252,14 +252,12 @@ export const AnalysisStep: React.FC = () => {
 
   if (isRunningSearches) {
     return (
-      <>
-        <FullScreenLoader
-          type="Ring"
-          wrapperHeight="85vh"
-          wrapperWidth="100vw"
-          text={<p>Performing Searches</p>}
-        />
-      </>
+      <FullScreenLoader
+        type="Ring"
+        wrapperHeight="85vh"
+        wrapperWidth="100vw"
+        text={<p>Performing Searches</p>}
+      />
     );
   }
 
