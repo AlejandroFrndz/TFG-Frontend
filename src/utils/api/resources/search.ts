@@ -19,11 +19,11 @@ export type ISearch = {
   isUsingSynt: boolean;
 };
 
-type SearchResponse = {
+type AxiosSearchResponse = {
   search: ISearch;
 };
 
-type SearchesResponse = {
+type AxiosSearchesResponse = {
   searches: ISearch[];
 };
 
@@ -40,14 +40,15 @@ export type CreateSearchRequest = {
   project: string;
 };
 
+type SearchResponse = FailureOrSuccess<IError, ISearch>;
+type SearchesResponse = FailureOrSuccess<IError, ISearch[]>;
+
 export class Search {
   private static prefix = "/search" as const;
 
-  static create = async (
-    data: FormData
-  ): Promise<FailureOrSuccess<IError, ISearch>> => {
+  static create = async (data: FormData): Promise<SearchResponse> => {
     try {
-      const response = await client.post<SearchResponse>(
+      const response = await client.post<AxiosSearchResponse>(
         `${this.prefix}`,
         data,
         {
@@ -74,27 +75,13 @@ export class Search {
 
   static getAllForProject = async (
     projectId: string
-  ): Promise<FailureOrSuccess<IError, ISearch[]>> => {
+  ): Promise<SearchesResponse> => {
     try {
-      const response = await client.get<SearchesResponse>(
+      const response = await client.get<AxiosSearchesResponse>(
         `${this.prefix}/project/${projectId}`
       );
 
       return success(response.data.searches);
-    } catch (error) {
-      return handleAxiosError(error);
-    }
-  };
-
-  static runSearches = async (
-    projectId: string
-  ): Promise<FailureOrSuccess<IError, ISearch>> => {
-    try {
-      const response = await client.get<SearchResponse>(
-        `${this.prefix}/project/${projectId}/run`
-      );
-
-      return success(response.data as any);
     } catch (error) {
       return handleAxiosError(error);
     }

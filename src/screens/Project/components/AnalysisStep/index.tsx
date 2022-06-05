@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Button,
   Col,
@@ -32,6 +32,7 @@ import {
 import API from "src/utils/api";
 import { SavedSearch } from "./components/SavedSearch";
 import { FullScreenLoader } from "src/shared/FullScreenLoader";
+import { setProject } from "src/redux/projects/actions";
 
 const { Title, Text } = Typography;
 
@@ -110,6 +111,7 @@ const initialParameterState: ParameterState = { type: "unset", value: null };
 
 export const AnalysisStep: React.FC = () => {
   const project = useSelector(selectProject()) as IProject;
+  const dispatch = useDispatch();
 
   const [noun1State, setNoun1State] = useState<ParameterState>(
     initialParameterState
@@ -208,11 +210,12 @@ export const AnalysisStep: React.FC = () => {
   const handleRunSearches = async () => {
     setIsRunningSearches(true);
 
-    const response = await API.search.runSearches(project.id);
+    //TODO: Change this when the signed url is no longer returned
+    const projectAndFileResponse = await API.project.runSearches(project.id);
 
-    if (response.isSuccess()) {
-      // Update search with dispatch
-      window.alert((response.value as any).url);
+    if (projectAndFileResponse.isSuccess()) {
+      dispatch(setProject(projectAndFileResponse.value.project));
+      window.alert(projectAndFileResponse.value.url);
     }
 
     setIsRunningSearches(false);
