@@ -210,12 +210,10 @@ export const AnalysisStep: React.FC = () => {
   const handleRunSearches = async () => {
     setIsRunningSearches(true);
 
-    //TODO: Change this when the signed url is no longer returned
     const projectAndFileResponse = await API.project.runSearches(project.id);
 
     if (projectAndFileResponse.isSuccess()) {
-      dispatch(setProject(projectAndFileResponse.value.project));
-      window.alert(projectAndFileResponse.value.url);
+      dispatch(setProject(projectAndFileResponse.value));
     }
 
     setIsRunningSearches(false);

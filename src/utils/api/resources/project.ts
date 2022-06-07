@@ -35,16 +35,6 @@ type AxiosProjectResponse = {
   project: IProject;
 };
 
-type AxiosProjectAndFileResponse = {
-  project: IProject;
-  url: string;
-};
-
-type ProjectAndFileResponse = FailureOrSuccess<
-  IError,
-  { project: IProject; url: string }
->;
-
 export type ProjectResponse = FailureOrSuccess<IError, IProject>;
 
 export class Project {
@@ -94,15 +84,13 @@ export class Project {
     }
   };
 
-  static runSearches = async (
-    projectId: string
-  ): Promise<ProjectAndFileResponse> => {
+  static runSearches = async (projectId: string): Promise<ProjectResponse> => {
     try {
-      const response = await client.get<AxiosProjectAndFileResponse>(
+      const response = await client.get<AxiosProjectResponse>(
         `${this.prefix}/${projectId}/runSearches`
       );
 
-      return success(response.data);
+      return success(response.data.project);
     } catch (error) {
       return handleAxiosError(error);
     }
