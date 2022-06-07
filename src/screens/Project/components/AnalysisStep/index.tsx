@@ -5,6 +5,7 @@ import {
   Col,
   Divider,
   Menu,
+  message,
   Row,
   Switch,
   Tooltip,
@@ -214,6 +215,11 @@ export const AnalysisStep: React.FC = () => {
 
     if (projectAndFileResponse.isSuccess()) {
       dispatch(setProject(projectAndFileResponse.value));
+    } else if (projectAndFileResponse.error.message === "Empty result files") {
+      message.error({
+        content: "The configured searches did not produce any results",
+        styles: styles.feedbackMessage,
+      });
     }
 
     setIsRunningSearches(false);
@@ -413,5 +419,9 @@ const styles = {
 
   hidden: {
     visibility: "hidden",
+  } as CSSProperties,
+
+  feedbackMessage: {
+    marginTop: "90vh",
   } as CSSProperties,
 };
