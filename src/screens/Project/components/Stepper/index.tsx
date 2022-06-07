@@ -8,6 +8,7 @@ import { Divider, Steps } from "antd";
 import { CSSProperties } from "react";
 import { AnalysisStep } from "../AnalysisStep";
 import { CreationStep } from "../CreationStep";
+import { TaggingStep } from "../TaggingStep";
 import { useStep } from "./hooks/useStep";
 
 const { Step } = Steps;
@@ -30,7 +31,7 @@ export const ProjectStepper: React.FC<ProjectStepperProps> = ({
       case 1:
         return <AnalysisStep />;
       case 2:
-        return <div>Tagging</div>;
+        return <TaggingStep />;
       case 3:
         return <div>Visualization</div>;
       default:
