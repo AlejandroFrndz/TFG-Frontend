@@ -13,7 +13,7 @@ import {
 } from "antd";
 import ReactCountryFlag from "react-country-flag";
 import { IProject, ProjectLanguage } from "src/utils/api/resources/project";
-import { RcFile } from "antd/lib/upload";
+import type { RcFile } from "antd/lib/upload";
 import API from "src/utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";

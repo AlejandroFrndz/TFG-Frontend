@@ -22,7 +22,7 @@ import {
   FileTextOutlined,
   QuestionOutlined,
 } from "@ant-design/icons";
-import { RcFile } from "antd/lib/upload";
+import type { RcFile } from "antd/lib/upload";
 import React, { CSSProperties, useEffect, useState } from "react";
 import { ParameterInput } from "./components/ParameterInput";
 import {
