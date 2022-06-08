@@ -18,6 +18,35 @@ export const TaggingStep: React.FC = () => {
   const [triples, setTriples] = useState<ITriple[]>([]);
   const [isFetchingTriples, setIsFetchingTriples] = useState(false);
 
+  const [updatedTriples, setUpdatedTriples] = useState<ITriple[]>([]);
+
+  const addTriple = (updatedTriple: ITriple) => {
+    // Update triples in table data
+    const newTriples = triples.map((triple) => {
+      if (triple.id === updatedTriple.id) {
+        return updatedTriple;
+      } else {
+        return triple;
+      }
+    });
+
+    // Copy state data as it should be immutable (mutated only through setter function)
+    const newUpdatedTriples = [...updatedTriples];
+
+    const updatedTripleIndex = newUpdatedTriples.findIndex(
+      (triple) => triple.id === updatedTriple.id
+    );
+
+    if (updatedTripleIndex >= 0) {
+      newUpdatedTriples[updatedTripleIndex] = updatedTriple;
+    } else {
+      newUpdatedTriples.push(updatedTriple);
+    }
+
+    setTriples(newTriples);
+    setUpdatedTriples(newUpdatedTriples);
+  };
+
   useEffect(() => {
     const fetchTriples = async () => {
       setIsFetchingTriples(true);
@@ -74,7 +103,7 @@ export const TaggingStep: React.FC = () => {
           type="Hash"
         />
       ) : (
-        <TaggingTable data={triples} />
+        <TaggingTable data={triples} updateTriple={addTriple} />
       )}
     </>
   );
