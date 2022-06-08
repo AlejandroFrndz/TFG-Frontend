@@ -190,7 +190,7 @@ export const TaggingTable: React.FC<Props> = ({ data, updateTriple }) => {
           render: (_, record) => record.noun1.noun,
         },
         {
-          title: "TR",
+          title: "Thematic Role",
           dataIndex: "noun1",
           key: "tr1",
           render: (_, record) => (
@@ -205,7 +205,7 @@ export const TaggingTable: React.FC<Props> = ({ data, updateTriple }) => {
           className: "overridePadding",
         },
         {
-          title: "SC",
+          title: "Semantic Category",
           dataIndex: "noun1",
           key: "sc1",
           render: (_, record) => (
@@ -255,7 +255,7 @@ export const TaggingTable: React.FC<Props> = ({ data, updateTriple }) => {
           render: (_, record) => record.noun2.noun,
         },
         {
-          title: "TR",
+          title: "Thematic Role",
           dataIndex: "noun2",
           key: "tr2",
           render: (_, record) => (
@@ -269,7 +269,7 @@ export const TaggingTable: React.FC<Props> = ({ data, updateTriple }) => {
           ),
         },
         {
-          title: "SC",
+          title: "Semantic Category",
           dataIndex: "noun2",
           key: "sc2",
           render: (_, record) => (
@@ -286,21 +286,24 @@ export const TaggingTable: React.FC<Props> = ({ data, updateTriple }) => {
     },
     {
       title: "Problem",
-      children: [
+      dataIndex: "problem",
+      key: "problem",
+      filters: [
         {
-          dataIndex: "problem",
-          key: "problem",
-          render: (_, record) => (
-            <TagSelect
-              options={["error"]}
-              value={record.problem}
-              triple={record}
-              problem
-              updateTriple={updateTriple}
-            />
-          ),
+          text: "Hide errors",
+          value: true,
         },
       ],
+      render: (_, record) => (
+        <TagSelect
+          options={["error"]}
+          value={record.problem}
+          triple={record}
+          problem
+          updateTriple={updateTriple}
+        />
+      ),
+      onFilter: (value, record) => (value ? record.problem === null : true),
     },
   ];
 

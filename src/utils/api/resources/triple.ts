@@ -47,8 +47,17 @@ export type ITripleVerb = {
 type AxiosTriplesResponse = {
   triples: ITriple[];
 };
+type AxiosTripleResponse = {
+  triple: ITriple;
+};
 
 type TriplesResponse = FailureOrSuccess<IError, ITriple[]>;
+type TripleResponse = FailureOrSuccess<IError, ITriple>;
+
+type UpdateTagsRequest = Pick<
+  ITriple,
+  "id" | "noun1" | "verb" | "noun2" | "problem" | "project"
+>;
 
 export class Triple {
   private static prefix = "/triple" as const;
@@ -58,10 +67,25 @@ export class Triple {
   ): Promise<TriplesResponse> => {
     try {
       const response = await client.get<AxiosTriplesResponse>(
-        `${this.prefix}/${projectId}`
+        `${this.prefix}/project/${projectId}`
       );
 
       return success(response.data.triples);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  static updateTags = async (
+    request: UpdateTagsRequest
+  ): Promise<TripleResponse> => {
+    try {
+      const response = await client.patch<AxiosTripleResponse>(
+        `${this.prefix}/${request.id}`,
+        request
+      );
+
+      return success(response.data.triple);
     } catch (error) {
       return handleAxiosError(error);
     }

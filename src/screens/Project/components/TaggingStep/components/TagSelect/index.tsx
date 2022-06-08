@@ -59,6 +59,10 @@ export const TagSelect: React.FC<TagSelectProps> = ({
     }
   };
 
+  const onClear = () => {
+    updateTriple({ ...triple, problem: null });
+  };
+
   return (
     <Select
       showSearch
@@ -68,9 +72,13 @@ export const TagSelect: React.FC<TagSelectProps> = ({
       filterOption={filter}
       value={value}
       onChange={onSelect}
+      allowClear={problem}
+      onClear={onClear}
     >
       {options.map((option) => (
-        <Option value={option.toLowerCase()}>{option}</Option>
+        <Option value={option.toLowerCase()} key={option}>
+          {option}
+        </Option>
       ))}
     </Select>
   );

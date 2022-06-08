@@ -3,12 +3,13 @@ import { useSelector } from "react-redux";
 import { selectProject } from "src/redux/projects/selectors";
 import { IProject } from "src/utils/api/resources/project";
 import { MarcoTAO } from "src/utils/constants";
-import { Col, Divider, Row, Typography } from "antd";
+import { Affix, Button, Col, Divider, message, Row, Typography } from "antd";
 import { CSSProperties, useEffect, useState } from "react";
 import { ITriple } from "src/utils/api/resources/triple";
 import API from "src/utils/api";
 import { FullScreenLoader } from "src/shared/FullScreenLoader";
 import { TaggingTable } from "./components/TaggingTable";
+import _ from "lodash";
 
 const { Title, Text } = Typography;
 
@@ -19,8 +20,12 @@ export const TaggingStep: React.FC = () => {
   const [isFetchingTriples, setIsFetchingTriples] = useState(false);
 
   const [updatedTriples, setUpdatedTriples] = useState<ITriple[]>([]);
+  const [isLoadingTagsUpdate, setIsLoadingTagsUpdate] = useState(false);
 
-  const addTriple = (updatedTriple: ITriple) => {
+  const addTripleToUpdate = (updatedTriple: ITriple) => {
+    if (updatedTriple.problem === undefined) {
+      updatedTriple.problem = null;
+    }
     // Update triples in table data
     const newTriples = triples.map((triple) => {
       if (triple.id === updatedTriple.id) {
@@ -45,6 +50,59 @@ export const TaggingStep: React.FC = () => {
 
     setTriples(newTriples);
     setUpdatedTriples(newUpdatedTriples);
+  };
+
+  const onSave = async () => {
+    setIsLoadingTagsUpdate(true);
+
+    const updatePromises = updatedTriples.map((updateTriple) =>
+      API.triple.updateTags(
+        _.pick(updateTriple, [
+          "id",
+          "project",
+          "noun1",
+          "verb",
+          "noun2",
+          "problem",
+        ])
+      )
+    );
+
+    const updateResponses = await Promise.all(updatePromises);
+
+    const successfulResponses = updateResponses.filter((response) =>
+      response.isSuccess()
+    );
+
+    if (successfulResponses.length === updateResponses.length) {
+      // All triples updated successfully
+      setUpdatedTriples([]);
+      message.success("Changes saved successfully");
+    } else if (successfulResponses.length === 0) {
+      // All updates failed
+      message.error(
+        "Couldn't save you work right now. Please try again later or, if the problem persists, contact support"
+      );
+    } else {
+      /* Partial Success. Some updates failed. In this case, we leave the failed triples in the updated array in order to not lose the information
+      and allow future retry of the update
+    */
+      const successfulUpdateIds = successfulResponses.map(
+        (response) => response.value.id
+      );
+
+      const failedTriples = updatedTriples.filter((triple) =>
+        successfulUpdateIds.find((successId) => successId === triple.id)
+      );
+
+      setUpdatedTriples(failedTriples);
+
+      message.warning(
+        "Some triples could not be saved. If you leave the page now some work may be lost. Please, try again later. If the problem persists, contact support"
+      );
+    }
+
+    setIsLoadingTagsUpdate(false);
   };
 
   useEffect(() => {
@@ -86,12 +144,6 @@ export const TaggingStep: React.FC = () => {
             from the final script execution)
           </Text>
         </Col>
-        <Col span={24}>
-          <Text>
-            When you're done, click the button at the bottom of the page to
-            conclude your analisys and get the results
-          </Text>
-        </Col>
       </Row>
 
       <Divider />
@@ -103,7 +155,26 @@ export const TaggingStep: React.FC = () => {
           type="Hash"
         />
       ) : (
-        <TaggingTable data={triples} updateTriple={addTriple} />
+        <>
+          <TaggingTable data={triples} updateTriple={addTripleToUpdate} />
+          {updatedTriples.length > 0 ? (
+            <Affix offsetBottom={40} style={{ marginRight: "40px" }}>
+              <Row justify="end">
+                <Button
+                  type="primary"
+                  shape="round"
+                  size="large"
+                  style={styles.saveButton}
+                  block
+                  loading={isLoadingTagsUpdate}
+                  onClick={onSave}
+                >
+                  {isFetchingTriples ? "Saving" : "Save"}
+                </Button>
+              </Row>
+            </Affix>
+          ) : null}
+        </>
       )}
     </>
   );
@@ -114,5 +185,12 @@ const styles = {
     justifyContent: "center",
     alignItems: "center",
     textAlign: "center",
+  } as CSSProperties,
+
+  saveButton: {
+    padding: "20px",
+    height: "80px",
+    width: "200px",
+    fontSize: "24px",
   } as CSSProperties,
 };
