@@ -1,3 +1,4 @@
+import { ExclamationOutlined, StopOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 import type { DefaultOptionType } from "antd/lib/select";
 import React, { CSSProperties } from "react";
@@ -14,6 +15,7 @@ interface TagSelectProps {
     | { entity: "verb"; property: "domain" };
   problem?: boolean;
   updateTriple: (triple: ITriple) => void;
+  disabled?: boolean;
 }
 
 const filter = (
@@ -39,6 +41,7 @@ export const TagSelect: React.FC<TagSelectProps> = ({
   type,
   problem,
   updateTriple,
+  disabled,
 }) => {
   const onSelect = (value: string) => {
     if (problem) {
@@ -74,6 +77,8 @@ export const TagSelect: React.FC<TagSelectProps> = ({
       onChange={onSelect}
       allowClear={problem}
       onClear={onClear}
+      disabled={disabled}
+      suffixIcon={disabled ? <StopOutlined /> : undefined}
     >
       {options.map((option) => (
         <Option value={option.toLowerCase()} key={option}>

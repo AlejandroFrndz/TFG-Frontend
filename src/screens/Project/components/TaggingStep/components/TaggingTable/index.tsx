@@ -200,6 +200,7 @@ export const TaggingTable: React.FC<Props> = ({ data, updateTriple }) => {
               triple={record}
               type={{ entity: "noun1", property: "tr" }}
               updateTriple={updateTriple}
+              disabled={!!record.problem}
             />
           ),
           className: "overridePadding",
@@ -215,6 +216,7 @@ export const TaggingTable: React.FC<Props> = ({ data, updateTriple }) => {
               triple={record}
               type={{ entity: "noun1", property: "sc" }}
               updateTriple={updateTriple}
+              disabled={!!record.problem}
             />
           ),
         },
@@ -240,6 +242,7 @@ export const TaggingTable: React.FC<Props> = ({ data, updateTriple }) => {
               triple={record}
               type={{ entity: "verb", property: "domain" }}
               updateTriple={updateTriple}
+              disabled={!!record.problem}
             />
           ),
         },
@@ -265,6 +268,7 @@ export const TaggingTable: React.FC<Props> = ({ data, updateTriple }) => {
               triple={record}
               type={{ entity: "noun2", property: "tr" }}
               updateTriple={updateTriple}
+              disabled={!!record.problem}
             />
           ),
         },
@@ -279,6 +283,7 @@ export const TaggingTable: React.FC<Props> = ({ data, updateTriple }) => {
               triple={record}
               type={{ entity: "noun2", property: "sc" }}
               updateTriple={updateTriple}
+              disabled={!!record.problem}
             />
           ),
         },
