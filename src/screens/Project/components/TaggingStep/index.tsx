@@ -10,6 +10,8 @@ import API from "src/utils/api";
 import { FullScreenLoader } from "src/shared/FullScreenLoader";
 import { TaggingTable } from "./components/TaggingTable";
 import _ from "lodash";
+import { ISemanticRoleTag } from "src/utils/api/resources/tags/SemanticRole";
+import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 
 const { Title, Text } = Typography;
 
@@ -17,7 +19,10 @@ export const TaggingStep: React.FC = () => {
   const project = useSelector(selectProject()) as IProject;
 
   const [triples, setTriples] = useState<ITriple[]>([]);
-  const [isFetchingTriples, setIsFetchingTriples] = useState(false);
+  const [trTags, setTrTags] = useState<ISemanticRoleTag[]>([]);
+  const [scTags, setScTags] = useState<any>([]);
+  const [domainTags, setDomainTags] = useState<ILexicalDomainTag[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const [updatedTriples, setUpdatedTriples] = useState<ITriple[]>([]);
   const [isLoadingTagsUpdate, setIsLoadingTagsUpdate] = useState(false);
@@ -107,14 +112,25 @@ export const TaggingStep: React.FC = () => {
 
   useEffect(() => {
     const fetchTriples = async () => {
-      setIsFetchingTriples(true);
+      setIsLoading(true);
 
-      const triplesResponse = await API.triple.getAllForProject(project.id);
+      const [triplesResponse, tagsResponse] = await Promise.all([
+        API.triple.getAllForProject(project.id),
+        API.tags.getAll(),
+      ]);
 
       if (triplesResponse.isSuccess()) {
         setTriples(triplesResponse.value);
       }
-      setIsFetchingTriples(false);
+
+      if (tagsResponse.isSuccess()) {
+        const { lexicalDomain, semanticRole } = tagsResponse.value;
+
+        setDomainTags(lexicalDomain);
+        setTrTags(semanticRole);
+      }
+
+      setIsLoading(false);
     };
 
     fetchTriples();
@@ -148,7 +164,7 @@ export const TaggingStep: React.FC = () => {
 
       <Divider />
 
-      {isFetchingTriples ? (
+      {isLoading ? (
         <FullScreenLoader
           wrapperWidth="100vw"
           wrapperHeight="40vh"
@@ -156,7 +172,12 @@ export const TaggingStep: React.FC = () => {
         />
       ) : (
         <>
-          <TaggingTable data={triples} updateTriple={addTripleToUpdate} />
+          <TaggingTable
+            data={triples}
+            updateTriple={addTripleToUpdate}
+            trTags={trTags}
+            domTags={domainTags}
+          />
           {updatedTriples.length > 0 ? (
             <Affix offsetBottom={40} style={{ marginRight: "40px" }}>
               <Row justify="end">
@@ -169,7 +190,7 @@ export const TaggingStep: React.FC = () => {
                   loading={isLoadingTagsUpdate}
                   onClick={onSave}
                 >
-                  {isFetchingTriples ? "Saving" : "Save"}
+                  {isLoadingTagsUpdate ? "Saving" : "Save"}
                 </Button>
               </Row>
             </Affix>

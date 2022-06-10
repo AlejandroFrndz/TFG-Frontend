@@ -1,13 +1,15 @@
-import { ExclamationOutlined, StopOutlined } from "@ant-design/icons";
+import { StopOutlined } from "@ant-design/icons";
 import { Select } from "antd";
 import type { DefaultOptionType } from "antd/lib/select";
 import React, { CSSProperties } from "react";
+import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
+import { ISemanticRoleTag } from "src/utils/api/resources/tags/SemanticRole";
 import { ITriple } from "src/utils/api/resources/triple";
 
 const { Option } = Select;
 
 interface TagSelectProps {
-  options: string[];
+  options: ILexicalDomainTag[] | ISemanticRoleTag[];
   value: string | null;
   triple: ITriple;
   type?:
@@ -81,8 +83,8 @@ export const TagSelect: React.FC<TagSelectProps> = ({
       suffixIcon={disabled ? <StopOutlined /> : undefined}
     >
       {options.map((option) => (
-        <Option value={option.toLowerCase()} key={option}>
-          {option}
+        <Option value={option.tag} key={option.tag}>
+          {option.tag}
         </Option>
       ))}
     </Select>

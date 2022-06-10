@@ -41,7 +41,7 @@ export class Auth {
         const message = error.response
           ? error.response.data.error
           : error.message;
-        return failure(new ApiError(message, error));
+        return failure(new ApiError(message, undefined, error));
       }
 
       return failure(new UnexpectedError(error));
@@ -62,7 +62,7 @@ export class Auth {
         const message = error.response
           ? error.response.data.error
           : error.message;
-        return failure(new ApiError(message, error));
+        return failure(new ApiError(message, undefined, error));
       }
 
       return failure(new UnexpectedError(error));

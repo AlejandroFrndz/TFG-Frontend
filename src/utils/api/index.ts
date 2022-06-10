@@ -6,6 +6,7 @@ import { File } from "src/utils/api/resources/file";
 import { Project } from "src/utils/api/resources/project";
 import { Search } from "./resources/search";
 import { Triple } from "./resources/triple";
+import { Tags } from "./resources/tags";
 
 export default class API {
   static setToken(token: string): void {
@@ -23,4 +24,5 @@ export default class API {
   static project = Project;
   static search = Search;
   static triple = Triple;
+  static tags = Tags;
 }
