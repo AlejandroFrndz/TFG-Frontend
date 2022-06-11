@@ -54,7 +54,7 @@ type AxiosTripleResponse = {
 type TriplesResponse = FailureOrSuccess<IError, ITriple[]>;
 type TripleResponse = FailureOrSuccess<IError, ITriple>;
 
-type UpdateTagsRequest = Pick<
+type UpdateTripleRequest = Pick<
   ITriple,
   "id" | "noun1" | "verb" | "noun2" | "problem" | "project"
 >;
@@ -76,8 +76,8 @@ export class Triple {
     }
   };
 
-  static updateTags = async (
-    request: UpdateTagsRequest
+  static update = async (
+    request: UpdateTripleRequest
   ): Promise<TripleResponse> => {
     try {
       const response = await client.patch<AxiosTripleResponse>(

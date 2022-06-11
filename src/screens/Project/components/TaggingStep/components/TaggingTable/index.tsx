@@ -5,6 +5,7 @@ import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticCategoryTag } from "src/utils/api/resources/tags/semanticCategory";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { ITriple } from "src/utils/api/resources/triple";
+import { NounInput } from "./components/NounInput";
 import { TagSelect } from "./components/TagSelect";
 import { TreeTagSelect } from "./components/TreeTagSelect";
 
@@ -110,7 +111,14 @@ export const TaggingTable: React.FC<Props> = ({
           title: "Noun",
           dataIndex: "noun1",
           key: "noun1",
-          render: (_, record) => record.noun1.noun,
+          render: (_, record) => (
+            <NounInput
+              triple={record}
+              entity="noun1"
+              updateTriple={updateTriple}
+            />
+          ),
+          className: "overridePadding maxWidth",
         },
         {
           title: "Thematic Role",
@@ -149,7 +157,14 @@ export const TaggingTable: React.FC<Props> = ({
           title: "Verb",
           dataIndex: "verb",
           key: "verb",
-          render: (_, record) => record.verb.verb,
+          render: (_, record) => (
+            <NounInput
+              triple={record}
+              entity="verb"
+              updateTriple={updateTriple}
+            />
+          ),
+          className: "overridePadding maxWidth",
         },
         {
           title: "Domain",
@@ -174,7 +189,14 @@ export const TaggingTable: React.FC<Props> = ({
           title: "Noun",
           dataIndex: "noun2",
           key: "noun2",
-          render: (_, record) => record.noun2.noun,
+          render: (_, record) => (
+            <NounInput
+              triple={record}
+              entity="noun2"
+              updateTriple={updateTriple}
+            />
+          ),
+          className: "overridePadding maxWidth",
         },
         {
           title: "Thematic Role",

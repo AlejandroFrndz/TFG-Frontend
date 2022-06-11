@@ -4,6 +4,7 @@ import type { DefaultOptionType } from "antd/lib/select";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ITriple } from "src/utils/api/resources/triple";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
+import { useValue } from "./hooks/useValue";
 
 interface TagSelectProps {
   options: ILexicalDomainTag[] | ISemanticRoleTag[];
@@ -36,6 +37,8 @@ export const TagSelect: React.FC<TagSelectProps> = ({
   entity,
   updateTriple,
 }) => {
+  const value = useValue(entity, triple);
+
   const onSelect = (value: string) => {
     const updatedTriple: ITriple =
       entity === "verb"
@@ -53,11 +56,7 @@ export const TagSelect: React.FC<TagSelectProps> = ({
       placeholder="Select a tag"
       bordered={false}
       style={styles.select}
-      value={
-        entity === "verb"
-          ? triple[entity].domain ?? undefined
-          : triple[entity].tr ?? undefined
-      }
+      value={value}
       filterOption={filter}
       onChange={onSelect}
     >

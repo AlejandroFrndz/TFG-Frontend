@@ -62,7 +62,7 @@ export const TaggingStep: React.FC = () => {
     setIsLoadingTagsUpdate(true);
 
     const updatePromises = updatedTriples.map((updateTriple) =>
-      API.triple.updateTags(
+      API.triple.update(
         _.pick(updateTriple, [
           "id",
           "project",
