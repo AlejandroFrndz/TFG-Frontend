@@ -159,8 +159,12 @@ export const TaggingStep: React.FC = () => {
         <Col span={24}>
           <Text>
             Tag each element with one of the tags from the selection, or mark
-            them as errors if they are incorrect (Incorrect triples are excluded
-            from the final script execution)
+            them as errors if they are incorrect
+          </Text>
+        </Col>
+        <Col span={24}>
+          <Text>
+            You may also edit the search results if you deem it appropiate
           </Text>
         </Col>
       </Row>

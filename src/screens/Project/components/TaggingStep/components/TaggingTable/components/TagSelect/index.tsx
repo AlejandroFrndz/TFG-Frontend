@@ -5,6 +5,7 @@ import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ITriple } from "src/utils/api/resources/triple";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { useValue } from "./hooks/useValue";
+import _ from "lodash";
 
 interface TagSelectProps {
   options: ILexicalDomainTag[] | ISemanticRoleTag[];
@@ -62,7 +63,7 @@ export const TagSelect: React.FC<TagSelectProps> = ({
     >
       {options.map((option) => (
         <Option value={option.tag} key={option.tag}>
-          {option.tag}
+          {_.capitalize(option.tag)}
         </Option>
       ))}
     </Select>
