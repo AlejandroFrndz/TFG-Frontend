@@ -118,10 +118,9 @@ export const TaggingTable: React.FC<Props> = ({
           key: "tr1",
           render: (_, record) => (
             <TagSelect
+              entity="noun1"
               options={trTags}
-              value={record.noun1.tr}
               triple={record}
-              type={{ entity: "noun1", property: "tr" }}
               updateTriple={updateTriple}
             />
           ),
@@ -158,10 +157,9 @@ export const TaggingTable: React.FC<Props> = ({
           key: "domain",
           render: (_, record) => (
             <TagSelect
+              entity="verb"
               options={domTags}
-              value={record.verb.domain}
               triple={record}
-              type={{ entity: "verb", property: "domain" }}
               updateTriple={updateTriple}
             />
           ),
@@ -184,10 +182,9 @@ export const TaggingTable: React.FC<Props> = ({
           key: "tr2",
           render: (_, record) => (
             <TagSelect
+              entity="noun2"
               options={trTags}
-              value={record.noun2.tr}
               triple={record}
-              type={{ entity: "noun2", property: "tr" }}
               updateTriple={updateTriple}
             />
           ),

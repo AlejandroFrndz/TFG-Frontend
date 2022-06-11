@@ -1,24 +1,18 @@
-import { StopOutlined } from "@ant-design/icons";
 import { Select } from "antd";
+import type { CSSProperties } from "react";
 import type { DefaultOptionType } from "antd/lib/select";
-import React, { CSSProperties } from "react";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
-import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { ITriple } from "src/utils/api/resources/triple";
-
-const { Option } = Select;
+import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 
 interface TagSelectProps {
   options: ILexicalDomainTag[] | ISemanticRoleTag[];
-  value: string | null;
   triple: ITriple;
-  type?:
-    | { entity: "noun1" | "noun2"; property: "tr" | "sc" }
-    | { entity: "verb"; property: "domain" };
-  problem?: boolean;
+  entity: "noun1" | "noun2" | "verb";
   updateTriple: (triple: ITriple) => void;
-  disabled?: boolean;
 }
+
+const { Option } = Select;
 
 const filter = (
   input: string,
@@ -38,34 +32,19 @@ const filter = (
 
 export const TagSelect: React.FC<TagSelectProps> = ({
   options,
-  value,
   triple,
-  type,
-  problem,
+  entity,
   updateTriple,
-  disabled,
 }) => {
   const onSelect = (value: string) => {
-    if (problem) {
-      if (triple.problem !== value) {
-        updateTriple({ ...triple, problem: value });
-      }
-    } else if (type) {
-      if (type.entity === "verb") {
-        if (triple.verb.domain !== value) {
-          updateTriple({ ...triple, verb: { ...triple.verb, domain: value } });
-        }
-      } else if (triple[type.entity][type.property] !== value) {
-        const tripleCopy = { ...triple };
-        tripleCopy[type.entity][type.property] = value;
+    const updatedTriple: ITriple =
+      entity === "verb"
+        ? { ...triple, verb: { ...triple.verb, domain: value } }
+        : entity === "noun1"
+        ? { ...triple, noun1: { ...triple.noun1, tr: value } }
+        : { ...triple, noun2: { ...triple.noun2, tr: value } };
 
-        updateTriple(tripleCopy);
-      }
-    }
-  };
-
-  const onClear = () => {
-    updateTriple({ ...triple, problem: null });
+    updateTriple(updatedTriple);
   };
 
   return (
@@ -74,13 +53,13 @@ export const TagSelect: React.FC<TagSelectProps> = ({
       placeholder="Select a tag"
       bordered={false}
       style={styles.select}
+      value={
+        entity === "verb"
+          ? triple[entity].domain ?? undefined
+          : triple[entity].tr ?? undefined
+      }
       filterOption={filter}
-      value={value}
       onChange={onSelect}
-      allowClear={problem}
-      onClear={onClear}
-      disabled={disabled}
-      suffixIcon={disabled ? <StopOutlined /> : undefined}
     >
       {options.map((option) => (
         <Option value={option.tag} key={option.tag}>
