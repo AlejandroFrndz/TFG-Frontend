@@ -1,3 +1,5 @@
+import { QuestionCircleOutlined } from "@ant-design/icons";
+import { Row } from "antd";
 import type { ColumnsType } from "antd/lib/table";
 import Table from "antd/lib/table";
 import React, { CSSProperties } from "react";
@@ -5,6 +7,7 @@ import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticCategoryTag } from "src/utils/api/resources/tags/semanticCategory";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { ITriple } from "src/utils/api/resources/triple";
+import { InfoHeader } from "./components/InfoHeader";
 import { NounInput } from "./components/NounInput";
 import { TagSelect } from "./components/TagSelect";
 import { TreeTagSelect } from "./components/TreeTagSelect";
@@ -121,7 +124,7 @@ export const TaggingTable: React.FC<Props> = ({
           className: "overridePadding maxWidth",
         },
         {
-          title: "Thematic Role",
+          title: <InfoHeader type="tr" />,
           dataIndex: "noun1",
           key: "tr1",
           render: (_, record) => (
@@ -167,7 +170,7 @@ export const TaggingTable: React.FC<Props> = ({
           className: "overridePadding maxWidth",
         },
         {
-          title: "Domain",
+          title: <InfoHeader type="dom" />,
           dataIndex: "verb",
           key: "domain",
           render: (_, record) => (
@@ -199,7 +202,7 @@ export const TaggingTable: React.FC<Props> = ({
           className: "overridePadding maxWidth",
         },
         {
-          title: "Thematic Role",
+          title: <InfoHeader type="tr" />,
           dataIndex: "noun2",
           key: "tr2",
           render: (_, record) => (
@@ -229,7 +232,7 @@ export const TaggingTable: React.FC<Props> = ({
       ],
     },
     {
-      title: "Problem",
+      title: <InfoHeader type="err" />,
       dataIndex: "problem",
       key: "problem",
       filters: [
