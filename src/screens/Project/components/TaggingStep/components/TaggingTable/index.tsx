@@ -1,5 +1,3 @@
-import { QuestionCircleOutlined } from "@ant-design/icons";
-import { Row } from "antd";
 import type { ColumnsType } from "antd/lib/table";
 import Table from "antd/lib/table";
 import React, { CSSProperties } from "react";
@@ -7,6 +5,7 @@ import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticCategoryTag } from "src/utils/api/resources/tags/semanticCategory";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { ITriple } from "src/utils/api/resources/triple";
+import { ExpandedTables } from "./components/ExpandedTables";
 import { InfoHeader } from "./components/InfoHeader";
 import { NounInput } from "./components/NounInput";
 import { TagSelect } from "./components/TagSelect";
@@ -21,77 +20,6 @@ interface Props {
   domTags: ILexicalDomainTag[];
   scTags: ISemanticCategoryTag[];
 }
-
-interface ExpandedProps {
-  record: ITriple;
-}
-
-const EXPANDED_METADATA_COLUMNS: ColumnsType<ITriple> = [
-  {
-    title: "Metadata",
-    children: [
-      {
-        title: "PMI",
-        dataIndex: "pmiCorpus",
-        key: "pmi",
-      },
-      {
-        title: "Dice",
-        dataIndex: "diceCorpus",
-        key: "dice",
-      },
-      {
-        title: "T",
-        dataIndex: "tCorpus",
-        key: "t",
-      },
-    ],
-  },
-];
-
-const EXPANDED_CORPUS_COLUMNS: ColumnsType<ITriple> = [
-  {
-    title: "Corpus",
-    children: [
-      {
-        title: "Examples",
-        dataIndex: "examples",
-        key: "examples",
-      },
-      {
-        title: "Occurs",
-        dataIndex: "occurs",
-        key: "occurs",
-      },
-      {
-        title: "Sources",
-        dataIndex: "sources",
-        key: "sources",
-      },
-    ],
-  },
-];
-
-const ExpandedTaggingTable: React.FC<ExpandedProps> = ({ record }) => (
-  <>
-    <Table
-      columns={EXPANDED_CORPUS_COLUMNS}
-      dataSource={[record]}
-      pagination={{ position: [] }}
-      size="small"
-      style={styles.expandTable}
-      rowKey="id"
-    />
-    <Table
-      columns={EXPANDED_METADATA_COLUMNS}
-      dataSource={[record]}
-      pagination={{ position: [] }}
-      size="small"
-      style={styles.expandTable}
-      rowKey="id"
-    />
-  </>
-);
 
 export const TaggingTable: React.FC<Props> = ({
   data,
@@ -263,7 +191,7 @@ export const TaggingTable: React.FC<Props> = ({
       style={styles.taggingTable}
       pagination={{ position: ["bottomCenter"], pageSize: 8 }}
       expandable={{
-        expandedRowRender: (record) => <ExpandedTaggingTable record={record} />,
+        expandedRowRender: (record) => <ExpandedTables record={record} />,
       }}
       rowKey="id"
     />
@@ -273,8 +201,5 @@ export const TaggingTable: React.FC<Props> = ({
 const styles: Record<string, CSSProperties> = {
   taggingTable: {
     padding: "10px",
-  },
-  expandTable: {
-    maxWidth: "95vw",
   },
 };
