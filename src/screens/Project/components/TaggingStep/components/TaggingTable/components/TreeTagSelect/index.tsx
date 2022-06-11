@@ -36,6 +36,9 @@ export const TreeTagSelect: React.FC<Props> = ({
       placeholder={"Select a tag"}
       value={triple[entity].sc ?? undefined}
       onChange={onSelect}
+      treeLine={{ showLeafIcon: false }}
+      showSearch
+      treeDefaultExpandedKeys={[triple[entity].sc ?? ""]}
     />
   );
 };
