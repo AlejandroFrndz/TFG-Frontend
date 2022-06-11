@@ -2,24 +2,20 @@ import type { ColumnsType } from "antd/lib/table";
 import Table from "antd/lib/table";
 import React, { CSSProperties } from "react";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
-import { ISemanticRoleTag } from "src/utils/api/resources/tags/SemanticRole";
+import { ISemanticCategoryTag } from "src/utils/api/resources/tags/semanticCategory";
+import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { ITriple } from "src/utils/api/resources/triple";
-import { TagSelect } from "../TagSelect";
+import { TagSelect } from "./components/TagSelect";
+import { TreeTagSelect } from "./components/TreeTagSelect";
 
 import "./overrideCellPadding.css";
-
-/*
-  Temporal tag data. Delete once backend support is added
-*/
-const scTags = ["SC-Tag-1", "SC-Tag-2", "SC-Tag-3", "SC-Tag-4", "SC-Tag-5"];
-
-/* --------------------------------------------------- */
 
 interface Props {
   data: ITriple[];
   updateTriple: (triple: ITriple) => void;
   trTags: ISemanticRoleTag[];
   domTags: ILexicalDomainTag[];
+  scTags: ISemanticCategoryTag[];
 }
 
 interface ExpandedProps {
@@ -98,6 +94,7 @@ export const TaggingTable: React.FC<Props> = ({
   updateTriple,
   trTags,
   domTags,
+  scTags,
 }) => {
   const columns: ColumnsType<ITriple> = [
     {
@@ -126,7 +123,6 @@ export const TaggingTable: React.FC<Props> = ({
               triple={record}
               type={{ entity: "noun1", property: "tr" }}
               updateTriple={updateTriple}
-              disabled={!!record.problem}
             />
           ),
           className: "overridePadding",
@@ -135,16 +131,14 @@ export const TaggingTable: React.FC<Props> = ({
           title: "Semantic Category",
           dataIndex: "noun1",
           key: "sc1",
-          // render: (_, record) => (
-          //   <TagSelect
-          //     options={scTags}
-          //     value={record.noun1.sc}
-          //     triple={record}
-          //     type={{ entity: "noun1", property: "sc" }}
-          //     updateTriple={updateTriple}
-          //     disabled={!!record.problem}
-          //   />
-          // ),
+          render: (_, record) => (
+            <TreeTagSelect
+              rawOptions={scTags}
+              triple={record}
+              entity="noun1"
+              updateTriple={updateTriple}
+            />
+          ),
           className: "overridePadding",
         },
       ],
@@ -169,7 +163,6 @@ export const TaggingTable: React.FC<Props> = ({
               triple={record}
               type={{ entity: "verb", property: "domain" }}
               updateTriple={updateTriple}
-              disabled={!!record.problem}
             />
           ),
           className: "overridePadding",
@@ -196,7 +189,6 @@ export const TaggingTable: React.FC<Props> = ({
               triple={record}
               type={{ entity: "noun2", property: "tr" }}
               updateTriple={updateTriple}
-              disabled={!!record.problem}
             />
           ),
           className: "overridePadding",
@@ -205,16 +197,14 @@ export const TaggingTable: React.FC<Props> = ({
           title: "Semantic Category",
           dataIndex: "noun2",
           key: "sc2",
-          // render: (_, record) => (
-          //   <TagSelect
-          //     options={scTags}
-          //     value={record.noun2.sc}
-          //     triple={record}
-          //     type={{ entity: "noun2", property: "sc" }}
-          //     updateTriple={updateTriple}
-          //     disabled={!!record.problem}
-          //   />
-          // ),
+          render: (_, record) => (
+            <TreeTagSelect
+              rawOptions={scTags}
+              triple={record}
+              entity="noun2"
+              updateTriple={updateTriple}
+            />
+          ),
           className: "overridePadding",
         },
       ],

@@ -1,13 +1,15 @@
 import { IError } from "../../logic/errors/IError";
 import { FailureOrSuccess, success } from "../../logic/FailureOrSuccess";
 import { ILexicalDomainTag, LexicalDomain } from "./lexicalDomain";
-import { ISemanticRoleTag, SemanticRole } from "./SemanticRole";
 import client from "src/utils/api/axios";
 import { handleAxiosError } from "src/utils/helpers";
+import { ISemanticRoleTag, SemanticRole } from "./semanticRole";
+import { ISemanticCategoryTag, SemanticCategory } from "./semanticCategory";
 
 export type IAllTags = {
   lexicalDomain: ILexicalDomainTag[];
   semanticRole: ISemanticRoleTag[];
+  semanticCategory: ISemanticCategoryTag[];
 };
 
 type TagsResponse = FailureOrSuccess<IError, IAllTags>;
@@ -17,6 +19,7 @@ export class Tags {
 
   static lexicalDomain = LexicalDomain;
   static semanticRole = SemanticRole;
+  static semanticCategory = SemanticCategory;
 
   static getAll = async (): Promise<TagsResponse> => {
     try {

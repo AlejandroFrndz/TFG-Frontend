@@ -10,8 +10,9 @@ import API from "src/utils/api";
 import { FullScreenLoader } from "src/shared/FullScreenLoader";
 import { TaggingTable } from "./components/TaggingTable";
 import _ from "lodash";
-import { ISemanticRoleTag } from "src/utils/api/resources/tags/SemanticRole";
+import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
+import { ISemanticCategoryTag } from "src/utils/api/resources/tags/semanticCategory";
 
 const { Title, Text } = Typography;
 
@@ -20,7 +21,7 @@ export const TaggingStep: React.FC = () => {
 
   const [triples, setTriples] = useState<ITriple[]>([]);
   const [trTags, setTrTags] = useState<ISemanticRoleTag[]>([]);
-  const [scTags, setScTags] = useState<any>([]);
+  const [scTags, setScTags] = useState<ISemanticCategoryTag[]>([]);
   const [domainTags, setDomainTags] = useState<ILexicalDomainTag[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -124,10 +125,12 @@ export const TaggingStep: React.FC = () => {
       }
 
       if (tagsResponse.isSuccess()) {
-        const { lexicalDomain, semanticRole } = tagsResponse.value;
+        const { lexicalDomain, semanticRole, semanticCategory } =
+          tagsResponse.value;
 
         setDomainTags(lexicalDomain);
         setTrTags(semanticRole);
+        setScTags(semanticCategory);
       }
 
       setIsLoading(false);
@@ -177,9 +180,10 @@ export const TaggingStep: React.FC = () => {
             updateTriple={addTripleToUpdate}
             trTags={trTags}
             domTags={domainTags}
+            scTags={scTags}
           />
           {updatedTriples.length > 0 ? (
-            <Affix offsetBottom={40} style={{ marginRight: "40px" }}>
+            <Affix offsetBottom={40} style={styles.affix}>
               <Row justify="end">
                 <Button
                   type="primary"
@@ -213,5 +217,9 @@ const styles = {
     height: "80px",
     width: "200px",
     fontSize: "24px",
+  } as CSSProperties,
+
+  affix: {
+    marginRight: "40px",
   } as CSSProperties,
 };

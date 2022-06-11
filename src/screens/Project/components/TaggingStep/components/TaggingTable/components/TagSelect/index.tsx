@@ -3,7 +3,7 @@ import { Select } from "antd";
 import type { DefaultOptionType } from "antd/lib/select";
 import React, { CSSProperties } from "react";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
-import { ISemanticRoleTag } from "src/utils/api/resources/tags/SemanticRole";
+import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { ITriple } from "src/utils/api/resources/triple";
 
 const { Option } = Select;
