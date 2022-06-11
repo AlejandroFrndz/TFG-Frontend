@@ -1,5 +1,5 @@
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import { Row, Space, Tooltip } from "antd";
+import { Row, Space } from "antd";
 import type { ColumnsType } from "antd/lib/table";
 import Table from "antd/lib/table";
 import { CSSProperties, useState } from "react";
