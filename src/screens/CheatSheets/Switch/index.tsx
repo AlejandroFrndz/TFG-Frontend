@@ -5,8 +5,8 @@ import { Helmet } from "react-helmet";
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { PropagateLoader } from "react-spinners";
 import { MarcoTAO } from "src/utils/constants";
-import { SingleTableCheatSheet } from "./components/SingleTable";
-import { TreeCheatSheet } from "./components/Tree";
+import { TableCheatSheet } from "./components/TableCheatSheet";
+import { TreeCheatSheet } from "./components/TreeCheatSheet";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import Title from "antd/lib/typography/Title";
 import {
@@ -107,19 +107,13 @@ export const CheatSheetsSwitch: React.FC = () => {
     switch (type) {
       case "thematicRoles":
         return (
-          <SingleTableCheatSheet
-            type={type}
-            data={data as ISemanticRoleTag[]}
-          />
+          <TableCheatSheet type={type} data={data as ISemanticRoleTag[]} />
         );
       case "semanticCategories":
         return <TreeCheatSheet data={data as ISemanticCategoryTag[]} />;
       case "lexicalDomains":
         return (
-          <SingleTableCheatSheet
-            type={type}
-            data={data as ILexicalDomainTag[]}
-          />
+          <TableCheatSheet type={type} data={data as ILexicalDomainTag[]} />
         );
       case "errors":
         return <>Errors</>;

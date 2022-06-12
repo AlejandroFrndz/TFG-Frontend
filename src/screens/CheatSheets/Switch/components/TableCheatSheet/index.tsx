@@ -5,16 +5,13 @@ import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { useColumns } from "./hooks/useColumns";
 
 interface Props {
-  type: SingleTableCheatSheetType;
+  type: TableCheatSheetType;
   data: ILexicalDomainTag[] | ISemanticRoleTag[];
 }
 
-export type SingleTableCheatSheetType =
-  | "thematicRoles"
-  | "lexicalDomains"
-  | "errors";
+export type TableCheatSheetType = "thematicRoles" | "lexicalDomains" | "errors";
 
-export const SingleTableCheatSheet: React.FC<Props> = ({ type, data }) => {
+export const TableCheatSheet: React.FC<Props> = ({ type, data }) => {
   const columns = useColumns(type);
 
   return (
