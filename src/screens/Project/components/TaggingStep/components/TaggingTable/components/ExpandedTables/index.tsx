@@ -1,5 +1,5 @@
 import { EyeInvisibleOutlined, EyeOutlined } from "@ant-design/icons";
-import { Row, Space } from "antd";
+import { Row, Space, Tooltip } from "antd";
 import type { ColumnsType } from "antd/lib/table";
 import Table from "antd/lib/table";
 import { CSSProperties, useState } from "react";
@@ -34,18 +34,38 @@ const METADATA_COLUMNS: ColumnsType<ITriple> = [
 
 export const ExpandedTables: React.FC<ExpandedProps> = ({ record }) => {
   const [showMetadata, setShowMetadata] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
-  const toggleMetadata = () => setShowMetadata((show) => !show);
+  const toggleMetadata = () => {
+    setShowMetadata((show) => !show);
+    setIsHovering(false);
+  };
 
   const header = (
     <Row justify="center" align="middle">
       <Space size={"large"}>
         <span>Corpus</span>
-        {showMetadata ? (
-          <EyeOutlined onClick={toggleMetadata} />
-        ) : (
-          <EyeInvisibleOutlined onClick={toggleMetadata} />
-        )}
+        <span
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
+          <Tooltip
+            overlay={showMetadata ? "Hide Metadata" : "Show Metadata"}
+            mouseEnterDelay={0.8}
+          >
+            {isHovering ? (
+              !showMetadata ? (
+                <EyeOutlined onClick={toggleMetadata} />
+              ) : (
+                <EyeInvisibleOutlined onClick={toggleMetadata} />
+              )
+            ) : showMetadata ? (
+              <EyeOutlined onClick={toggleMetadata} />
+            ) : (
+              <EyeInvisibleOutlined onClick={toggleMetadata} />
+            )}
+          </Tooltip>
+        </span>
       </Space>
     </Row>
   );
