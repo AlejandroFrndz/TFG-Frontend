@@ -66,7 +66,7 @@ export const TaggingTable: React.FC<Props> = ({
           className: "overridePadding",
         },
         {
-          title: "Semantic Category",
+          title: <InfoHeader type="sc" />,
           dataIndex: "noun1",
           key: "sc1",
           render: (_, record) => (
@@ -144,7 +144,7 @@ export const TaggingTable: React.FC<Props> = ({
           className: "overridePadding",
         },
         {
-          title: "Semantic Category",
+          title: <InfoHeader type="sc" />,
           dataIndex: "noun2",
           key: "sc2",
           render: (_, record) => (
