@@ -137,10 +137,6 @@ export const CreationStep: React.FC = () => {
     setProjectState({ ...projectState, domainName: e.target.value });
   };
 
-  const handleSubdomainsChange = (value: boolean) => {
-    setProjectState({ ...projectState, isUsingSubdomains: value });
-  };
-
   const handleLanguageChange = (value: string | number) => {
     setProjectState({ ...projectState, language: value as ProjectLanguage });
   };
@@ -224,16 +220,6 @@ export const CreationStep: React.FC = () => {
             style={styles.domainInput}
             onChange={handleNameChange}
             value={projectState.domainName}
-          />
-        </Col>
-        <Col span={5}>
-          <Text style={styles.subdomainText}>Use Subdomains</Text>
-          <Tooltip title="Use fine grain subdomain tags for the lexical domains of verbs">
-            <QuestionCircleOutlined style={styles.subdomainIcon} />
-          </Tooltip>
-          <Switch
-            onChange={handleSubdomainsChange}
-            checked={projectState.isUsingSubdomains}
           />
         </Col>
       </Row>
