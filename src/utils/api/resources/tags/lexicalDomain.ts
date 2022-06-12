@@ -12,7 +12,10 @@ type AxiosLexicalDomainTagsResponse = {
   tags: ILexicalDomainTag[];
 };
 
-type LexicalDomainTagsResponse = FailureOrSuccess<IError, ILexicalDomainTag[]>;
+export type LexicalDomainTagsResponse = FailureOrSuccess<
+  IError,
+  ILexicalDomainTag[]
+>;
 
 export class LexicalDomain {
   private static prefix = "/tag/lexicalDomain" as const;

@@ -1,8 +1,8 @@
 import { TreeSelect } from "antd";
 import { CSSProperties } from "react";
+import { TreeDataNode, useTreeDataTags } from "src/shared/hooks/useTreeDataTag";
 import { ISemanticCategoryTag } from "src/utils/api/resources/tags/semanticCategory";
 import { ITriple } from "src/utils/api/resources/triple";
-import { TreeDataNode, useTreeDataTags } from "./hooks/useTreeDataTags";
 
 interface Props {
   rawOptions: ISemanticCategoryTag[];

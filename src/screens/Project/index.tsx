@@ -60,7 +60,7 @@ export const Project: React.FC = () => {
         <Helmet>
           <title>{`${MarcoTAO} - Workspace`}</title>
         </Helmet>
-        <FullScreenLoader type="Propagate" color="red" />
+        <FullScreenLoader type="Propagate" />
       </>
     );
 

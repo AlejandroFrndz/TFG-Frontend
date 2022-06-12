@@ -7,10 +7,7 @@ export type TreeDataNode = {
   children: TreeDataNode[];
 };
 
-const _mapTags = (
-  tags: ISemanticCategoryTag[],
-  ancestorValue?: string
-): TreeDataNode[] => {
+const _mapTags = (tags: ISemanticCategoryTag[]): TreeDataNode[] => {
   const formattedTags: TreeDataNode[] = tags.map((tag) => {
     const node: TreeDataNode = {
       title: _.capitalize(tag.tag),
@@ -18,7 +15,7 @@ const _mapTags = (
       children: [],
     };
 
-    node.children = _mapTags(tag.subTags, node.value);
+    node.children = _mapTags(tag.subTags);
 
     return node;
   });

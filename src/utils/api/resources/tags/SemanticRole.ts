@@ -12,12 +12,15 @@ type AxiosSemanticRoleTagsResponse = {
   tags: ISemanticRoleTag[];
 };
 
-type LexicalDomainTagsResponse = FailureOrSuccess<IError, ISemanticRoleTag[]>;
+export type SemanticRoleTagsResponse = FailureOrSuccess<
+  IError,
+  ISemanticRoleTag[]
+>;
 
 export class SemanticRole {
-  private static prefix = "/tag/lexicalDomain" as const;
+  private static prefix = "/tag/semanticRole" as const;
 
-  static getAll = async (): Promise<LexicalDomainTagsResponse> => {
+  static getAll = async (): Promise<SemanticRoleTagsResponse> => {
     try {
       const response = await client.get<AxiosSemanticRoleTagsResponse>(
         `${this.prefix}`
