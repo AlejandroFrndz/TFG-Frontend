@@ -1,6 +1,7 @@
 import { QuestionCircleOutlined } from "@ant-design/icons";
 import { Row } from "antd";
-import { CSSProperties, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 
 interface Props {
   type: "tr" | "dom" | "err" | "sc";
