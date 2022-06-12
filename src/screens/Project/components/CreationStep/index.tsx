@@ -1,16 +1,6 @@
 import React, { CSSProperties, useState } from "react";
-import { FileTextOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Col,
-  Input,
-  Row,
-  Segmented,
-  Switch,
-  Tooltip,
-  Typography,
-  Upload,
-} from "antd";
+import { FileTextOutlined } from "@ant-design/icons";
+import { Button, Col, Input, Row, Segmented, Typography, Upload } from "antd";
 import ReactCountryFlag from "react-country-flag";
 import { IProject, ProjectLanguage } from "src/utils/api/resources/project";
 import type { RcFile } from "antd/lib/upload";
