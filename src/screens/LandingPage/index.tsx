@@ -1,4 +1,5 @@
-import React, { CSSProperties, useState } from "react";
+import { useState } from "react";
+import type { CSSProperties } from "react";
 import { Row, Col, Typography, Layout, message, Card, Divider } from "antd";
 import { Center } from "src/shared/components/Center/Center";
 import { LogInForm } from "src/screens/LandingPage/components/LogInForm";
