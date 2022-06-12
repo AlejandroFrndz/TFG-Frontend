@@ -39,6 +39,7 @@ export const TreeTagSelect: React.FC<Props> = ({
       treeLine={{ showLeafIcon: false }}
       showSearch
       treeDefaultExpandedKeys={[triple[entity].sc ?? ""]}
+      dropdownMatchSelectWidth={400}
     />
   );
 };
