@@ -7,7 +7,7 @@ import { Affix, Button, Col, Divider, message, Row, Typography } from "antd";
 import { CSSProperties, useEffect, useState } from "react";
 import { ITriple } from "src/utils/api/resources/triple";
 import API from "src/utils/api";
-import { FullScreenLoader } from "src/shared/FullScreenLoader";
+import { FullScreenLoader } from "src/shared/components/FullScreenLoader";
 import { TaggingTable } from "./components/TaggingTable";
 import _ from "lodash";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";

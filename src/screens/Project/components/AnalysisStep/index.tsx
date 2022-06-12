@@ -12,7 +12,7 @@ import {
   Typography,
 } from "antd";
 import { selectProject } from "src/redux/projects/selectors";
-import { Center } from "src/shared/Center/Center";
+import { Center } from "src/shared/components/Center/Center";
 import { IProject } from "src/utils/api/resources/project";
 import { MarcoTAO } from "src/utils/constants";
 import {
@@ -32,7 +32,7 @@ import {
 } from "src/utils/api/resources/search";
 import API from "src/utils/api";
 import { SavedSearch } from "./components/SavedSearch";
-import { FullScreenLoader } from "src/shared/FullScreenLoader";
+import { FullScreenLoader } from "src/shared/components/FullScreenLoader";
 import { setProject } from "src/redux/projects/actions";
 
 const { Title, Text } = Typography;

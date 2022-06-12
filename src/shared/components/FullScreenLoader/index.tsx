@@ -65,6 +65,9 @@ type FullScreenLoaderProps = {
   text?: JSX.Element;
 };
 
+/**
+ * @deprecated Use antd <Spin /> component instead https://ant.design/components/spin/
+ */
 export const FullScreenLoader: React.FC<FullScreenLoaderProps> = ({
   type,
   size,

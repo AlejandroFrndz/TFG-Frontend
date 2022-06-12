@@ -2,7 +2,7 @@ import { Button, Col, Row, Table, Tooltip, Typography } from "antd";
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { Helmet } from "react-helmet";
-import { FullScreenLoader } from "src/shared/FullScreenLoader";
+import { FullScreenLoader } from "src/shared/components/FullScreenLoader";
 import API from "src/utils/api";
 import {
   ILexicalDomainTag,
@@ -16,7 +16,7 @@ import { MarcoTAO } from "src/utils/constants";
 import { useColumns } from "./hooks/useColumns";
 import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import { Center } from "src/shared/Center/Center";
+import { Center } from "src/shared/components/Center/Center";
 
 interface Props {
   type: SingleTableCheatSheetType;

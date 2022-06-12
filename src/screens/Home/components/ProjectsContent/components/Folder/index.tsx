@@ -4,7 +4,7 @@ import { DragTypes } from "src/utils/constants";
 import { getEmptyImage } from "react-dnd-html5-backend";
 import { useDispatch } from "react-redux";
 import { updateFolder } from "src/redux/folders/actions";
-import { ProjectItem } from "src/shared/ProjectItem";
+import { ProjectItem } from "src/shared/components/ProjectItem";
 import { updateFile } from "src/redux/files/actions";
 import API from "src/utils/api";
 import { handleActionErrorMessage } from "src/utils/helpers";

@@ -1,6 +1,6 @@
 import React, { CSSProperties } from "react";
 import { Helmet } from "react-helmet";
-import { Center } from "src/shared/Center/Center";
+import { Center } from "src/shared/components/Center/Center";
 import { MarcoTAO } from "src/utils/constants";
 
 export const WIP: React.FC = () => {
