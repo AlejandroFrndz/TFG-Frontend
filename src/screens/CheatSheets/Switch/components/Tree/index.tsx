@@ -1,5 +1,5 @@
 import { ArrowLeftOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Spin, Tooltip } from "antd";
+import { Button, Col, Divider, Row, Spin, Tooltip, Tree } from "antd";
 import Title from "antd/lib/typography/Title";
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
@@ -67,6 +67,16 @@ export const TreeCheatSheet: React.FC = () => {
           <Title>Semantic Categories</Title>
         </Col>
       </Row>
+
+      <Divider />
+
+      <div style={styles.tree}>
+        <Tree
+          treeData={formattedData}
+          showLine={{ showLeafIcon: false }}
+          selectedKeys={[]}
+        />
+      </div>
     </>
   );
 };
@@ -94,5 +104,10 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
+  } as CSSProperties,
+
+  tree: {
+    marginLeft: "100px",
+    justifyContent: "space-evenly",
   } as CSSProperties,
 };
