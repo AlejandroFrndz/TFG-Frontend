@@ -35,10 +35,10 @@ export const DeleteAccountSection: React.FC = () => {
     confirm({
       title: "Are you sure?",
       content: "This action is irreversible",
-      icon: <WarningOutlined style={{ color: "red" }} />,
+      icon: <WarningOutlined style={styles.modalIcon} />,
       centered: true,
       okButtonProps: {
-        style: { backgroundColor: "red", borderColor: "red" },
+        style: styles.modalButton,
       },
       okText: "Delete Account",
       cancelButtonProps: { type: "primary" },
@@ -49,7 +49,7 @@ export const DeleteAccountSection: React.FC = () => {
   return (
     <>
       <Divider />
-      <Row align="middle">
+      <Row align="middle" style={styles.wrapperRow}>
         <Col span={6} offset={5}>
           <Title style={styles.deleteAccountTitle}>Delete Account</Title>
           <Text style={styles.deleteAccountText}>
@@ -84,5 +84,18 @@ const styles = {
 
   deleteAccountText: {
     color: "#8d8d8d",
+  } as CSSProperties,
+
+  wrapperRow: {
+    paddingBottom: "30px",
+  } as CSSProperties,
+
+  modalButton: {
+    backgroundColor: "red",
+    borderColor: "red",
+  } as CSSProperties,
+
+  modalIcon: {
+    color: "red",
   } as CSSProperties,
 };
