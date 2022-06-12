@@ -22,7 +22,6 @@ export const AccountContent: React.FC = () => {
       <Content style={styles.content}>
         <AccountForm />
         <LogoutButton />
-        <Divider />
         <DeleteAccountSection />
       </Content>
     </>
