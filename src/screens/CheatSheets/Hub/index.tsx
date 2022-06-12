@@ -10,7 +10,7 @@ export const CheatSheetsHub: React.FC = () => {
   return (
     <>
       <Helmet>
-        <title>{MarcoTAO} - Tags</title>
+        <title>{MarcoTAO} - Cheat Sheets</title>
       </Helmet>
 
       <>

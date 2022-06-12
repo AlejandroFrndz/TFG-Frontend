@@ -13,7 +13,7 @@ type AxiosSemanticCategoryTagsResponse = {
   tags: ISemanticCategoryTag[];
 };
 
-type SemanticCategoryTagsResponse = FailureOrSuccess<
+export type SemanticCategoryTagsResponse = FailureOrSuccess<
   IError,
   ISemanticCategoryTag[]
 >;
