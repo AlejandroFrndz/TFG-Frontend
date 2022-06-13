@@ -6,6 +6,7 @@ import { MarcoTAO } from "src/utils/constants";
 import { AccountForm } from "./components/AccountForm";
 import { LogoutButton } from "./components/LogoutButton";
 import { DeleteAccountSection } from "./components/DeleteAccountSection";
+import { AdminSection } from "./components/AdminSection";
 
 const { Title } = Typography;
 
@@ -22,6 +23,7 @@ export const AccountContent: React.FC = () => {
       <Content style={styles.content}>
         <AccountForm />
         <LogoutButton />
+        <AdminSection />
         <DeleteAccountSection />
       </Content>
     </>
