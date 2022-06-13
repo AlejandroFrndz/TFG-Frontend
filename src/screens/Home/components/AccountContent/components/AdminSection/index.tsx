@@ -1,6 +1,15 @@
 import { useSelector } from "react-redux";
 import { selectUserIsAdmin } from "src/redux/auth/selectors";
-import { Col, Collapse, Divider, Row, Spin, Typography } from "antd";
+import {
+  Button,
+  Col,
+  Collapse,
+  Divider,
+  message,
+  Row,
+  Spin,
+  Typography,
+} from "antd";
 import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
@@ -9,18 +18,83 @@ import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import API from "src/utils/api";
 import { HashLoader } from "react-spinners";
 import { TableTags } from "./components/TableTags";
+import { TreeTags } from "./components/TreeTags";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
+
+const _deleteTreeTag = (allTags: ISemanticCategoryTag[], tagName: string) => {
+  const newTags = allTags.filter((tag) => tag.tag !== tagName);
+
+  if (newTags.length < allTags.length) {
+    return newTags;
+  }
+
+  return allTags.map((tag) => {
+    tag.subTags = _deleteTreeTag(tag.subTags, tagName);
+    return tag;
+  });
+};
 
 export const AdminSection: React.FC = () => {
   const isAdmin = useSelector(selectUserIsAdmin);
 
   const [trTags, setTrTags] = useState<ISemanticRoleTag[]>([]);
+  const [deletedTrTags, setDeletedTrTags] = useState<string[]>([]);
+  const [newTrTags, setNewTrTags] = useState<ISemanticRoleTag[]>([]);
+
   const [scTags, setScTags] = useState<ISemanticCategoryTag[]>([]);
+  const [deletedScTags, setDeletedScTags] = useState<string[]>([]);
+  const [newScTags, setNewScTags] = useState<ISemanticCategoryTag[]>([]);
+
   const [domainTags, setDomainTags] = useState<ILexicalDomainTag[]>([]);
+  const [deletedDomainTags, setDeletedDomainTags] = useState<string[]>([]);
+  const [newDomainTags, setNewDomainTags] = useState<ILexicalDomainTag[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+
+  const handleDeleteTag = (
+    tagName: string,
+    type: "thematicRoles" | "lexicalDomains" | "semanticCategories"
+  ) => {
+    switch (type) {
+      case "thematicRoles":
+        setDeletedTrTags([...deletedTrTags, tagName]);
+        setTrTags(trTags.filter((tag) => tag.tag !== tagName));
+        break;
+      case "lexicalDomains":
+        setDeletedDomainTags([...deletedDomainTags, tagName]);
+        setDomainTags(domainTags.filter((tag) => tag.tag !== tagName));
+        break;
+      case "semanticCategories":
+        setDeletedScTags([...deletedScTags, tagName]);
+        setScTags(_deleteTreeTag(scTags, tagName));
+    }
+  };
+
+  const handleSaveTagsUpdate = async () => {
+    const deleteTrPromises = deletedTrTags.map((tagName) =>
+      API.tags.semanticRole.delete(tagName)
+    );
+    const deleteDomPromises = deletedDomainTags.map((tagName) =>
+      API.tags.lexicalDomain.delete(tagName)
+    );
+
+    const deleteResponses = await Promise.all([
+      ...deleteTrPromises,
+      ...deleteDomPromises,
+    ]);
+
+    if (deleteResponses.some((response) => response.isFailure())) {
+      message.error(
+        "Some or all updates failed to process. Please, refresh the page and try again later"
+      );
+    }
+
+    setDeletedDomainTags([]);
+    setDeletedTrTags([]);
+  };
 
   useEffect(() => {
     const fetchTags = async () => {
@@ -41,6 +115,26 @@ export const AdminSection: React.FC = () => {
 
     if (isAdmin) fetchTags();
   }, [isAdmin]);
+
+  const shouldSaveTagsBeDisabled = (): boolean => {
+    if (
+      deletedDomainTags.length > 0 ||
+      deletedTrTags.length > 0 ||
+      deletedScTags.length > 0
+    ) {
+      return false;
+    }
+
+    if (
+      newTrTags.length > 0 ||
+      newDomainTags.length > 0 ||
+      newScTags.length > 0
+    ) {
+      return false;
+    }
+
+    return true;
+  };
 
   if (!isAdmin) {
     return null;
@@ -72,20 +166,39 @@ export const AdminSection: React.FC = () => {
           </Text>
         </Row>
       ) : (
-        <Collapse style={styles.collapse} expandIconPosition="right">
-          <Panel key="tr" header="Semantic Roles">
-            <TableTags type="thematicRoles" data={trTags} />
-          </Panel>
-          <Panel key="sc" header="Semantic Categories">
-            Semantic Categories
-          </Panel>
-          <Panel key="dom" header="Lexical Domain">
-            <TableTags type="lexicalDomains" data={domainTags} />
-          </Panel>
-          <Panel key="err" header="Errors">
-            Errors
-          </Panel>
-        </Collapse>
+        <>
+          <Collapse style={styles.collapse} expandIconPosition="right">
+            <Panel key="tr" header="Semantic Roles">
+              <TableTags
+                type="thematicRoles"
+                data={trTags}
+                handleDeleteTag={handleDeleteTag}
+              />
+            </Panel>
+            <Panel key="sc" header="Semantic Categories">
+              <TreeTags data={scTags} handleDeleteTag={handleDeleteTag} />
+            </Panel>
+            <Panel key="dom" header="Lexical Domain">
+              <TableTags
+                type="lexicalDomains"
+                data={domainTags}
+                handleDeleteTag={handleDeleteTag}
+              />
+            </Panel>
+            <Panel key="err" header="Errors">
+              Errors
+            </Panel>
+          </Collapse>
+          <Row justify="center">
+            <Button
+              type="primary"
+              style={styles.tagsButton}
+              disabled={shouldSaveTagsBeDisabled()}
+            >
+              Save Tag Updates
+            </Button>
+          </Row>
+        </>
       )}
     </>
   );
@@ -109,5 +222,9 @@ const styles = {
   apiStatusWrapper: {
     marginTop: "80px",
     marginBottom: "60px",
+  } as CSSProperties,
+
+  tagsButton: {
+    marginTop: "20px",
   } as CSSProperties,
 };

@@ -1,4 +1,5 @@
 import type { ColumnsType } from "antd/lib/table";
+import _ from "lodash";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 
@@ -9,6 +10,7 @@ const LEXICAL_DOMAIN_COLUMNS: ColumnsType<ILexicalDomainTag> = [
     title: "Lexical Domain",
     dataIndex: "tag",
     key: "dom",
+    render: (_unsued, record) => _.capitalize(record.tag),
   },
   {
     title: "Prototypical verb",
@@ -23,6 +25,7 @@ const SEMANTIC_ROLES_COLUMNS: ColumnsType<ISemanticRoleTag> = [
     dataIndex: "tag",
     key: "role",
     width: "10%",
+    render: (_unsued, record) => _.capitalize(record.tag),
   },
   {
     title: "Definition",

@@ -202,7 +202,7 @@ export const CreationStep: React.FC = () => {
     <>
       <Row align="middle" justify="center" style={styles.domainSettingsRow}>
         <Col span={24} style={styles.sectionTitle}>
-          <Title>Domain Settings</Title>
+          <Title>Domain Name</Title>
         </Col>
         <Col span={6} style={styles.domainInputCol}>
           <Input

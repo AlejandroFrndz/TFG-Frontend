@@ -7,11 +7,14 @@ import { useColumnsWithDeleteAction } from "./hooks/useColumnsWithDeleteAction";
 interface Props {
   type: TableTagsType;
   data: ISemanticRoleTag[] | ILexicalDomainTag[];
+  handleDeleteTag(tag: string, type: "thematicRoles" | "lexicalDomains"): void;
 }
 
-export const TableTags: React.FC<Props> = ({ type, data }) => {
-  const columns = useColumnsWithDeleteAction(type, (record: any) =>
-    console.log(record)
+export const TableTags: React.FC<Props> = ({ type, data, handleDeleteTag }) => {
+  const columns = useColumnsWithDeleteAction(
+    type,
+    (record: ISemanticRoleTag | ILexicalDomainTag) =>
+      handleDeleteTag(record.tag, type as "thematicRoles" | "lexicalDomains")
   );
 
   return (
