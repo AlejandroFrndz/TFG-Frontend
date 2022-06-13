@@ -1,22 +1,23 @@
 import { Table } from "antd";
-import type { CSSProperties } from "react";
-import { TableTagsType, useColumns } from "src/shared/hooks/useColumns";
+import { TableTagsType } from "src/shared/hooks/useColumns";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
+import { useColumnsWithDeleteAction } from "./hooks/useColumnsWithDeleteAction";
 
 interface Props {
   type: TableTagsType;
-  data: ILexicalDomainTag[] | ISemanticRoleTag[];
+  data: ISemanticRoleTag[] | ILexicalDomainTag[];
 }
 
-export const TableCheatSheet: React.FC<Props> = ({ type, data }) => {
-  const columns = useColumns(type);
+export const TableTags: React.FC<Props> = ({ type, data }) => {
+  const columns = useColumnsWithDeleteAction(type, (record: any) =>
+    console.log(record)
+  );
 
   return (
     <Table
       columns={columns as any}
       dataSource={data as any}
-      style={styles.table}
       bordered
       pagination={{
         position: ["bottomCenter"],
@@ -25,11 +26,4 @@ export const TableCheatSheet: React.FC<Props> = ({ type, data }) => {
       }}
     />
   );
-};
-
-const styles = {
-  table: {
-    padding: "30px",
-    paddingTop: 0,
-  } as CSSProperties,
 };

@@ -1,7 +1,8 @@
 import type { ColumnsType } from "antd/lib/table";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
-import { TableCheatSheetType } from "..";
+
+export type TableTagsType = "thematicRoles" | "lexicalDomains" | "errors";
 
 const LEXICAL_DOMAIN_COLUMNS: ColumnsType<ILexicalDomainTag> = [
   {
@@ -31,7 +32,7 @@ const SEMANTIC_ROLES_COLUMNS: ColumnsType<ISemanticRoleTag> = [
 ];
 
 export const useColumns: (
-  type: TableCheatSheetType
+  type: TableTagsType
 ) => ColumnsType<ILexicalDomainTag> | ColumnsType<ISemanticRoleTag> = (
   type
 ) => {
