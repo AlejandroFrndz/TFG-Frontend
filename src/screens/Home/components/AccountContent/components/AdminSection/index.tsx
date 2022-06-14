@@ -54,6 +54,8 @@ export const AdminSection: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
+  const [isLoadingUpdate, setIsLoadingUpdate] = useState(false);
+
   const handleDeleteTag = (
     tagName: string,
     type: "thematicRoles" | "lexicalDomains" | "semanticCategories"
@@ -74,16 +76,22 @@ export const AdminSection: React.FC = () => {
   };
 
   const handleSaveTagsUpdate = async () => {
+    setIsLoadingUpdate(true);
+
     const deleteTrPromises = deletedTrTags.map((tagName) =>
       API.tags.semanticRole.delete(tagName)
     );
     const deleteDomPromises = deletedDomainTags.map((tagName) =>
       API.tags.lexicalDomain.delete(tagName)
     );
+    const deleteScPromises = deletedScTags.map((tagName) =>
+      API.tags.semanticCategory.delete(tagName)
+    );
 
     const deleteResponses = await Promise.all([
       ...deleteTrPromises,
       ...deleteDomPromises,
+      ...deleteScPromises,
     ]);
 
     if (deleteResponses.some((response) => response.isFailure())) {
@@ -94,6 +102,9 @@ export const AdminSection: React.FC = () => {
 
     setDeletedDomainTags([]);
     setDeletedTrTags([]);
+    setDeletedScTags([]);
+
+    setIsLoadingUpdate(false);
   };
 
   useEffect(() => {
@@ -194,6 +205,8 @@ export const AdminSection: React.FC = () => {
               type="primary"
               style={styles.tagsButton}
               disabled={shouldSaveTagsBeDisabled()}
+              onClick={handleSaveTagsUpdate}
+              loading={isLoadingUpdate}
             >
               Save Tag Updates
             </Button>

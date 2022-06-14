@@ -13,6 +13,7 @@ import _ from "lodash";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticCategoryTag } from "src/utils/api/resources/tags/semanticCategory";
+import { IErrorTag } from "src/utils/api/resources/tags/error";
 
 const { Title, Text } = Typography;
 
@@ -23,6 +24,7 @@ export const TaggingStep: React.FC = () => {
   const [trTags, setTrTags] = useState<ISemanticRoleTag[]>([]);
   const [scTags, setScTags] = useState<ISemanticCategoryTag[]>([]);
   const [domainTags, setDomainTags] = useState<ILexicalDomainTag[]>([]);
+  const [errorTags, setErrorTags] = useState<IErrorTag[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const [updatedTriples, setUpdatedTriples] = useState<ITriple[]>([]);
@@ -125,12 +127,13 @@ export const TaggingStep: React.FC = () => {
       }
 
       if (tagsResponse.isSuccess()) {
-        const { lexicalDomain, semanticRole, semanticCategory } =
+        const { lexicalDomain, semanticRole, semanticCategory, errors } =
           tagsResponse.value;
 
         setDomainTags(lexicalDomain);
         setTrTags(semanticRole);
         setScTags(semanticCategory);
+        setErrorTags(errors);
       }
 
       setIsLoading(false);

@@ -5,11 +5,13 @@ import client from "src/utils/api/axios";
 import { handleAxiosError } from "src/utils/helpers";
 import { ISemanticRoleTag, SemanticRole } from "./semanticRole";
 import { ISemanticCategoryTag, SemanticCategory } from "./semanticCategory";
+import { ErrorTag, IErrorTag } from "./error";
 
 export type IAllTags = {
   lexicalDomain: ILexicalDomainTag[];
   semanticRole: ISemanticRoleTag[];
   semanticCategory: ISemanticCategoryTag[];
+  errors: IErrorTag[];
 };
 
 type TagsResponse = FailureOrSuccess<IError, IAllTags>;
@@ -20,6 +22,7 @@ export class Tags {
   static lexicalDomain = LexicalDomain;
   static semanticRole = SemanticRole;
   static semanticCategory = SemanticCategory;
+  static error = ErrorTag;
 
   static getAll = async (): Promise<TagsResponse> => {
     try {
