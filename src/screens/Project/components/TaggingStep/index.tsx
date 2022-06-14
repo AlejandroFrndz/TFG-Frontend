@@ -188,6 +188,7 @@ export const TaggingStep: React.FC = () => {
             trTags={trTags}
             domTags={domainTags}
             scTags={scTags}
+            errorTags={errorTags}
           />
           {updatedTriples.length > 0 ? (
             <Affix offsetBottom={40} style={styles.affix}>

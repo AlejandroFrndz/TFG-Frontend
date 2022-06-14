@@ -1,10 +1,12 @@
 import type { ColumnsType } from "antd/lib/table";
 import Table from "antd/lib/table";
 import React, { CSSProperties } from "react";
+import { IErrorTag } from "src/utils/api/resources/tags/error";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticCategoryTag } from "src/utils/api/resources/tags/semanticCategory";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { ITriple } from "src/utils/api/resources/triple";
+import { ErrorSelect } from "./components/ErrorSelect";
 import { ExpandedTables } from "./components/ExpandedTables";
 import { InfoHeader } from "./components/InfoHeader";
 import { NounInput } from "./components/NounInput";
@@ -19,6 +21,7 @@ interface Props {
   trTags: ISemanticRoleTag[];
   domTags: ILexicalDomainTag[];
   scTags: ISemanticCategoryTag[];
+  errorTags: IErrorTag[];
 }
 
 export const TaggingTable: React.FC<Props> = ({
@@ -27,6 +30,7 @@ export const TaggingTable: React.FC<Props> = ({
   trTags,
   domTags,
   scTags,
+  errorTags,
 }) => {
   const columns: ColumnsType<ITriple> = [
     {
@@ -169,15 +173,13 @@ export const TaggingTable: React.FC<Props> = ({
           value: true,
         },
       ],
-      // render: (_, record) => (
-      //   <TagSelect
-      //     options={["error"]}
-      //     value={record.problem}
-      //     triple={record}
-      //     problem
-      //     updateTriple={updateTriple}
-      //   />
-      // ),
+      render: (_, record) => (
+        <ErrorSelect
+          options={errorTags}
+          triple={record}
+          updateTriple={updateTriple}
+        />
+      ),
       onFilter: (value, record) => (value ? record.problem === null : true),
       className: "overridePadding",
     },
