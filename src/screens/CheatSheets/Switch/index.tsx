@@ -91,10 +91,12 @@ export const CheatSheetsSwitch: React.FC = () => {
           break;
       }
 
-      if (!dataResponse || dataResponse.isFailure()) {
-        setIsError(true);
-      } else {
-        setData(dataResponse.value);
+      if (dataResponse) {
+        if (dataResponse.isFailure()) {
+          setIsError(true);
+        } else {
+          setData(dataResponse.value);
+        }
       }
 
       setIsLoading(false);
@@ -115,8 +117,6 @@ export const CheatSheetsSwitch: React.FC = () => {
         return (
           <TableCheatSheet type={type} data={data as ILexicalDomainTag[]} />
         );
-      case "errors":
-        return <>Errors</>;
       default:
         return <Navigate to={"/tags"} />;
     }

@@ -29,34 +29,36 @@ export const CheatSheetsHub: React.FC = () => {
         <Divider />
 
         <Row justify="space-around" align="middle" style={styles.contentRow}>
-          <Col span={5}>
+          <Col span={6}>
             <Link to="thematicRoles">
               <Card hoverable style={styles.contentCard}>
                 <Title>Thematic Roles</Title>
               </Card>
             </Link>
           </Col>
-          <Col span={5}>
+          <Col span={6}>
             <Link to="semanticCategories">
               <Card hoverable style={styles.contentCard}>
                 <Title>Semantic Categories</Title>
               </Card>
             </Link>
           </Col>
-          <Col span={5}>
+          <Col span={6}>
             <Link to="lexicalDomains">
               <Card hoverable style={styles.contentCard}>
                 <Title>Lexical Domains</Title>
               </Card>
             </Link>
           </Col>
-          <Col span={5}>
-            <Link to="errors">
-              <Card hoverable style={styles.contentCard}>
-                <Title>Errors</Title>
-              </Card>
-            </Link>
-          </Col>
+          {/*
+            <Col span={5}>
+              <Link to="errors">
+                <Card hoverable style={styles.contentCard}>
+                  <Title>Errors</Title>
+                </Card>
+              </Link>
+            </Col>
+          */}
         </Row>
       </>
     </>
