@@ -19,6 +19,8 @@ import API from "src/utils/api";
 import { HashLoader } from "react-spinners";
 import { TableTags } from "./components/TableTags";
 import { TreeTags } from "./components/TreeTags";
+import { IErrorTag } from "src/utils/api/resources/tags/error";
+import { ErrorTagsAdminTable } from "./components/ErrorTagsAdminTable";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
@@ -51,6 +53,9 @@ export const AdminSection: React.FC = () => {
   const [deletedDomainTags, setDeletedDomainTags] = useState<string[]>([]);
   const [newDomainTags, setNewDomainTags] = useState<ILexicalDomainTag[]>([]);
 
+  const [errorTags, setErrorTags] = useState<IErrorTag[]>([]);
+  const [deletedErrorTags, setDeletedErrorTags] = useState<string[]>([]);
+
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
 
@@ -58,7 +63,7 @@ export const AdminSection: React.FC = () => {
 
   const handleDeleteTag = (
     tagName: string,
-    type: "thematicRoles" | "lexicalDomains" | "semanticCategories"
+    type: "thematicRoles" | "lexicalDomains" | "semanticCategories" | "errors"
   ) => {
     switch (type) {
       case "thematicRoles":
@@ -72,6 +77,13 @@ export const AdminSection: React.FC = () => {
       case "semanticCategories":
         setDeletedScTags([...deletedScTags, tagName]);
         setScTags(_deleteTreeTag(scTags, tagName));
+        break;
+      case "errors":
+        setDeletedErrorTags([...deletedErrorTags, tagName]);
+        setErrorTags(
+          errorTags.filter((tag) => tag.errorCode.toString() !== tagName)
+        );
+        break;
     }
   };
 
@@ -87,11 +99,15 @@ export const AdminSection: React.FC = () => {
     const deleteScPromises = deletedScTags.map((tagName) =>
       API.tags.semanticCategory.delete(tagName)
     );
+    const deleteErrorPromises = deletedErrorTags.map((code) =>
+      API.tags.error.delete(code)
+    );
 
     const deleteResponses = await Promise.all([
       ...deleteTrPromises,
       ...deleteDomPromises,
       ...deleteScPromises,
+      ...deleteErrorPromises,
     ]);
 
     if (deleteResponses.some((response) => response.isFailure())) {
@@ -103,6 +119,7 @@ export const AdminSection: React.FC = () => {
     setDeletedDomainTags([]);
     setDeletedTrTags([]);
     setDeletedScTags([]);
+    setDeletedErrorTags([]);
 
     setIsLoadingUpdate(false);
   };
@@ -117,6 +134,7 @@ export const AdminSection: React.FC = () => {
         setTrTags(tagsResponse.value.semanticRole);
         setScTags(tagsResponse.value.semanticCategory);
         setDomainTags(tagsResponse.value.lexicalDomain);
+        setErrorTags(tagsResponse.value.errors);
       } else {
         setIsError(true);
       }
@@ -131,7 +149,8 @@ export const AdminSection: React.FC = () => {
     if (
       deletedDomainTags.length > 0 ||
       deletedTrTags.length > 0 ||
-      deletedScTags.length > 0
+      deletedScTags.length > 0 ||
+      deletedErrorTags.length > 0
     ) {
       return false;
     }
@@ -197,7 +216,10 @@ export const AdminSection: React.FC = () => {
               />
             </Panel>
             <Panel key="err" header="Errors">
-              Errors
+              <ErrorTagsAdminTable
+                data={errorTags}
+                handleDeleteTag={handleDeleteTag}
+              />
             </Panel>
           </Collapse>
           <Row justify="center">

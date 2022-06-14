@@ -27,7 +27,7 @@ export class ErrorTag {
     }
   };
 
-  static delete = async (errorCode: number): Promise<EmptyResponse> => {
+  static delete = async (errorCode: string): Promise<EmptyResponse> => {
     try {
       await client.delete(`${this.prefix}/${errorCode}`);
 
