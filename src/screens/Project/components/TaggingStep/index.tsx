@@ -108,7 +108,9 @@ export const TaggingStep: React.FC = () => {
       }
     }
 
-    window.alert("We would be chaging phases then");
+    await API.project.finishTagging(project.id);
+
+    return console.log("DONE");
   };
 
   const onSave = async (): Promise<boolean> => {

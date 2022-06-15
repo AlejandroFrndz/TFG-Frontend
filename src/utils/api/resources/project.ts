@@ -95,4 +95,18 @@ export class Project {
       return handleAxiosError(error);
     }
   };
+
+  static finishTagging = async (
+    projectId: string
+  ): Promise<ProjectResponse> => {
+    try {
+      const response = await client.get<AxiosProjectResponse>(
+        `${this.prefix}/${projectId}/finishTagging`
+      );
+
+      return success(response.data.project);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
 }
