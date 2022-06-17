@@ -1,5 +1,5 @@
 import { Helmet } from "react-helmet";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectProject } from "src/redux/projects/selectors";
 import { IProject } from "src/utils/api/resources/project";
 import { MarcoTAO } from "src/utils/constants";
@@ -24,6 +24,7 @@ import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticCategoryTag } from "src/utils/api/resources/tags/semanticCategory";
 import { IErrorTag } from "src/utils/api/resources/tags/error";
+import { setProject } from "src/redux/projects/actions";
 
 const { Title, Text } = Typography;
 
@@ -41,6 +42,7 @@ const isTripleMissingTag = (triple: ITriple) => {
 
 export const TaggingStep: React.FC = () => {
   const project = useSelector(selectProject()) as IProject;
+  const dispatch = useDispatch();
 
   const [triples, setTriples] = useState<ITriple[]>([]);
   const [trTags, setTrTags] = useState<ISemanticRoleTag[]>([]);
@@ -108,9 +110,19 @@ export const TaggingStep: React.FC = () => {
       }
     }
 
-    await API.project.finishTagging(project.id);
+    const apiResponse = await API.project.finishTagging(project.id);
 
-    return console.log("DONE");
+    console.log("HERE");
+
+    if (apiResponse.isSuccess()) {
+      console.log("SUCCESS");
+      dispatch(setProject(apiResponse.value));
+    } else {
+      console.log("ERROR");
+      message.error(
+        "An error occurred while updating the project. Please, refresh the page and try again"
+      );
+    }
   };
 
   const onSave = async (): Promise<boolean> => {
