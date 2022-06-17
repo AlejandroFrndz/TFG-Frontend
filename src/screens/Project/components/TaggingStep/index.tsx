@@ -112,13 +112,9 @@ export const TaggingStep: React.FC = () => {
 
     const apiResponse = await API.project.finishTagging(project.id);
 
-    console.log("HERE");
-
     if (apiResponse.isSuccess()) {
-      console.log("SUCCESS");
       dispatch(setProject(apiResponse.value));
     } else {
-      console.log("ERROR");
       message.error(
         "An error occurred while updating the project. Please, refresh the page and try again"
       );
