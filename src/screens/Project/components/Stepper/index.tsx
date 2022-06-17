@@ -9,6 +9,7 @@ import { CSSProperties } from "react";
 import { AnalysisStep } from "../AnalysisStep";
 import { CreationStep } from "../CreationStep";
 import { TaggingStep } from "../TaggingStep";
+import { VisualizationStep } from "../VisualizationStep";
 import { useStep } from "./hooks/useStep";
 
 const { Step } = Steps;
@@ -33,7 +34,7 @@ export const ProjectStepper: React.FC<ProjectStepperProps> = ({
       case 2:
         return <TaggingStep />;
       case 3:
-        return <div>Visualization</div>;
+        return <VisualizationStep />;
       default:
         return <></>;
     }
