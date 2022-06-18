@@ -1,11 +1,10 @@
 import { Table } from "antd";
-import { TableTagsType } from "src/shared/hooks/useColumns";
 import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticRoleTag } from "src/utils/api/resources/tags/semanticRole";
 import { useColumnsWithDeleteAction } from "./hooks/useColumnsWithDeleteAction";
 
 interface Props {
-  type: TableTagsType;
+  type: "thematicRoles" | "lexicalDomains";
   data: ISemanticRoleTag[] | ILexicalDomainTag[];
   handleDeleteTag(tag: string, type: "thematicRoles" | "lexicalDomains"): void;
 }

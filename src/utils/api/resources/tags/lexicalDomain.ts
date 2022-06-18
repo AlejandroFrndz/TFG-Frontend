@@ -13,9 +13,18 @@ type AxiosLexicalDomainTagsResponse = {
   tags: ILexicalDomainTag[];
 };
 
+type AxiosLexicalDomainTagResponse = {
+  tag: ILexicalDomainTag;
+};
+
 export type LexicalDomainTagsResponse = FailureOrSuccess<
   IError,
   ILexicalDomainTag[]
+>;
+
+export type LexicalDomainTagResponse = FailureOrSuccess<
+  IError,
+  ILexicalDomainTag
 >;
 
 export class LexicalDomain {
@@ -38,6 +47,21 @@ export class LexicalDomain {
       await client.delete(`${this.prefix}/${tagName}`);
 
       return success(null);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  static create = async (
+    tag: ILexicalDomainTag
+  ): Promise<LexicalDomainTagResponse> => {
+    try {
+      const response = await client.post<AxiosLexicalDomainTagResponse>(
+        this.prefix,
+        tag
+      );
+
+      return success(response.data.tag);
     } catch (error) {
       return handleAxiosError(error);
     }

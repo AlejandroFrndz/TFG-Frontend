@@ -21,6 +21,8 @@ import { TableTags } from "./components/TableTags";
 import { TreeTags } from "./components/TreeTags";
 import { IErrorTag } from "src/utils/api/resources/tags/error";
 import { ErrorTagsAdminTable } from "./components/ErrorTagsAdminTable";
+import { AddTableTag } from "./components/AddTableTag";
+import { AddErrorTag } from "./components/AddErrorTag";
 
 const { Title, Text } = Typography;
 const { Panel } = Collapse;
@@ -55,6 +57,7 @@ export const AdminSection: React.FC = () => {
 
   const [errorTags, setErrorTags] = useState<IErrorTag[]>([]);
   const [deletedErrorTags, setDeletedErrorTags] = useState<string[]>([]);
+  const [newErrorTags, setNewErrorTags] = useState<IErrorTag[]>([]);
 
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -67,11 +70,27 @@ export const AdminSection: React.FC = () => {
   ) => {
     switch (type) {
       case "thematicRoles":
-        setDeletedTrTags([...deletedTrTags, tagName]);
+        const filteredNewTrTags = newTrTags.filter(
+          (newTag) => newTag.tag !== tagName
+        );
+
+        if (filteredNewTrTags.length !== newTrTags.length) {
+          setNewTrTags(filteredNewTrTags);
+        } else {
+          setDeletedTrTags([...deletedTrTags, tagName]);
+        }
         setTrTags(trTags.filter((tag) => tag.tag !== tagName));
         break;
       case "lexicalDomains":
-        setDeletedDomainTags([...deletedDomainTags, tagName]);
+        const filteredNewDomainTags = newDomainTags.filter(
+          (newTag) => newTag.tag !== tagName
+        );
+
+        if (filteredNewDomainTags.length !== newDomainTags.length) {
+          setNewDomainTags(filteredNewDomainTags);
+        } else {
+          setDeletedDomainTags([...deletedDomainTags, tagName]);
+        }
         setDomainTags(domainTags.filter((tag) => tag.tag !== tagName));
         break;
       case "semanticCategories":
@@ -79,7 +98,15 @@ export const AdminSection: React.FC = () => {
         setScTags(_deleteTreeTag(scTags, tagName));
         break;
       case "errors":
-        setDeletedErrorTags([...deletedErrorTags, tagName]);
+        const filteredNewErrorTags = newErrorTags.filter(
+          (newTag) => newTag.errorCode.toString() !== tagName
+        );
+
+        if (filteredNewErrorTags.length !== newErrorTags.length) {
+          setNewErrorTags(filteredNewErrorTags);
+        } else {
+          setDeletedErrorTags([...deletedErrorTags, tagName]);
+        }
         setErrorTags(
           errorTags.filter((tag) => tag.errorCode.toString() !== tagName)
         );
@@ -87,15 +114,81 @@ export const AdminSection: React.FC = () => {
     }
   };
 
+  const handleAddTag = (
+    mainField: string | number,
+    secondaryField: string,
+    type: "thematicRoles" | "lexicalDomains" | "semanticCategories" | "errors"
+  ): boolean => {
+    switch (type) {
+      case "thematicRoles":
+        const foundTrTag = trTags.find((tag) => tag.tag === mainField);
+
+        if (foundTrTag) {
+          return true;
+        }
+
+        const newTrTag: ISemanticRoleTag = {
+          tag: mainField as string,
+          definition: secondaryField === "" ? null : secondaryField,
+        };
+
+        setNewTrTags([...newTrTags, newTrTag]);
+        setTrTags([newTrTag, ...trTags]);
+        break;
+
+      case "lexicalDomains":
+        const foundDomainTag = domainTags.find((tag) => tag.tag === mainField);
+
+        if (foundDomainTag) {
+          return true;
+        }
+
+        const newDomainTag: ILexicalDomainTag = {
+          tag: mainField as string,
+          protoVerbs: secondaryField === "" ? null : secondaryField,
+        };
+
+        setNewDomainTags([...newDomainTags, newDomainTag]);
+        setDomainTags([newDomainTag, ...domainTags]);
+        break;
+
+      case "errors":
+        const foundErrorTag = errorTags.find(
+          (tag) => tag.errorCode === mainField
+        );
+
+        if (foundErrorTag) {
+          return true;
+        }
+
+        const newErrorTag: IErrorTag = {
+          errorCode: mainField as number,
+          humanReadable: secondaryField,
+        };
+
+        setNewErrorTags([...newErrorTags, newErrorTag]);
+        setErrorTags(
+          [...errorTags, newErrorTag].sort((a, b) => a.errorCode - b.errorCode)
+        );
+        break;
+    }
+
+    return false;
+  };
+
   const handleSaveTagsUpdate = async () => {
     setIsLoadingUpdate(true);
 
+    /* IMPORTANT
+      Delete before creating new tags in case some tag was recreated with new parameters
+    */
     const deleteTrPromises = deletedTrTags.map((tagName) =>
       API.tags.semanticRole.delete(tagName)
     );
     const deleteDomPromises = deletedDomainTags.map((tagName) =>
       API.tags.lexicalDomain.delete(tagName)
     );
+    // Probably will have to not make this in parallel because of race conditions with cascade deletes of child tags
     const deleteScPromises = deletedScTags.map((tagName) =>
       API.tags.semanticCategory.delete(tagName)
     );
@@ -111,15 +204,45 @@ export const AdminSection: React.FC = () => {
     ]);
 
     if (deleteResponses.some((response) => response.isFailure())) {
-      message.error(
+      setIsLoadingUpdate(false);
+      return message.error(
         "Some or all updates failed to process. Please, refresh the page and try again later"
       );
     }
+
+    const createTrPromises = newTrTags.map((newTag) =>
+      API.tags.semanticRole.create(newTag)
+    );
+    const createDomPromises = newDomainTags.map((newTag) =>
+      API.tags.lexicalDomain.create(newTag)
+    );
+    const createErrorPromises = newErrorTags.map((newTag) =>
+      API.tags.error.create(newTag)
+    );
 
     setDeletedDomainTags([]);
     setDeletedTrTags([]);
     setDeletedScTags([]);
     setDeletedErrorTags([]);
+
+    const createResponses = await Promise.all([
+      ...createTrPromises,
+      ...createDomPromises,
+      ...createErrorPromises,
+    ]);
+
+    if (createResponses.some((response) => response.isFailure())) {
+      setIsLoadingUpdate(false);
+      return message.error(
+        "Some or all updates failed to process. Please, refresh the page and try again later"
+      );
+    }
+
+    setNewTrTags([]);
+    setNewDomainTags([]);
+    setNewErrorTags([]);
+
+    message.success("Updates saved successfully");
 
     setIsLoadingUpdate(false);
   };
@@ -158,7 +281,8 @@ export const AdminSection: React.FC = () => {
     if (
       newTrTags.length > 0 ||
       newDomainTags.length > 0 ||
-      newScTags.length > 0
+      newScTags.length > 0 ||
+      newErrorTags.length > 0
     ) {
       return false;
     }
@@ -199,6 +323,7 @@ export const AdminSection: React.FC = () => {
         <>
           <Collapse style={styles.collapse} expandIconPosition="right">
             <Panel key="tr" header="Semantic Roles">
+              <AddTableTag type="thematicRoles" handleAddTag={handleAddTag} />
               <TableTags
                 type="thematicRoles"
                 data={trTags}
@@ -209,6 +334,7 @@ export const AdminSection: React.FC = () => {
               <TreeTags data={scTags} handleDeleteTag={handleDeleteTag} />
             </Panel>
             <Panel key="dom" header="Lexical Domain">
+              <AddTableTag type="lexicalDomains" handleAddTag={handleAddTag} />
               <TableTags
                 type="lexicalDomains"
                 data={domainTags}
@@ -216,6 +342,7 @@ export const AdminSection: React.FC = () => {
               />
             </Panel>
             <Panel key="err" header="Errors">
+              <AddErrorTag handleAddTag={handleAddTag} />
               <ErrorTagsAdminTable
                 data={errorTags}
                 handleDeleteTag={handleDeleteTag}

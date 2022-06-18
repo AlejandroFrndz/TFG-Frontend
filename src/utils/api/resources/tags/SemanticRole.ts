@@ -13,9 +13,18 @@ type AxiosSemanticRoleTagsResponse = {
   tags: ISemanticRoleTag[];
 };
 
+type AxiosSemanticRoleTagResponse = {
+  tag: ISemanticRoleTag;
+};
+
 export type SemanticRoleTagsResponse = FailureOrSuccess<
   IError,
   ISemanticRoleTag[]
+>;
+
+export type SemanticRoleTagResponse = FailureOrSuccess<
+  IError,
+  ISemanticRoleTag
 >;
 
 export class SemanticRole {
@@ -38,6 +47,21 @@ export class SemanticRole {
       await client.delete(`${this.prefix}/${tagName}`);
 
       return success(null);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  static create = async (
+    tag: ISemanticRoleTag
+  ): Promise<SemanticRoleTagResponse> => {
+    try {
+      const response = await client.post<AxiosSemanticRoleTagResponse>(
+        this.prefix,
+        tag
+      );
+
+      return success(response.data.tag);
     } catch (error) {
       return handleAxiosError(error);
     }

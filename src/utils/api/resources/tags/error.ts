@@ -8,18 +8,24 @@ export type IErrorTag = {
   humanReadable: string;
 };
 
-type AxiosErrorTagResponse = {
+type AxiosErrorTagsResponse = {
   tags: IErrorTag[];
 };
 
+type AxiosErrorTagResponse = {
+  tag: IErrorTag;
+};
+
 export type ErrorTagsResponse = FailureOrSuccess<IError, IErrorTag[]>;
+
+export type ErrorTagResponse = FailureOrSuccess<IError, IErrorTag>;
 
 export class ErrorTag {
   private static prefix = "/tag/error" as const;
 
   static getAll = async (): Promise<ErrorTagsResponse> => {
     try {
-      const response = await client.get<AxiosErrorTagResponse>(this.prefix);
+      const response = await client.get<AxiosErrorTagsResponse>(this.prefix);
 
       return success(response.data.tags);
     } catch (error) {
@@ -32,6 +38,19 @@ export class ErrorTag {
       await client.delete(`${this.prefix}/${errorCode}`);
 
       return success(null);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  static create = async (tag: IErrorTag): Promise<ErrorTagResponse> => {
+    try {
+      const response = await client.post<AxiosErrorTagResponse>(
+        this.prefix,
+        tag
+      );
+
+      return success(response.data.tag);
     } catch (error) {
       return handleAxiosError(error);
     }
