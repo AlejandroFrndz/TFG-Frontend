@@ -2,6 +2,8 @@ import { IError } from "../logic/errors/IError";
 import { FailureOrSuccess, success } from "../logic/FailureOrSuccess";
 import client from "src/utils/api/axios";
 import { handleAxiosError } from "src/utils/helpers";
+import { EmptyResponse } from "../logic";
+import fileDownload from "js-file-download";
 
 export type ITriple = {
   id: string;
@@ -43,6 +45,8 @@ export type ITripleVerb = {
   verb: string;
   domain: string | null;
 };
+
+export type TriplesFileFormat = "tsv" | "csv";
 
 type AxiosTriplesResponse = {
   triples: ITriple[];
@@ -86,6 +90,27 @@ export class Triple {
       );
 
       return success(response.data.triple);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  static getFile = async (params: {
+    projectId: string;
+    fileFormat: TriplesFileFormat;
+    domainName: string;
+  }): Promise<EmptyResponse> => {
+    const { projectId, fileFormat, domainName } = params;
+
+    try {
+      const response = await client.get(
+        `${this.prefix}/project/${projectId}/download?fileFormat=${fileFormat}`,
+        { responseType: "blob" }
+      );
+
+      fileDownload(response.data, `${domainName}-ungrouped.${fileFormat}`);
+
+      return success(null);
     } catch (error) {
       return handleAxiosError(error);
     }

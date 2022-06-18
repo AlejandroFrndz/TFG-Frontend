@@ -1,4 +1,4 @@
-import FileDownload from "js-file-download";
+import fileDownload from "js-file-download";
 import { EmptyResponse, success } from "../logic";
 import client from "src/utils/api/axios";
 import { handleAxiosError } from "src/utils/helpers";
@@ -27,17 +27,19 @@ export type GroupedTriplesFileFormat = "tsv" | "csv" | "txt";
 export class GroupedTriples {
   private static prefix = "/groupedTriples" as const;
 
-  static getFile = async (
-    projectId: string,
-    fileFormat: GroupedTriplesFileFormat
-  ): Promise<EmptyResponse> => {
+  static getFile = async (params: {
+    projectId: string;
+    fileFormat: GroupedTriplesFileFormat;
+    domainName: string;
+  }): Promise<EmptyResponse> => {
+    const { projectId, fileFormat, domainName } = params;
     try {
       const response = await client.get(
         `${this.prefix}/${projectId}/download?fileFormat=${fileFormat}`,
         { responseType: "blob" }
       );
 
-      FileDownload(response.data, `results.${fileFormat}`);
+      fileDownload(response.data, `${domainName}-grouped.${fileFormat}`);
 
       return success(null);
     } catch (error) {
