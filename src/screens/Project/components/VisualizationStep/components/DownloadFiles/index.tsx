@@ -6,8 +6,13 @@ import API from "src/utils/api";
 import { GroupedTriplesFileFormat } from "src/utils/api/resources/groupedTriples";
 import { IProject } from "src/utils/api/resources/project";
 import { TriplesFileFormat } from "src/utils/api/resources/triple";
+import { ReactComponent as TSVIcon } from "src/assets/SVG/TSV.svg";
+import { ReactComponent as CSVIcon } from "src/assets/SVG/CSV.svg";
+import { ReactComponent as TXTIcon } from "src/assets/SVG/TXT.svg";
 
-const { Title, Text } = Typography;
+import "./styles.css";
+
+const { Title } = Typography;
 
 export const DownloadFiles: React.FC = () => {
   const project = useSelector(selectProject()) as IProject;
@@ -53,8 +58,9 @@ export const DownloadFiles: React.FC = () => {
             hoverable
             style={styles.contentCard}
             onClick={() => handleDownloadGroupedFile("tsv")}
+            className="colorOnHover"
           >
-            <Text>TSV</Text>
+            <TSVIcon width={"50px"} height={"50px"} />
           </Card>
         </Col>
         <Col span={3}>
@@ -62,8 +68,9 @@ export const DownloadFiles: React.FC = () => {
             hoverable
             style={styles.contentCard}
             onClick={() => handleDownloadGroupedFile("csv")}
+            className="colorOnHover"
           >
-            <Text>CSV</Text>
+            <CSVIcon width={"50px"} height={"50px"} />
           </Card>
         </Col>
         <Col span={3}>
@@ -71,12 +78,13 @@ export const DownloadFiles: React.FC = () => {
             hoverable
             style={styles.contentCard}
             onClick={() => handleDownloadGroupedFile("txt")}
+            className="colorOnHoverBlue"
           >
-            <Text>TXT</Text>
+            <TXTIcon width={"50px"} height={"50px"} />
           </Card>
         </Col>
       </Row>
-      <Row justify="center" style={styles.titleRowMargin}>
+      <Row justify="center">
         <Title>Download Ungrouped Triples</Title>
       </Row>
       <Row justify="space-around" align="middle" style={styles.cardRowMargin}>
@@ -86,8 +94,9 @@ export const DownloadFiles: React.FC = () => {
             hoverable
             style={styles.contentCard}
             onClick={() => handleDownloadUngroupedFile("tsv")}
+            className="colorOnHover"
           >
-            <Text>TSV</Text>
+            <TSVIcon width={"50px"} height={"50px"} />
           </Card>
         </Col>
         <Col span={3}>
@@ -95,8 +104,9 @@ export const DownloadFiles: React.FC = () => {
             hoverable
             style={styles.contentCard}
             onClick={() => handleDownloadUngroupedFile("csv")}
+            className="colorOnHover"
           >
-            <Text>CSV</Text>
+            <CSVIcon width={"50px"} height={"50px"} />
           </Card>
         </Col>
         <Col span={3} />
@@ -116,11 +126,8 @@ const styles = {
     borderRadius: "20px",
   } as CSSProperties,
 
-  titleRowMargin: {
-    marginTop: "60px",
-  } as CSSProperties,
-
   cardRowMargin: {
     marginTop: "30px",
+    paddingBottom: "60px",
   } as CSSProperties,
 };

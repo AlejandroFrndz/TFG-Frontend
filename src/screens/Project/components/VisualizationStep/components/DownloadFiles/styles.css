@@ -1,0 +1,9 @@
+.colorOnHover:hover {
+  color: #008100;
+  transition: color 0.3s;
+}
+
+.colorOnHoverBlue:hover {
+  color: #003496;
+  transition: color 0.3s;
+}
