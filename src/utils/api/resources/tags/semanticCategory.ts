@@ -14,9 +14,18 @@ type AxiosSemanticCategoryTagsResponse = {
   tags: ISemanticCategoryTag[];
 };
 
+type AxiosSemanticCategoryTagResponse = {
+  tag: ISemanticCategoryTag;
+};
+
 export type SemanticCategoryTagsResponse = FailureOrSuccess<
   IError,
   ISemanticCategoryTag[]
+>;
+
+export type SemanticCategoryTagResponse = FailureOrSuccess<
+  IError,
+  ISemanticCategoryTag
 >;
 
 export class SemanticCategory {
@@ -39,6 +48,22 @@ export class SemanticCategory {
       await client.delete(`${this.prefix}/${tagName}`);
 
       return success(null);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  static create = async (newTag: {
+    tag: string;
+    ancestor: string | null;
+  }): Promise<SemanticCategoryTagResponse> => {
+    try {
+      const response = await client.post<AxiosSemanticCategoryTagResponse>(
+        this.prefix,
+        newTag
+      );
+
+      return success(response.data.tag);
     } catch (error) {
       return handleAxiosError(error);
     }

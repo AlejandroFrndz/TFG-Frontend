@@ -40,6 +40,52 @@ const _deleteTreeTag = (allTags: ISemanticCategoryTag[], tagName: string) => {
   });
 };
 
+const _findTreeTag = (
+  allTags: ISemanticCategoryTag[],
+  tagName: string
+): boolean => {
+  const foundTag = allTags.find((tag) => tag.tag === tagName);
+
+  // If the tag is in the current array, return true
+  if (foundTag) {
+    return true;
+  }
+
+  // If not found, search in subTags
+  return allTags.some((tag) => _findTreeTag(tag.subTags, tagName));
+};
+
+const _addTreeTag = (
+  allTags: ISemanticCategoryTag[],
+  tagName: string,
+  ancestor: string
+) => {
+  if (ancestor === "") {
+    return [...allTags, { tag: tagName, ancestor: null, subTags: [] }];
+  }
+
+  let alreadyAdded = false;
+
+  const newTags = allTags.map((tag) => {
+    if (tag.tag === ancestor) {
+      alreadyAdded = true;
+      tag.subTags.push({ tag: tagName, ancestor, subTags: [] });
+      return tag;
+    } else {
+      return tag;
+    }
+  });
+
+  if (alreadyAdded) {
+    return newTags;
+  }
+
+  return allTags.map((tag) => {
+    tag.subTags = _addTreeTag(tag.subTags, tagName, ancestor);
+    return tag;
+  });
+};
+
 export const AdminSection: React.FC = () => {
   const isAdmin = useSelector(selectUserIsAdmin);
 
@@ -49,7 +95,9 @@ export const AdminSection: React.FC = () => {
 
   const [scTags, setScTags] = useState<ISemanticCategoryTag[]>([]);
   const [deletedScTags, setDeletedScTags] = useState<string[]>([]);
-  const [newScTags, setNewScTags] = useState<ISemanticCategoryTag[]>([]);
+  const [newScTags, setNewScTags] = useState<
+    { tag: string; ancestor: string | null }[]
+  >([]);
 
   const [domainTags, setDomainTags] = useState<ILexicalDomainTag[]>([]);
   const [deletedDomainTags, setDeletedDomainTags] = useState<string[]>([]);
@@ -94,8 +142,17 @@ export const AdminSection: React.FC = () => {
         setDomainTags(domainTags.filter((tag) => tag.tag !== tagName));
         break;
       case "semanticCategories":
-        setDeletedScTags([...deletedScTags, tagName]);
+        // First of all, remove the tag from the current tree
         setScTags(_deleteTreeTag(scTags, tagName));
+
+        // If the tag is not in the new tags array, it means its an existing tag so we should add it to the removals array
+        if (!newScTags.find((tag) => tag.tag === tagName)) {
+          setDeletedScTags([...deletedScTags, tagName]);
+        }
+
+        // Finally, filtere the newTags array by trying to find the new tag in the current tree
+        // If a new tag is no longer found in the current tree, it means new changes lead to it being deleted and thus should not be created
+        setNewScTags(newScTags.filter((tag) => _findTreeTag(scTags, tag.tag)));
         break;
       case "errors":
         const filteredNewErrorTags = newErrorTags.filter(
@@ -171,6 +228,23 @@ export const AdminSection: React.FC = () => {
           [...errorTags, newErrorTag].sort((a, b) => a.errorCode - b.errorCode)
         );
         break;
+
+      case "semanticCategories":
+        const doesTagAlreadyExist = _findTreeTag(scTags, mainField as string);
+
+        if (doesTagAlreadyExist) {
+          return true;
+        }
+
+        setNewScTags([
+          ...newScTags,
+          {
+            tag: mainField as string,
+            ancestor: secondaryField === "" ? null : secondaryField,
+          },
+        ]);
+        setScTags(_addTreeTag(scTags, mainField as string, secondaryField));
+        break;
     }
 
     return false;
@@ -188,10 +262,6 @@ export const AdminSection: React.FC = () => {
     const deleteDomPromises = deletedDomainTags.map((tagName) =>
       API.tags.lexicalDomain.delete(tagName)
     );
-    // Probably will have to not make this in parallel because of race conditions with cascade deletes of child tags
-    const deleteScPromises = deletedScTags.map((tagName) =>
-      API.tags.semanticCategory.delete(tagName)
-    );
     const deleteErrorPromises = deletedErrorTags.map((code) =>
       API.tags.error.delete(code)
     );
@@ -199,9 +269,15 @@ export const AdminSection: React.FC = () => {
     const deleteResponses = await Promise.all([
       ...deleteTrPromises,
       ...deleteDomPromises,
-      ...deleteScPromises,
       ...deleteErrorPromises,
     ]);
+
+    // Sequentially delete sc tags to avoid race condition during deletions due to ancestor/subTags relatoinships and cascade delete from parents to children
+    for (const deletedScTagName of deletedScTags) {
+      const response = await API.tags.semanticCategory.delete(deletedScTagName);
+
+      deleteResponses.push(response);
+    }
 
     if (deleteResponses.some((response) => response.isFailure())) {
       setIsLoadingUpdate(false);
@@ -231,6 +307,13 @@ export const AdminSection: React.FC = () => {
       ...createErrorPromises,
     ]);
 
+    // Sequentially create sc tags as if a child creation is attempted before its parent creation, it will error
+    for (const newScTag of newScTags) {
+      const response = await API.tags.semanticCategory.create(newScTag);
+
+      createResponses.push(response as any);
+    }
+
     if (createResponses.some((response) => response.isFailure())) {
       setIsLoadingUpdate(false);
       return message.error(
@@ -241,6 +324,7 @@ export const AdminSection: React.FC = () => {
     setNewTrTags([]);
     setNewDomainTags([]);
     setNewErrorTags([]);
+    setNewScTags([]);
 
     message.success("Updates saved successfully");
 
@@ -331,7 +415,11 @@ export const AdminSection: React.FC = () => {
               />
             </Panel>
             <Panel key="sc" header="Semantic Categories">
-              <TreeTags data={scTags} handleDeleteTag={handleDeleteTag} />
+              <TreeTags
+                data={scTags}
+                handleDeleteTag={handleDeleteTag}
+                handleAddTag={handleAddTag}
+              />
             </Panel>
             <Panel key="dom" header="Lexical Domain">
               <AddTableTag type="lexicalDomains" handleAddTag={handleAddTag} />
