@@ -19,7 +19,7 @@ export const DeleteAccountSection: React.FC = () => {
   };
 
   const handleDeleteAccount = async () => {
-    const response = await API.user.delete();
+    const response = await API.user.deleteMe();
 
     if (response.isSuccess()) {
       handleLogOut();

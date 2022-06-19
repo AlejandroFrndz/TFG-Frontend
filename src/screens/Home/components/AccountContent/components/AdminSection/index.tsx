@@ -3,6 +3,7 @@ import { selectUserIsAdmin } from "src/redux/auth/selectors";
 import { Col, Divider, Row, Typography } from "antd";
 import type { CSSProperties } from "react";
 import { TagsAdminSection } from "./components/TagsAdminSection";
+import { UsersAdminSection } from "./components/UsersAdminSection";
 
 const { Title } = Typography;
 
@@ -21,12 +22,14 @@ export const AdminSection: React.FC = () => {
           <Title style={styles.titleRow}>Admin Settings</Title>
         </Col>
       </Row>
-      <Row>
-        <Col span={12} offset={6}>
-          <Divider />
-        </Col>
-      </Row>
+      <Col span={12} offset={6}>
+        <Divider />
+      </Col>
       <TagsAdminSection />
+      <Col span={12} offset={6}>
+        <Divider />
+      </Col>
+      <UsersAdminSection />
     </>
   );
 };

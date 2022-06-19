@@ -56,7 +56,7 @@ export const AccountForm: React.FC = () => {
 
     if (!_.isEmpty(params)) {
       setLoadingProfileUpdate(true);
-      const userResponse = await API.user.update(params);
+      const userResponse = await API.user.updateMe(params);
       setLoadingProfileUpdate(false);
 
       if (userResponse.isSuccess()) {
