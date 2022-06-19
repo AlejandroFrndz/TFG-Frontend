@@ -66,7 +66,7 @@ export const LogInForm: React.FC<LogInFormProps> = ({ onFinish }) => {
         </Form.Item>
       </Form>
 
-      <Row>
+      {/* <Row>
         <Col span={24}>
           <Center>
             <Link to="/forgot-password" style={styles.forgotPassword}>
@@ -74,7 +74,7 @@ export const LogInForm: React.FC<LogInFormProps> = ({ onFinish }) => {
             </Link>
           </Center>
         </Col>
-      </Row>
+        </Row> */}
     </>
   );
 };
