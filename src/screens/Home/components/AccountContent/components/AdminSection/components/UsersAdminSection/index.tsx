@@ -89,8 +89,8 @@ export const UsersAdminSection: React.FC = () => {
       ) : isError ? (
         <Row justify="center" style={styles.apiStatusWrapper}>
           <Text>
-            Couldn't get tag information at the moment. Please, refresh the page
-            and try again later
+            Couldn't get users information at the moment. Please, refresh the
+            page and try again later
           </Text>
         </Row>
       ) : (
