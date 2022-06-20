@@ -236,7 +236,6 @@ export const CreationStep: React.FC = () => {
           <Dragger
             name="corpus"
             multiple
-            maxCount={15}
             accept=".txt,text/plain"
             beforeUpload={beforeUpload}
             onRemove={handleRemove}

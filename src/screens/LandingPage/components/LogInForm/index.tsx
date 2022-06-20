@@ -1,7 +1,6 @@
 import React, { CSSProperties, useState } from "react";
-import { Form, Input, Button, Row, Col } from "antd";
-import { Link } from "react-router-dom";
-import { Center } from "../../../../shared/components/Center/Center";
+import { Form, Input, Button } from "antd";
+import { Center } from "src/shared/components/Center/Center";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 
 type LogInFormProps = {
