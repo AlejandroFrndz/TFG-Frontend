@@ -1,7 +1,7 @@
 import { CSSProperties } from "react";
 import { useDragLayer, XYCoord } from "react-dnd";
 import { DragTypes } from "src/utils/constants";
-import { ProjectItem } from "src/shared/ProjectItem";
+import { ProjectItem } from "src/shared/components/ProjectItem";
 
 export const CustomDragLayer: React.FC = () => {
   const { itemType, isDragging, currentOffset, item } = useDragLayer(

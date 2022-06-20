@@ -1,7 +1,7 @@
 import React, { CSSProperties, useState } from "react";
 import { Form, Input, Button, Row, Col } from "antd";
 import { Link } from "react-router-dom";
-import { Center } from "../../../../shared/Center/Center";
+import { Center } from "../../../../shared/components/Center/Center";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 
 type LogInFormProps = {
@@ -66,7 +66,7 @@ export const LogInForm: React.FC<LogInFormProps> = ({ onFinish }) => {
         </Form.Item>
       </Form>
 
-      <Row>
+      {/* <Row>
         <Col span={24}>
           <Center>
             <Link to="/forgot-password" style={styles.forgotPassword}>
@@ -74,7 +74,7 @@ export const LogInForm: React.FC<LogInFormProps> = ({ onFinish }) => {
             </Link>
           </Center>
         </Col>
-      </Row>
+        </Row> */}
     </>
   );
 };

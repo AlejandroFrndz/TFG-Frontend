@@ -1,0 +1,11 @@
+td.overridePadding {
+  padding: 0px 0px !important;
+}
+
+td.maxWidth {
+  max-width: 120px;
+}
+
+.hidePrefix > .ant-input-prefix {
+  display: none;
+}

@@ -1,19 +1,9 @@
 import React, { CSSProperties, useState } from "react";
-import { FileTextOutlined, QuestionCircleOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Col,
-  Input,
-  Row,
-  Segmented,
-  Switch,
-  Tooltip,
-  Typography,
-  Upload,
-} from "antd";
+import { FileTextOutlined } from "@ant-design/icons";
+import { Button, Col, Input, Row, Segmented, Typography, Upload } from "antd";
 import ReactCountryFlag from "react-country-flag";
 import { IProject, ProjectLanguage } from "src/utils/api/resources/project";
-import { RcFile } from "antd/lib/upload";
+import type { RcFile } from "antd/lib/upload";
 import API from "src/utils/api";
 import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
@@ -21,7 +11,7 @@ import { selectProject } from "src/redux/projects/selectors";
 import { isNotEmpty } from "src/utils/helpers";
 import { setProject } from "src/redux/projects/actions";
 import { UploadFile } from "antd/lib/upload/interface";
-import { FullScreenLoader } from "src/shared/FullScreenLoader";
+import { FullScreenLoader } from "src/shared/components/FullScreenLoader";
 
 const { Title, Text } = Typography;
 const { Dragger } = Upload;
@@ -137,10 +127,6 @@ export const CreationStep: React.FC = () => {
     setProjectState({ ...projectState, domainName: e.target.value });
   };
 
-  const handleSubdomainsChange = (value: boolean) => {
-    setProjectState({ ...projectState, isUsingSubdomains: value });
-  };
-
   const handleLanguageChange = (value: string | number) => {
     setProjectState({ ...projectState, language: value as ProjectLanguage });
   };
@@ -216,7 +202,7 @@ export const CreationStep: React.FC = () => {
     <>
       <Row align="middle" justify="center" style={styles.domainSettingsRow}>
         <Col span={24} style={styles.sectionTitle}>
-          <Title>Domain Settings</Title>
+          <Title>Domain Name</Title>
         </Col>
         <Col span={6} style={styles.domainInputCol}>
           <Input
@@ -224,16 +210,6 @@ export const CreationStep: React.FC = () => {
             style={styles.domainInput}
             onChange={handleNameChange}
             value={projectState.domainName}
-          />
-        </Col>
-        <Col span={5}>
-          <Text style={styles.subdomainText}>Use Subdomains</Text>
-          <Tooltip title="Use fine grain subdomain tags for the lexical domains of verbs">
-            <QuestionCircleOutlined style={styles.subdomainIcon} />
-          </Tooltip>
-          <Switch
-            onChange={handleSubdomainsChange}
-            checked={projectState.isUsingSubdomains}
           />
         </Col>
       </Row>

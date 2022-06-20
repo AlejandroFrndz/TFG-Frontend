@@ -10,7 +10,8 @@ export const handleAxiosError = (
 ): FailureOrSuccess<IError, never> => {
   if (axios.isAxiosError(error)) {
     const message = error.response ? error.response.data.error : error.message;
-    return failure(new ApiError(message, error));
+    const code = error.response ? error.response.data.type : undefined;
+    return failure(new ApiError(message, code, error));
   }
 
   return failure(new UnexpectedError(error));

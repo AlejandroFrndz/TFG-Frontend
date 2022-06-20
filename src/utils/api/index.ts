@@ -5,6 +5,9 @@ import { Folder } from "src/utils/api/resources/folder";
 import { File } from "src/utils/api/resources/file";
 import { Project } from "src/utils/api/resources/project";
 import { Search } from "./resources/search";
+import { Triple } from "./resources/triple";
+import { Tags } from "./resources/tags";
+import { GroupedTriples } from "./resources/groupedTriples";
 
 export default class API {
   static setToken(token: string): void {
@@ -21,4 +24,7 @@ export default class API {
   static file = File;
   static project = Project;
   static search = Search;
+  static triple = Triple;
+  static tags = Tags;
+  static groupedTriples = GroupedTriples;
 }

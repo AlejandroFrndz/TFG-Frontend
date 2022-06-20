@@ -34,6 +34,7 @@ function recursivelyDeleteFolder(
   let deletedArray = folderArray.filter((folder) => folder.id !== folderId);
 
   toDelete.map((folderToDelete) => {
+    //eslint-disable-next-line
     deletedArray = recursivelyDeleteFolder(deletedArray, folderToDelete.id);
     return folderToDelete;
   });

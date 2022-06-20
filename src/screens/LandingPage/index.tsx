@@ -1,6 +1,7 @@
-import React, { CSSProperties, useState } from "react";
+import { useState } from "react";
+import type { CSSProperties } from "react";
 import { Row, Col, Typography, Layout, message, Card, Divider } from "antd";
-import { Center } from "src/shared/Center/Center";
+import { Center } from "src/shared/components/Center/Center";
 import { LogInForm } from "src/screens/LandingPage/components/LogInForm";
 import API from "src/utils/api";
 import { useNavigate } from "react-router-dom";

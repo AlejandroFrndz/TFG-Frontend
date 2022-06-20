@@ -5,13 +5,14 @@ import {
   Col,
   Divider,
   Menu,
+  message,
   Row,
   Switch,
   Tooltip,
   Typography,
 } from "antd";
 import { selectProject } from "src/redux/projects/selectors";
-import { Center } from "src/shared/Center/Center";
+import { Center } from "src/shared/components/Center/Center";
 import { IProject } from "src/utils/api/resources/project";
 import { MarcoTAO } from "src/utils/constants";
 import {
@@ -21,7 +22,7 @@ import {
   FileTextOutlined,
   QuestionOutlined,
 } from "@ant-design/icons";
-import { RcFile } from "antd/lib/upload";
+import type { RcFile } from "antd/lib/upload";
 import React, { CSSProperties, useEffect, useState } from "react";
 import { ParameterInput } from "./components/ParameterInput";
 import {
@@ -31,7 +32,7 @@ import {
 } from "src/utils/api/resources/search";
 import API from "src/utils/api";
 import { SavedSearch } from "./components/SavedSearch";
-import { FullScreenLoader } from "src/shared/FullScreenLoader";
+import { FullScreenLoader } from "src/shared/components/FullScreenLoader";
 import { setProject } from "src/redux/projects/actions";
 
 const { Title, Text } = Typography;
@@ -210,12 +211,15 @@ export const AnalysisStep: React.FC = () => {
   const handleRunSearches = async () => {
     setIsRunningSearches(true);
 
-    //TODO: Change this when the signed url is no longer returned
     const projectAndFileResponse = await API.project.runSearches(project.id);
 
     if (projectAndFileResponse.isSuccess()) {
-      dispatch(setProject(projectAndFileResponse.value.project));
-      window.alert(projectAndFileResponse.value.url);
+      dispatch(setProject(projectAndFileResponse.value));
+    } else if (projectAndFileResponse.error.message === "Empty result files") {
+      message.error({
+        content: "The configured searches did not produce any results",
+        styles: styles.feedbackMessage,
+      });
     }
 
     setIsRunningSearches(false);
@@ -415,5 +419,9 @@ const styles = {
 
   hidden: {
     visibility: "hidden",
+  } as CSSProperties,
+
+  feedbackMessage: {
+    marginTop: "90vh",
   } as CSSProperties,
 };

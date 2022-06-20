@@ -3,8 +3,8 @@ import { Helmet } from "react-helmet";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { setProject } from "src/redux/projects/actions";
-import { Center } from "src/shared/Center/Center";
-import { FullScreenLoader } from "src/shared/FullScreenLoader";
+import { Center } from "src/shared/components/Center/Center";
+import { FullScreenLoader } from "src/shared/components/FullScreenLoader";
 import API from "src/utils/api";
 import { MarcoTAO } from "src/utils/constants";
 import { ProjectStepper } from "./components/Stepper";
@@ -60,7 +60,7 @@ export const Project: React.FC = () => {
         <Helmet>
           <title>{`${MarcoTAO} - Workspace`}</title>
         </Helmet>
-        <FullScreenLoader type="Propagate" color="red" />
+        <FullScreenLoader type="Propagate" />
       </>
     );
 

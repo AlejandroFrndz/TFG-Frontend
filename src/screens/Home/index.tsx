@@ -1,19 +1,14 @@
 import React, { CSSProperties, useEffect, useState } from "react";
 import { Layout, Menu } from "antd";
-import {
-  PartitionOutlined,
-  ProjectOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { ProjectOutlined, UserOutlined } from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { clearAuthError, fetchMe } from "src/redux/auth/actions";
 import { PulseLoader } from "react-spinners";
-import { Center } from "src/shared/Center/Center";
+import { Center } from "src/shared/components/Center/Center";
 import { selectAuthError } from "src/redux/auth/selectors";
 import { useNavigate } from "react-router-dom";
 import { AccountContent } from "src/screens/Home/components/AccountContent";
 import { ProjectsContent } from "src/screens/Home/components/ProjectsContent";
-import { WIP } from "../WIP";
 
 enum CategoriesEnum {
   "My Projects" = "My Projects",
@@ -69,8 +64,8 @@ export const Home: React.FC = () => {
     switch (category) {
       case CategoriesEnum["My Projects"]:
         return <ProjectsContent />;
-      case CategoriesEnum["Shared With Me"]:
-        return <WIP />;
+      // case CategoriesEnum["Shared With Me"]:
+      //   return <WIP />;
       case CategoriesEnum.Account:
         return <AccountContent />;
     }
@@ -101,13 +96,13 @@ export const Home: React.FC = () => {
           >
             {CategoriesEnum["My Projects"]}
           </Menu.Item>
-          <Menu.Item
+          {/*<Menu.Item
             key={CategoriesEnum["Shared With Me"]}
             icon={<PartitionOutlined style={styles.menuIcon} />}
             style={styles.menuItem}
           >
             {CategoriesEnum["Shared With Me"]}
-          </Menu.Item>
+          </Menu.Item>*/}
           <Menu.Item
             key={CategoriesEnum.Account}
             icon={<UserOutlined style={styles.menuIcon} />}
@@ -145,7 +140,7 @@ const styles = {
   } as CSSProperties,
 
   accountMenuItem: {
-    marginTop: "69vh",
+    marginTop: "80vh",
   } as CSSProperties,
 
   menuIcon: {
