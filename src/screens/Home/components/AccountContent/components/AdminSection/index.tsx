@@ -1,14 +1,15 @@
 import { useSelector } from "react-redux";
-import { selectUserIsAdmin } from "src/redux/auth/selectors";
+import { selectUser } from "src/redux/auth/selectors";
 import { Col, Divider, Row, Typography } from "antd";
 import type { CSSProperties } from "react";
 import { TagsAdminSection } from "./components/TagsAdminSection";
 import { UsersAdminSection } from "./components/UsersAdminSection";
+import { IUser } from "src/utils/api/resources/user";
 
 const { Title } = Typography;
 
 export const AdminSection: React.FC = () => {
-  const isAdmin = useSelector(selectUserIsAdmin);
+  const { isAdmin } = useSelector(selectUser) as IUser;
 
   if (!isAdmin) {
     return null;
