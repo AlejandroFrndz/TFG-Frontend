@@ -80,13 +80,11 @@ export const LandingPage: React.FC = () => {
               </Row>
             </Col>
             <Col span={12}>
-              <Center>
-                <Card style={styles.card} bordered={false}>
-                  <LogInForm onFinish={handleLogin} />
-                  <Divider />
-                  <SingUp onFinish={handleSingUp} blurBackground={setBlur} />
-                </Card>
-              </Center>
+              <Card style={styles.card} bordered={false}>
+                <LogInForm onFinish={handleLogin} />
+                <Divider />
+                <SingUp onFinish={handleSingUp} blurBackground={setBlur} />
+              </Card>
             </Col>
           </Row>
         </Content>
@@ -103,8 +101,8 @@ const styles = {
 
   card: {
     borderRadius: "20px",
-    width: "400px",
-    transform: "scale(1.5,1.5)",
+    width: "600px",
+    height: "400px",
   } as CSSProperties,
 
   layout: (blur: boolean) => {

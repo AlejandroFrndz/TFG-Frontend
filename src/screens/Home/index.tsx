@@ -85,10 +85,11 @@ export const Home: React.FC = () => {
           defaultSelectedKeys={[CategoriesEnum["My Projects"]]}
           mode="inline"
           onSelect={handleSelect}
+          style={{ height: "100vh" }}
         >
           <Menu.Item
             key={CategoriesEnum["My Projects"]}
-            icon={<ProjectOutlined style={styles.menuIcon} />}
+            icon={<ProjectOutlined />}
             style={{
               ...styles.menuItem,
               ...styles.myProjectsMenuItem,
@@ -105,10 +106,9 @@ export const Home: React.FC = () => {
           </Menu.Item>*/}
           <Menu.Item
             key={CategoriesEnum.Account}
-            icon={<UserOutlined style={styles.menuIcon} />}
+            icon={<UserOutlined />}
             style={{
               ...styles.menuItem,
-              ...styles.accountMenuItem,
             }}
           >
             {CategoriesEnum.Account}
@@ -137,14 +137,6 @@ const styles = {
 
   myProjectsMenuItem: {
     marginTop: "0px",
-  } as CSSProperties,
-
-  accountMenuItem: {
-    marginTop: "80vh",
-  } as CSSProperties,
-
-  menuIcon: {
-    transform: "scale(1.5,1.5)",
   } as CSSProperties,
 
   secondaryLayout: {
