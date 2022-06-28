@@ -8,6 +8,7 @@ import { Divider, Steps } from "antd";
 import { CSSProperties } from "react";
 import { AnalysisStep } from "../AnalysisStep";
 import { CreationStep } from "../CreationStep";
+import { ProcessingSpinner } from "../ProcessingSpinner";
 import { TaggingStep } from "../TaggingStep";
 import { VisualizationStep } from "../VisualizationStep";
 import { useStep } from "./hooks/useStep";
@@ -23,18 +24,39 @@ export const ProjectStepper: React.FC<ProjectStepperProps> = ({
   setError,
   setErrorMessage,
 }) => {
-  const step = useStep();
+  const [step, processing] = useStep();
 
   const renderStep = () => {
     switch (step) {
       case 0:
         return <CreationStep />;
       case 1:
-        return <AnalysisStep />;
+        return processing ? (
+          <ProcessingSpinner
+            setError={setError}
+            setErrorMessage={setErrorMessage}
+          />
+        ) : (
+          <AnalysisStep />
+        );
       case 2:
-        return <TaggingStep />;
+        return processing ? (
+          <ProcessingSpinner
+            setError={setError}
+            setErrorMessage={setErrorMessage}
+          />
+        ) : (
+          <TaggingStep />
+        );
       case 3:
-        return <VisualizationStep />;
+        return processing ? (
+          <ProcessingSpinner
+            setError={setError}
+            setErrorMessage={setErrorMessage}
+          />
+        ) : (
+          <VisualizationStep />
+        );
       default:
         return <></>;
     }

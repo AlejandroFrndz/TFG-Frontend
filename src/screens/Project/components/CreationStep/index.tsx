@@ -11,7 +11,6 @@ import { selectProject } from "src/redux/projects/selectors";
 import { isNotEmpty } from "src/utils/helpers";
 import { setProject } from "src/redux/projects/actions";
 import { UploadFile } from "antd/lib/upload/interface";
-import { FullScreenLoader } from "src/shared/components/FullScreenLoader";
 
 const { Title, Text } = Typography;
 const { Dragger } = Upload;
@@ -186,17 +185,6 @@ export const CreationStep: React.FC = () => {
       setIsParsingCorpus(false);
     }
   };
-
-  if (isParsingCorpus) {
-    return (
-      <FullScreenLoader
-        type="Ring"
-        wrapperHeight="85vh"
-        wrapperWidth="100vw"
-        text={<p>Parsing Corpus</p>}
-      />
-    );
-  }
 
   return (
     <>

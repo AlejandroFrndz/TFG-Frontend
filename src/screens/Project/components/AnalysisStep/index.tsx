@@ -254,17 +254,6 @@ export const AnalysisStep: React.FC = () => {
     return true;
   };
 
-  if (isRunningSearches) {
-    return (
-      <FullScreenLoader
-        type="Ring"
-        wrapperHeight="85vh"
-        wrapperWidth="100vw"
-        text={<p>Performing Searches</p>}
-      />
-    );
-  }
-
   return (
     <>
       <Helmet>
@@ -378,7 +367,11 @@ export const AnalysisStep: React.FC = () => {
                   </Button>
                 </Tooltip>
               ) : (
-                <Button type="primary" onClick={handleRunSearches}>
+                <Button
+                  type="primary"
+                  onClick={handleRunSearches}
+                  loading={isRunningSearches}
+                >
                   Run Searches
                 </Button>
               )}
