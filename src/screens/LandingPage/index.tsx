@@ -10,6 +10,7 @@ import { clearAuthError } from "src/redux/auth/actions";
 import { SingUp } from "src/screens/LandingPage/components/SingUp";
 import { Helmet } from "react-helmet";
 import { MarcoTAO } from "src/utils/constants";
+import { ReactComponent as MarcoTAOSvg } from "src/assets/SVG/MarcoTAO.svg";
 
 const { Content } = Layout;
 const { Title, Text } = Typography;
@@ -67,15 +68,8 @@ export const LandingPage: React.FC = () => {
           <Row align="middle" style={styles.mainRow}>
             <Col span={12}>
               <Row>
-                <Col span={24}>
-                  <Center>
-                    <Title>Log in to your account</Title>
-                  </Center>
-                </Col>
-                <Col span={24}>
-                  <Center>
-                    <Text>To access all your projects and previous work</Text>
-                  </Center>
+                <Col span={24} style={{ textAlign: "center" }}>
+                  <MarcoTAOSvg width={600} />
                 </Col>
               </Row>
             </Col>
