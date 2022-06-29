@@ -3,6 +3,7 @@ import {
   DeleteOutlined,
   EditOutlined,
   FolderAddOutlined,
+  QuestionCircleOutlined,
 } from "@ant-design/icons";
 import {
   Col,
@@ -15,6 +16,7 @@ import {
   Modal,
   Button,
   Space,
+  Tooltip,
 } from "antd";
 import React, { useState } from "react";
 import { CSSProperties } from "react";
@@ -94,6 +96,7 @@ export const ProjectsContent: React.FC = () => {
   >(undefined);
   const [disableGeneralContext, setDisableGeneralContext] = useState(false);
   const [showCreateProjectModal, setShowCreateProjectModal] = useState(false);
+  const [showHelpModal, setShowHelpModal] = useState(false);
 
   const clampActiveFolders = (lenght: number) => {
     if (lenght === activeFolders.length) {
@@ -390,6 +393,16 @@ export const ProjectsContent: React.FC = () => {
               >
                 Rename
               </Button>
+              <Tooltip
+                overlay="Click me to get some help!"
+                placement="right"
+                mouseEnterDelay={0.5}
+              >
+                <QuestionCircleOutlined
+                  style={{ fontSize: "20px", cursor: "pointer" }}
+                  onClick={() => setShowHelpModal(true)}
+                />
+              </Tooltip>
             </Space>
           </Row>
           <Row gutter={[16, 24]} style={styles.mainRow}>
@@ -485,6 +498,53 @@ export const ProjectsContent: React.FC = () => {
         handleSubmit={handleRenameItem}
         defaultText={itemToRename ? itemToRename.item.name : undefined}
       />
+
+      <Modal
+        visible={showHelpModal}
+        centered
+        title="How this screen works"
+        cancelButtonProps={{ style: { display: "none" } }}
+        onCancel={() => setShowHelpModal(false)}
+        onOk={() => setShowHelpModal(false)}
+        bodyStyle={{ maxHeight: "500px", overflowY: "auto" }}
+      >
+        <div style={{ display: "flex", flexDirection: "column" }}>
+          <h3>Move Between Items</h3>
+          <p>
+            If you double click a folder, you'll open it to see it contents. In
+            case you want to go back, click the folder names at the top of the
+            page to navigate back to previous folders. It works pretty much the
+            same as you would do while using the file explorer of your operating
+            system. (ie Windows)
+          </p>
+          <p>
+            If you double click a project, a new browser tab will open allowing
+            you to work on said project.
+          </p>
+          <h3>Select Items</h3>
+          <p>
+            Items can be selected by clicking them once. You will notice the
+            background of the currently selected item will turn darker. When an
+            item is selected, you can delete or rename it by click the buttons
+            that will now be enabled. You can deselect the currently selected
+            item by clicking anywhere else in the screen.
+          </p>
+          <h3>Organise Items</h3>
+          <p>
+            You can move your projects and folders to create whatever hierarchy
+            works best for you. You can drag both files and folders on top of
+            other folders to move them inside the folder you're dropping them
+            on. You can also drag items to the folder names at the top of the
+            page in order to get items out of a folder.
+          </p>
+          <h3>Context Menu</h3>
+          <p>
+            Lastly, you can use all the previously mentioned interaction via
+            contextual menus by right clicking in any free space to create new
+            folders and projects or on top of an item to delete or rename it.
+          </p>
+        </div>
+      </Modal>
     </>
   );
 };
