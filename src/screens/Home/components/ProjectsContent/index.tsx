@@ -13,6 +13,8 @@ import {
   Dropdown,
   Typography,
   Modal,
+  Button,
+  Space,
 } from "antd";
 import React, { useState } from "react";
 import { CSSProperties } from "react";
@@ -200,6 +202,23 @@ export const ProjectsContent: React.FC = () => {
     }
   };
 
+  const handleRenameFromButton = () => {
+    if (!selectedItem) return;
+
+    const selectedFolder = folders.find((folder) => folder.id === selectedItem);
+
+    if (selectedFolder) {
+      handleShowRenameItemModal({ type: "folder", item: selectedFolder });
+      return;
+    }
+
+    const selectedFile = files.find((file) => file.id === selectedItem);
+
+    if (selectedFile) {
+      handleShowRenameItemModal({ type: "file", item: selectedFile });
+    }
+  };
+
   const handleShowRenameItemModal = (params: RenameItemStruct) => {
     setShowRenameItemModal(true);
     setItemToRename(params);
@@ -209,6 +228,23 @@ export const ProjectsContent: React.FC = () => {
     setShowRenameItemModal(false);
     setItemToRename(undefined);
     setDisableGeneralContext(false);
+  };
+
+  const handleDeleteFromButton = () => {
+    if (!selectedItem) return;
+
+    const selectedFolder = folders.find((folder) => folder.id === selectedItem);
+
+    if (selectedFolder) {
+      handleShowDeleteFolderModal(selectedFolder);
+      return;
+    }
+
+    const selectedFile = files.find((file) => file.id === selectedItem);
+
+    if (selectedFile) {
+      handleShowDeleteFileModal(selectedFile);
+    }
   };
 
   const handleShowDeleteFolderModal = (folder: IFolder) => {
@@ -319,6 +355,43 @@ export const ProjectsContent: React.FC = () => {
           style={styles.whiteBackground}
           onClick={() => setSelectedItem(null)}
         >
+          <Row
+            style={{
+              marginBottom: "30px",
+              marginTop: "10px",
+              paddingLeft: "10px",
+            }}
+          >
+            <Space size={"large"}>
+              <Button
+                icon={<FolderAddOutlined />}
+                onClick={handleShowCreateFolderModal}
+              >
+                New Folder
+              </Button>
+              <Button
+                icon={<AppstoreAddOutlined />}
+                onClick={handleShowCreateProjectModal}
+              >
+                New Project
+              </Button>
+              <Button
+                icon={<DeleteOutlined />}
+                danger
+                disabled={selectedItem === null}
+                onClick={handleDeleteFromButton}
+              >
+                Delete
+              </Button>
+              <Button
+                icon={<EditOutlined />}
+                disabled={selectedItem === null}
+                onClick={handleRenameFromButton}
+              >
+                Rename
+              </Button>
+            </Space>
+          </Row>
           <Row gutter={[16, 24]} style={styles.mainRow}>
             {folders.map((folder) => {
               return (
@@ -330,12 +403,13 @@ export const ProjectsContent: React.FC = () => {
                 >
                   <Col
                     span={6}
-                    onDoubleClick={() =>
+                    onDoubleClick={() => {
                       setActiveFolders([
                         ...activeFolders,
                         { id: folder.id, name: folder.name },
-                      ])
-                    }
+                      ]);
+                      setSelectedItem(null);
+                    }}
                     onClick={(event) => {
                       setSelectedItem(folder.id);
                       event.stopPropagation(); // Stop event propagation to avoid triggering parent's <Content /> event
