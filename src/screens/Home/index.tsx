@@ -1,6 +1,10 @@
 import React, { CSSProperties, useEffect, useState } from "react";
 import { Layout, Menu } from "antd";
-import { ProjectOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  ApartmentOutlined,
+  ProjectOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { clearAuthError, fetchMe } from "src/redux/auth/actions";
 import { PulseLoader } from "react-spinners";
@@ -9,10 +13,12 @@ import { selectAuthError } from "src/redux/auth/selectors";
 import { useNavigate } from "react-router-dom";
 import { AccountContent } from "src/screens/Home/components/AccountContent";
 import { ProjectsContent } from "src/screens/Home/components/ProjectsContent";
+import { ConceptComparisonContent } from "./components/ConceptComparisonContent";
 
 enum CategoriesEnum {
   "My Projects" = "My Projects",
   "Shared With Me" = "Shared With Me",
+  "Concept Comparison" = "Concept Comparison",
   Account = "Account",
 }
 
@@ -64,8 +70,8 @@ export const Home: React.FC = () => {
     switch (category) {
       case CategoriesEnum["My Projects"]:
         return <ProjectsContent />;
-      // case CategoriesEnum["Shared With Me"]:
-      //   return <WIP />;
+      case CategoriesEnum["Concept Comparison"]:
+        return <ConceptComparisonContent />;
       case CategoriesEnum.Account:
         return <AccountContent />;
     }
@@ -90,26 +96,21 @@ export const Home: React.FC = () => {
           <Menu.Item
             key={CategoriesEnum["My Projects"]}
             icon={<ProjectOutlined />}
-            style={{
-              ...styles.menuItem,
-              ...styles.myProjectsMenuItem,
-            }}
+            style={styles.menuItem}
           >
             {CategoriesEnum["My Projects"]}
           </Menu.Item>
-          {/*<Menu.Item
-            key={CategoriesEnum["Shared With Me"]}
-            icon={<PartitionOutlined style={styles.menuIcon} />}
+          <Menu.Item
+            key={CategoriesEnum["Concept Comparison"]}
+            icon={<ApartmentOutlined />}
             style={styles.menuItem}
           >
-            {CategoriesEnum["Shared With Me"]}
-          </Menu.Item>*/}
+            {CategoriesEnum["Concept Comparison"]}
+          </Menu.Item>
           <Menu.Item
             key={CategoriesEnum.Account}
             icon={<UserOutlined />}
-            style={{
-              ...styles.menuItem,
-            }}
+            style={styles.menuItem}
           >
             {CategoriesEnum.Account}
           </Menu.Item>
@@ -132,7 +133,7 @@ const styles = {
 
   menuItem: {
     height: "10vh",
-    paddingTop: "3vh",
+    paddingTop: "2vh",
   } as CSSProperties,
 
   myProjectsMenuItem: {
@@ -141,6 +142,7 @@ const styles = {
 
   secondaryLayout: {
     marginLeft: "7vw",
+    backgroundColor: "#FFF",
   } as CSSProperties,
 
   whiteBackground: {

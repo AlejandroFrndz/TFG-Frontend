@@ -193,8 +193,6 @@ export const TaggingTable: React.FC<Props> = ({
       style={styles.taggingTable}
       pagination={{
         position: ["bottomCenter"],
-        pageSize: 8,
-        hideOnSinglePage: true,
       }}
       expandable={{
         expandedRowRender: (record) => <ExpandedTables record={record} />,
