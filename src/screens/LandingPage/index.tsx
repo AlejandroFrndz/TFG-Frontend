@@ -1,7 +1,6 @@
 import { useState } from "react";
 import type { CSSProperties } from "react";
-import { Row, Col, Typography, Layout, message, Card, Divider } from "antd";
-import { Center } from "src/shared/components/Center/Center";
+import { Row, Col, Layout, message, Card, Divider } from "antd";
 import { LogInForm } from "src/screens/LandingPage/components/LogInForm";
 import API from "src/utils/api";
 import { useNavigate } from "react-router-dom";
@@ -13,7 +12,6 @@ import { MarcoTAO } from "src/utils/constants";
 import { ReactComponent as MarcoTAOSvg } from "src/assets/SVG/MarcoTAO.svg";
 
 const { Content } = Layout;
-const { Title, Text } = Typography;
 
 export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
