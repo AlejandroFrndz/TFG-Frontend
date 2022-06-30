@@ -37,8 +37,12 @@ export type ProjectDetails = {
 type AxiosProjectResponse = {
   project: IProject;
 };
+type AxiosProjectsResponse = {
+  projects: IProject[];
+};
 
 export type ProjectResponse = FailureOrSuccess<IError, IProject>;
+export type ProjectsResponse = FailureOrSuccess<IError, IProject[]>;
 
 export class Project {
   private static prefix = "/project" as const;
@@ -108,6 +112,18 @@ export class Project {
       );
 
       return success(response.data.project);
+    } catch (error) {
+      return handleAxiosError(error);
+    }
+  };
+
+  static getFinishedForUser = async (): Promise<ProjectsResponse> => {
+    try {
+      const response = await client.get<AxiosProjectsResponse>(
+        `${this.prefix}/finished`
+      );
+
+      return success(response.data.projects);
     } catch (error) {
       return handleAxiosError(error);
     }

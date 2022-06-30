@@ -186,8 +186,6 @@ export const GroupedTriplesTable: React.FC<Props> = ({ data }) => {
       dataSource={data}
       pagination={{
         position: ["bottomCenter"],
-        pageSize: 8,
-        hideOnSinglePage: true,
       }}
       rowKey="combinationNum"
       style={styles.table}
