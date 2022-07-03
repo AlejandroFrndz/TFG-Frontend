@@ -2,6 +2,7 @@ import React, { CSSProperties, useEffect, useState } from "react";
 import { Layout, Menu } from "antd";
 import {
   ApartmentOutlined,
+  HomeOutlined,
   ProjectOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -14,8 +15,10 @@ import { useNavigate } from "react-router-dom";
 import { AccountContent } from "src/screens/Home/components/AccountContent";
 import { ProjectsContent } from "src/screens/Home/components/ProjectsContent";
 import { ConceptComparisonContent } from "./components/ConceptComparisonContent";
+import { WelcomeContent } from "./components/WelcomeContent";
 
 enum CategoriesEnum {
+  Welcome = "Welcome",
   "My Projects" = "My Projects",
   "Shared With Me" = "Shared With Me",
   "Concept Comparison" = "Concept Comparison",
@@ -31,7 +34,7 @@ const { Content, Sider } = Layout;
 export const Home: React.FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [category, setCategory] = useState(CategoriesEnum["My Projects"]);
+  const [category, setCategory] = useState(CategoriesEnum.Welcome);
   const [loading, setLoading] = useState(true);
   const error = useSelector(selectAuthError);
 
@@ -74,6 +77,10 @@ export const Home: React.FC = () => {
         return <ConceptComparisonContent />;
       case CategoriesEnum.Account:
         return <AccountContent />;
+      case CategoriesEnum.Welcome:
+        return <WelcomeContent />;
+      default:
+        return null;
     }
   };
 
@@ -88,11 +95,18 @@ export const Home: React.FC = () => {
       >
         <Menu
           theme="dark"
-          defaultSelectedKeys={[CategoriesEnum["My Projects"]]}
+          defaultSelectedKeys={[CategoriesEnum.Welcome]}
           mode="inline"
           onSelect={handleSelect}
           style={{ height: "100vh" }}
         >
+          <Menu.Item
+            key={CategoriesEnum.Welcome}
+            icon={<HomeOutlined />}
+            style={styles.menuItem}
+          >
+            {CategoriesEnum.Welcome}
+          </Menu.Item>
           <Menu.Item
             key={CategoriesEnum["My Projects"]}
             icon={<ProjectOutlined />}
