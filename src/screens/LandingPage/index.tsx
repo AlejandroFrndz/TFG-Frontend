@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { CSSProperties } from "react";
 import { Row, Col, Layout, message, Card, Divider } from "antd";
 import { LogInForm } from "src/screens/LandingPage/components/LogInForm";
@@ -17,6 +17,15 @@ export const LandingPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [blur, setBlur] = useState(false);
+
+  useEffect(() => {
+    const token = window.localStorage.getItem("token");
+    if (token !== null) {
+      API.setToken(token);
+      dispatch(clearAuthError());
+      navigate("/home");
+    }
+  }, [navigate, dispatch]);
 
   const handleLogin = async (values: { email: string; password: string }) => {
     const response = await API.auth.login(values);
