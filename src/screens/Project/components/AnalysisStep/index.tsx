@@ -4,9 +4,11 @@ import {
   Button,
   Col,
   Divider,
+  Input,
   Menu,
   message,
   Row,
+  Space,
   Switch,
   Tooltip,
   Typography,
@@ -124,6 +126,7 @@ export const AnalysisStep: React.FC = () => {
     initialParameterState
   );
   const [isUsingSynt, setIsUsingSynt] = useState(false);
+  const [description, setDescription] = useState<null | string>(null);
 
   const [isLoadingSavedSearches, setIsLoadingSavedSearches] = useState(false);
   const [savedSearches, setSavedSearches] = useState<ISearch[]>([]);
@@ -148,11 +151,18 @@ export const AnalysisStep: React.FC = () => {
     fetchSearches();
   }, [project]);
 
+  const handleChangeDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    setDescription(value === "" ? null : value);
+  };
+
   const resetSearchState = () => {
     setNoun1State(initialParameterState);
     setVerbState(initialParameterState);
     setNoun2State(initialParameterState);
     setIsUsingSynt(false);
+    setDescription(null);
   };
 
   const handleDeleteSearch = async (searchId: string) => {
@@ -181,6 +191,7 @@ export const AnalysisStep: React.FC = () => {
       },
       isUsingSynt,
       project: project.id,
+      description,
     };
 
     const data = new FormData();
@@ -322,14 +333,22 @@ export const AnalysisStep: React.FC = () => {
             />
           </Col>
           <Divider type="vertical" style={styles.verticalDivider} />
-          <Col span={3}>
-            <Button
-              type="primary"
-              onClick={handleSaveSearch}
-              disabled={!canSaveSearch()}
-            >
-              Save
-            </Button>
+          <Col span={3} style={{ marginTop: "-50px" }}>
+            <Space direction="vertical" size="large">
+              <Text>Description</Text>
+              <Input
+                placeholder="Enter description"
+                onChange={handleChangeDescription}
+                value={description ?? undefined}
+              />
+              <Button
+                type="primary"
+                onClick={handleSaveSearch}
+                disabled={!canSaveSearch()}
+              >
+                Save
+              </Button>
+            </Space>
           </Col>
         </Row>
       </>
@@ -345,11 +364,12 @@ export const AnalysisStep: React.FC = () => {
         ) : (
           <>
             <Row>
-              {savedSearches.map((search) => (
+              {savedSearches.map((search, indx) => (
                 <SavedSearch
                   search={search}
                   key={search.id}
                   deleteSearch={handleDeleteSearch}
+                  index={indx + 1}
                 />
               ))}
             </Row>

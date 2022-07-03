@@ -17,6 +17,7 @@
     "axios": "^0.26.1",
     "js-file-download": "^0.4.12",
     "lodash": "^4.17.21",
+    "moment": "^2.29.3",
     "react": "^17.0.0",
     "react-country-flag": "^3.0.2",
     "react-dnd": "^15.1.2",

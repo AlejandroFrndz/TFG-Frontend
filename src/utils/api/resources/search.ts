@@ -17,6 +17,8 @@ export type ISearch = {
   verb: SearchParameter;
   noun2: SearchParameter;
   isUsingSynt: boolean;
+  description: string | null;
+  createdAt: Date;
 };
 
 type AxiosSearchResponse = {
@@ -38,6 +40,7 @@ export type CreateSearchRequest = {
   noun2: CreateSearchRequestParameter;
   isUsingSynt: boolean;
   project: string;
+  description: string | null;
 };
 
 type SearchResponse = FailureOrSuccess<IError, ISearch>;
