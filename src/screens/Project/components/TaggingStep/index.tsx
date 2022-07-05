@@ -304,10 +304,12 @@ const styles = {
     height: "80px",
     width: "200px",
     fontSize: "24px",
+    pointerEvents: "all",
   } as CSSProperties,
 
   affix: {
     marginRight: "40px",
+    pointerEvents: "none",
   } as CSSProperties,
 
   finishButton: {
