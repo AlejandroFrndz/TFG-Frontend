@@ -9,8 +9,10 @@ import {
   Col,
   Divider,
   message,
+  Modal,
   Popconfirm,
   Row,
+  Tooltip,
   Typography,
 } from "antd";
 import { useEffect, useState } from "react";
@@ -25,6 +27,8 @@ import { ILexicalDomainTag } from "src/utils/api/resources/tags/lexicalDomain";
 import { ISemanticCategoryTag } from "src/utils/api/resources/tags/semanticCategory";
 import { IErrorTag } from "src/utils/api/resources/tags/error";
 import { setProject } from "src/redux/projects/actions";
+import { CloudDownloadOutlined } from "@ant-design/icons";
+import { DownloadFiles } from "../VisualizationStep/components/DownloadFiles";
 
 const { Title, Text } = Typography;
 
@@ -55,6 +59,40 @@ export const TaggingStep: React.FC = () => {
   const [isLoadingTagsUpdate, setIsLoadingTagsUpdate] = useState(false);
 
   const [isFinishAlertVisible, setIsFinishAlertVisible] = useState(false);
+
+  const [isDownloadModalVisible, setIsDownloadModalVisible] = useState(false);
+
+  const hideDownloadModal = () => setIsDownloadModalVisible(false);
+  const showDownloadModal = () => setIsDownloadModalVisible(true);
+
+  useEffect(() => {
+    const fetchTriples = async () => {
+      setIsLoading(true);
+
+      const [triplesResponse, tagsResponse] = await Promise.all([
+        API.triple.getAllForProject(project.id),
+        API.tags.getAll(),
+      ]);
+
+      if (triplesResponse.isSuccess()) {
+        setTriples(triplesResponse.value);
+      }
+
+      if (tagsResponse.isSuccess()) {
+        const { lexicalDomain, semanticRole, semanticCategory, errors } =
+          tagsResponse.value;
+
+        setDomainTags(lexicalDomain);
+        setTrTags(semanticRole);
+        setScTags(semanticCategory);
+        setErrorTags(errors);
+      }
+
+      setIsLoading(false);
+    };
+
+    fetchTriples();
+  }, [project]);
 
   const addTripleToUpdate = (updatedTriple: ITriple) => {
     if (updatedTriple.problem === undefined) {
@@ -180,35 +218,6 @@ export const TaggingStep: React.FC = () => {
     return error;
   };
 
-  useEffect(() => {
-    const fetchTriples = async () => {
-      setIsLoading(true);
-
-      const [triplesResponse, tagsResponse] = await Promise.all([
-        API.triple.getAllForProject(project.id),
-        API.tags.getAll(),
-      ]);
-
-      if (triplesResponse.isSuccess()) {
-        setTriples(triplesResponse.value);
-      }
-
-      if (tagsResponse.isSuccess()) {
-        const { lexicalDomain, semanticRole, semanticCategory, errors } =
-          tagsResponse.value;
-
-        setDomainTags(lexicalDomain);
-        setTrTags(semanticRole);
-        setScTags(semanticCategory);
-        setErrorTags(errors);
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchTriples();
-  }, [project]);
-
   return (
     <>
       <Helmet>
@@ -269,9 +278,26 @@ export const TaggingStep: React.FC = () => {
               </Button>
             </Popconfirm>
           </Row>
-          {updatedTriples.length > 0 ? (
-            <Affix offsetBottom={40} style={styles.affix}>
-              <Row justify="end">
+          <Affix offsetBottom={40} style={styles.affix}>
+            <Row justify="space-between" align="middle">
+              <Col span={1}>
+                <Tooltip
+                  overlay="Download Triples"
+                  placement="right"
+                  mouseEnterDelay={0.5}
+                >
+                  <Button
+                    type="primary"
+                    shape="round"
+                    size="large"
+                    style={styles.downloadButton}
+                    block
+                    icon={<CloudDownloadOutlined />}
+                    onClick={showDownloadModal}
+                  />
+                </Tooltip>
+              </Col>
+              {updatedTriples.length > 0 ? (
                 <Button
                   type="primary"
                   shape="round"
@@ -283,9 +309,20 @@ export const TaggingStep: React.FC = () => {
                 >
                   {isLoadingTagsUpdate ? "Saving" : "Save"}
                 </Button>
-              </Row>
-            </Affix>
-          ) : null}
+              ) : null}
+            </Row>
+          </Affix>
+
+          <Modal
+            visible={isDownloadModalVisible}
+            width="1000px"
+            centered
+            cancelButtonProps={{ style: { display: "none" } }}
+            onOk={hideDownloadModal}
+            onCancel={hideDownloadModal}
+          >
+            <DownloadFiles modalView />
+          </Modal>
         </>
       )}
     </>
@@ -304,10 +341,17 @@ const styles = {
     height: "80px",
     width: "200px",
     fontSize: "24px",
+    pointerEvents: "all",
+  } as CSSProperties,
+
+  downloadButton: {
+    pointerEvents: "all",
+    marginLeft: "20px",
   } as CSSProperties,
 
   affix: {
     marginRight: "40px",
+    pointerEvents: "none",
   } as CSSProperties,
 
   finishButton: {

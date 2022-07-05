@@ -14,7 +14,11 @@ import "./styles.css";
 
 const { Title } = Typography;
 
-export const DownloadFiles: React.FC = () => {
+interface DownloadFilesProps {
+  modalView?: boolean;
+}
+
+export const DownloadFiles: React.FC<DownloadFilesProps> = ({ modalView }) => {
   const project = useSelector(selectProject()) as IProject;
 
   const handleDownloadGroupedFile = async (
@@ -49,43 +53,52 @@ export const DownloadFiles: React.FC = () => {
 
   return (
     <>
+      {!modalView ? (
+        <>
+          <Row justify="center">
+            <Title>Download Grouped Triples</Title>
+          </Row>
+          <Row
+            justify="space-evenly"
+            align="middle"
+            style={styles.cardRowMargin}
+          >
+            <Col span={3}>
+              <Card
+                hoverable
+                style={styles.contentCard}
+                onClick={() => handleDownloadGroupedFile("tsv")}
+                className="colorOnHover"
+              >
+                <TSVIcon width={"50px"} height={"50px"} />
+              </Card>
+            </Col>
+            <Col span={3}>
+              <Card
+                hoverable
+                style={styles.contentCard}
+                onClick={() => handleDownloadGroupedFile("csv")}
+                className="colorOnHover"
+              >
+                <CSVIcon width={"50px"} height={"50px"} />
+              </Card>
+            </Col>
+            <Col span={3}>
+              <Card
+                hoverable
+                style={styles.contentCard}
+                onClick={() => handleDownloadGroupedFile("txt")}
+                className="colorOnHoverBlue"
+              >
+                <TXTIcon width={"50px"} height={"50px"} />
+              </Card>
+            </Col>
+          </Row>
+        </>
+      ) : null}
+
       <Row justify="center">
-        <Title>Download Grouped Triples</Title>
-      </Row>
-      <Row justify="space-evenly" align="middle" style={styles.cardRowMargin}>
-        <Col span={3}>
-          <Card
-            hoverable
-            style={styles.contentCard}
-            onClick={() => handleDownloadGroupedFile("tsv")}
-            className="colorOnHover"
-          >
-            <TSVIcon width={"50px"} height={"50px"} />
-          </Card>
-        </Col>
-        <Col span={3}>
-          <Card
-            hoverable
-            style={styles.contentCard}
-            onClick={() => handleDownloadGroupedFile("csv")}
-            className="colorOnHover"
-          >
-            <CSVIcon width={"50px"} height={"50px"} />
-          </Card>
-        </Col>
-        <Col span={3}>
-          <Card
-            hoverable
-            style={styles.contentCard}
-            onClick={() => handleDownloadGroupedFile("txt")}
-            className="colorOnHoverBlue"
-          >
-            <TXTIcon width={"50px"} height={"50px"} />
-          </Card>
-        </Col>
-      </Row>
-      <Row justify="center">
-        <Title>Download Ungrouped Triples</Title>
+        <Title>{`Download ${!modalView ? "Ungrouped" : ""} Triples`}</Title>
       </Row>
       <Row justify="space-around" align="middle" style={styles.cardRowMargin}>
         <Col span={3} />
