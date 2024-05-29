@@ -19,6 +19,4 @@ The app reads some data from the environment of the application. The React Scrip
 
 After having configured everything previously explained, simply run `npm run start` in the project root. The React Scripts will handle setting the development server up. Once they're done, the app should be accessible with your browser at [localhost:3000](http://localhost:3000)
 
-Alternatively, you can access the current production build of the app at [marcotao.eu](https://marcotao.eu)
-
 > Written with [StackEdit](https://stackedit.io/).
